@@ -8,9 +8,13 @@ const redisConfig = {
   maxRetriesPerRequest: null, // required for BullMQ
   enableReadyCheck: false,
   retryStrategy(times) {
-    if (times > 10) return null;
-    return Math.min(times * 200, 5000);
+    if (times > 3) {
+      console.warn('[redis] Max retries reached — giving up reconnection');
+      return null;
+    }
+    return Math.min(times * 200, 2000);
   },
+  lazyConnect: true,
 };
 
 let _client = null;
@@ -22,6 +26,7 @@ function getClient() {
     _client = new Redis(redisConfig);
     _client.on('error', (err) => console.error('[redis] Client error:', err.message));
     _client.on('connect', () => console.log('[redis] Client connected'));
+    _client.connect().catch(() => {}); // trigger lazy connect
   }
   return _client;
 }
@@ -30,6 +35,7 @@ function getSubscriber() {
   if (!_subscriber) {
     _subscriber = new Redis(redisConfig);
     _subscriber.on('error', (err) => console.error('[redis] Subscriber error:', err.message));
+    _subscriber.connect().catch(() => {});
   }
   return _subscriber;
 }
@@ -38,6 +44,7 @@ function getPublisher() {
   if (!_publisher) {
     _publisher = new Redis(redisConfig);
     _publisher.on('error', (err) => console.error('[redis] Publisher error:', err.message));
+    _publisher.connect().catch(() => {});
   }
   return _publisher;
 }
