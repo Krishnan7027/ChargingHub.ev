@@ -10,18 +10,8 @@ services:
         value: production
       - key: JWT_SECRET
         generateValue: true
-      - key: DB_HOST
+      - key: DATABASE_URL
         sync: false
-      - key: DB_PORT
-        value: "5432"
-      - key: DB_NAME
-        sync: false
-      - key: DB_USER
-        sync: false
-      - key: DB_PASSWORD
-        sync: false
-      - key: DB_SSL
-        value: require
       - key: CLIENT_URL
         sync: false
       - key: DEMO_MODE
