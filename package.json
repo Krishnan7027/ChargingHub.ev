@@ -1,0 +1,24 @@
+{
+  "name": "ev-charging-prototype",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "npx playwright test",
+    "test:api": "npx playwright test --project=api",
+    "test:ui": "npx playwright test --project=ui",
+    "test:smoke": "npx playwright test smoke",
+    "test:race": "npx playwright test race-condition",
+    "test:report": "npx playwright show-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1"
+  }
+}
