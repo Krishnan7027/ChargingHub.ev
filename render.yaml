@@ -3,8 +3,8 @@ services:
     name: ev-charge-hub-api
     runtime: node
     rootDir: backend
-    buildCommand: npm install && npm run migrate && npm run seed
-    startCommand: node src/server.js
+    buildCommand: npm install
+    startCommand: npm run migrate && npm run seed && node src/server.js
     envVars:
       - key: NODE_ENV
         value: production
