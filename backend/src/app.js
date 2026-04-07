@@ -22,46 +22,7 @@ if (env.nodeEnv !== 'test') {
   app.use(morgan('combined'));
 }
 
-// ── Rate limiting ──────────────────────────────────────────
-const limiter = rateLimit({
-  windowMs: env.rateLimit.windowMs,
-  max: env.rateLimit.max,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { error: 'Too many requests, please try again later' },
-});
-app.use('/api/', limiter);
-
-// Stricter limit for auth endpoints
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  message: { error: 'Too many authentication attempts' },
-});
-app.use('/api/auth/login', authLimiter);
-app.use('/api/auth/register', authLimiter);
-
-// ── Audit helper on every request ──────────────────────────
-app.use(auditMiddleware);
-
-// ── Versioned API routes (v1) ────────────────────────────────
-const v1 = express.Router();
-v1.use('/auth', require('./routes/auth'));
-v1.use('/stations', require('./routes/stations'));
-v1.use('/reservations', require('./routes/reservations'));
-v1.use('/charging', require('./routes/charging'));
-v1.use('/admin', require('./routes/admin'));
-v1.use('/predictions', require('./routes/predictions'));
-v1.use('/route-planner', require('./routes/routePlanner'));
-v1.use('/intelligent', require('./routes/intelligent'));
-v1.use('/payments', require('./routes/payments'));
-v1.use('/plug-charge', require('./routes/plugCharge'));
-
-// Mount v1 and keep /api/ as alias for backward compatibility
-app.use('/api/v1', v1);
-app.use('/api', v1);
-
-// ── Health checks ──────────────────────────────────────────
+// ── Health checks (BEFORE rate limiter — Render probes must never be throttled) ──
 const { checkConnection, pool } = require('./config/database');
 const { getClient: getRedisClient } = require('./config/redis');
 const { notificationQueue, reservationExpiryQueue, predictionUpdateQueue, queueAssignmentQueue, paymentQueue } = require('./jobs/queues');
@@ -198,6 +159,45 @@ app.get('/api/redis-test', async (_req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// ── Rate limiting (after health checks so Render probes are not throttled) ──
+const limiter = rateLimit({
+  windowMs: env.rateLimit.windowMs,
+  max: env.rateLimit.max,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later' },
+});
+app.use('/api/', limiter);
+
+// Stricter limit for auth endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { error: 'Too many authentication attempts' },
+});
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/register', authLimiter);
+
+// ── Audit helper on every request ──────────────────────────
+app.use(auditMiddleware);
+
+// ── Versioned API routes (v1) ────────────────────────────────
+const v1 = express.Router();
+v1.use('/auth', require('./routes/auth'));
+v1.use('/stations', require('./routes/stations'));
+v1.use('/reservations', require('./routes/reservations'));
+v1.use('/charging', require('./routes/charging'));
+v1.use('/admin', require('./routes/admin'));
+v1.use('/predictions', require('./routes/predictions'));
+v1.use('/route-planner', require('./routes/routePlanner'));
+v1.use('/intelligent', require('./routes/intelligent'));
+v1.use('/payments', require('./routes/payments'));
+v1.use('/plug-charge', require('./routes/plugCharge'));
+
+// Mount v1 and keep /api/ as alias for backward compatibility
+app.use('/api/v1', v1);
+app.use('/api', v1);
 
 // ── Demo mode toggle (admin only in production, open in dev) ──
 app.post('/api/demo/start', authenticate, authorize('admin'), (req, res) => {
