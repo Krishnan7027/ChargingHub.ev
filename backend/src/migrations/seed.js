@@ -99,6 +99,13 @@ const REVIEW_COMMENTS = [
 async function seed() {
   const client = await pool.connect();
   try {
+    // Skip seeding if data already exists (idempotent for production deploys)
+    const { rows: [{ count }] } = await client.query('SELECT COUNT(*)::int AS count FROM users');
+    if (count > 0) {
+      console.log(`Database already seeded (${count} users found). Skipping.`);
+      return;
+    }
+
     await client.query('BEGIN');
 
     console.log('Seeding users...');
