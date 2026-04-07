@@ -1,21 +1,47 @@
 const Redis = require('ioredis');
 
-const redisConfig = {
-  host: process.env.REDIS_HOST || '127.0.0.1',
-  port: parseInt(process.env.REDIS_PORT, 10) || 6379,
-  password: process.env.REDIS_PASSWORD || undefined,
-  db: parseInt(process.env.REDIS_DB, 10) || 0,
-  maxRetriesPerRequest: null, // required for BullMQ
-  enableReadyCheck: false,
-  retryStrategy(times) {
-    if (times > 3) {
-      console.warn('[redis] Max retries reached — giving up reconnection');
-      return null;
+// Build config: prefer REDIS_URL (Upstash/production), fall back to individual vars (local)
+const redisConfig = process.env.REDIS_URL
+  ? {
+      maxRetriesPerRequest: null, // required for BullMQ
+      enableReadyCheck: false,
+      tls: {},
+      retryStrategy(times) {
+        if (times > 5) {
+          console.warn('[redis] Max retries reached — giving up reconnection');
+          return null;
+        }
+        return Math.min(times * 200, 2000);
+      },
+      lazyConnect: true,
     }
-    return Math.min(times * 200, 2000);
-  },
-  lazyConnect: true,
-};
+  : {
+      host: process.env.REDIS_HOST || '127.0.0.1',
+      port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+      password: process.env.REDIS_PASSWORD || undefined,
+      db: parseInt(process.env.REDIS_DB, 10) || 0,
+      maxRetriesPerRequest: null, // required for BullMQ
+      enableReadyCheck: false,
+      retryStrategy(times) {
+        if (times > 5) {
+          console.warn('[redis] Max retries reached — giving up reconnection');
+          return null;
+        }
+        return Math.min(times * 200, 2000);
+      },
+      lazyConnect: true,
+    };
+
+function createRedisClient(label) {
+  const client = process.env.REDIS_URL
+    ? new Redis(process.env.REDIS_URL, redisConfig)
+    : new Redis(redisConfig);
+
+  client.on('error', (err) => console.error(`[redis] ${label} error:`, err.message));
+  client.on('connect', () => console.log(`[redis] ${label} connected`));
+  client.connect().catch(() => {}); // trigger lazy connect
+  return client;
+}
 
 let _client = null;
 let _subscriber = null;
@@ -23,28 +49,21 @@ let _publisher = null;
 
 function getClient() {
   if (!_client) {
-    _client = new Redis(redisConfig);
-    _client.on('error', (err) => console.error('[redis] Client error:', err.message));
-    _client.on('connect', () => console.log('[redis] Client connected'));
-    _client.connect().catch(() => {}); // trigger lazy connect
+    _client = createRedisClient('Client');
   }
   return _client;
 }
 
 function getSubscriber() {
   if (!_subscriber) {
-    _subscriber = new Redis(redisConfig);
-    _subscriber.on('error', (err) => console.error('[redis] Subscriber error:', err.message));
-    _subscriber.connect().catch(() => {});
+    _subscriber = createRedisClient('Subscriber');
   }
   return _subscriber;
 }
 
 function getPublisher() {
   if (!_publisher) {
-    _publisher = new Redis(redisConfig);
-    _publisher.on('error', (err) => console.error('[redis] Publisher error:', err.message));
-    _publisher.connect().catch(() => {});
+    _publisher = createRedisClient('Publisher');
   }
   return _publisher;
 }

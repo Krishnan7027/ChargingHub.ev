@@ -187,6 +187,18 @@ app.get('/api/health/deep', async (_req, res) => {
   });
 });
 
+// ── Temporary Redis test (remove after verification) ─────
+app.get('/api/redis-test', async (_req, res) => {
+  try {
+    const redis = getRedisClient();
+    await redis.set('test', 'hello');
+    const value = await redis.get('test');
+    res.json({ redis: value });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ── Demo mode toggle (admin only in production, open in dev) ──
 app.post('/api/demo/start', authenticate, authorize('admin'), (req, res) => {
   if (!isDemoMode()) {
