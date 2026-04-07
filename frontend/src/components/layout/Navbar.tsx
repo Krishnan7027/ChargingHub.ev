@@ -6,7 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useCountry } from '@/context/CountryContext';
 import { getCountryList } from '@/lib/countries';
 import { canAccessRoutePlanner, canAccessSmartFeatures, getSmartFeatures } from '@/lib/roles';
-import ThemeToggle from '@/components/ui/ThemeToggle';
+
 import { useState, useRef, useEffect } from 'react';
 
 function DropdownMenu({ label, items, onClose }: {
@@ -227,7 +227,6 @@ export default function Navbar() {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
-            <ThemeToggle />
             <CountrySelector />
             {user ? (
               <>
@@ -248,7 +247,6 @@ export default function Navbar() {
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center gap-2">
-            <ThemeToggle />
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="p-2 rounded-lg text-theme-secondary hover:text-theme-primary hover:bg-primary-500/5 transition-colors"

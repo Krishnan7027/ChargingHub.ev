@@ -8,13 +8,14 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="relative w-9 h-9 rounded-xl glass flex items-center justify-center
-                 transition-all duration-200 hover:scale-105 active:scale-95"
+      className="fixed bottom-6 right-6 z-[1200] w-10 h-10 rounded-full glass-heavy
+                 flex items-center justify-center shadow-lg
+                 transition-all duration-200 hover:scale-110 active:scale-95"
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
-      {/* Sun icon */}
+      {/* Moon icon — visible in light mode (click to go dark) */}
       <svg
-        className={`w-4.5 h-4.5 absolute transition-all duration-300 ${
+        className={`w-4 h-4 absolute transition-all duration-300 ${
           theme === 'light' ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 rotate-90 scale-50'
         }`}
         fill="none"
@@ -25,12 +26,12 @@ export default function ThemeToggle() {
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
-          d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+          d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
         />
       </svg>
-      {/* Moon icon */}
+      {/* Sun icon — visible in dark mode (click to go light) */}
       <svg
-        className={`w-4.5 h-4.5 absolute transition-all duration-300 ${
+        className={`w-4 h-4 absolute transition-all duration-300 ${
           theme === 'dark' ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-50'
         }`}
         fill="none"
@@ -41,7 +42,7 @@ export default function ThemeToggle() {
         <path
           strokeLinecap="round"
           strokeLinejoin="round"
-          d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+          d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
         />
       </svg>
     </button>

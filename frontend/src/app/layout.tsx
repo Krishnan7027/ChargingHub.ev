@@ -5,6 +5,7 @@ import { CountryProvider } from '@/context/CountryContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import QueryProvider from '@/context/QueryProvider';
 import GlassBackground from '@/components/ui/GlassBackground';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 import { Toaster } from 'react-hot-toast';
 import '@/styles/globals.css';
 
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <AuthProvider>
               <GlassBackground />
               {children}
+              <ThemeToggle />
               <Toaster
                 position="top-center"
                 toastOptions={{

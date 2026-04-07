@@ -112,7 +112,7 @@ export default function RoutePlannerPage() {
 
           {/* ── Map container (matches /map page exactly) ──── */}
           <div className="lg:w-[65%] lg:flex-shrink-0">
-            <div className="card rounded-2xl overflow-hidden relative">
+            <div className="glass-heavy rounded-2xl overflow-hidden relative">
               <StationMap
                 stations={mapStations}
                 center={mapCenter}

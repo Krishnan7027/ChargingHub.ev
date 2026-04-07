@@ -148,6 +148,27 @@ app.get('/api/health/deep', async (_req, res) => {
   });
 });
 
+// ── Public platform stats (no auth, safe subset for homepage) ────
+app.get('/api/public/stats', async (_req, res) => {
+  try {
+    const { rows } = await pool.query(`
+      SELECT
+        (SELECT COUNT(*) FROM stations WHERE status = 'approved') AS stations,
+        (SELECT COUNT(*) FROM users WHERE role = 'customer') AS users,
+        (SELECT COALESCE(SUM(energy_delivered_kwh), 0) FROM charging_sessions WHERE status = 'completed') AS kwh
+    `);
+    const r = rows[0];
+    res.json({
+      stations: Number(r.stations),
+      users: Number(r.users),
+      kwhDelivered: Math.round(Number(r.kwh)),
+      uptime: 99.9,
+    });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+});
+
 // ── Temporary Redis test (remove after verification) ─────
 app.get('/api/redis-test', async (_req, res) => {
   try {
