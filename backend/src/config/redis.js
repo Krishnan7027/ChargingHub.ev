@@ -1,8 +1,21 @@
 const Redis = require('ioredis');
 
 // Build config: prefer REDIS_URL (Upstash/production), fall back to individual vars (local)
-const redisConfig = process.env.REDIS_URL
+const redisUrl = process.env.REDIS_URL || null;
+
+function parseRedisUrl(url) {
+  const parsed = new URL(url);
+  return {
+    host: parsed.hostname,
+    port: parseInt(parsed.port, 10) || 6379,
+    password: parsed.password || undefined,
+    username: parsed.username || undefined,
+  };
+}
+
+const redisConfig = redisUrl
   ? {
+      ...parseRedisUrl(redisUrl),
       maxRetriesPerRequest: null, // required for BullMQ
       enableReadyCheck: false,
       tls: {},
