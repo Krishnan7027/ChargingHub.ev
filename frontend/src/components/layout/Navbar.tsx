@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useCountry } from '@/context/CountryContext';
 import { getCountryList } from '@/lib/countries';
 import { canAccessRoutePlanner, canAccessSmartFeatures, getSmartFeatures } from '@/lib/roles';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 import { useState, useRef, useEffect } from 'react';
 
 function DropdownMenu({ label, items, onClose }: {
@@ -24,13 +25,13 @@ function DropdownMenu({ label, items, onClose }: {
   }, [onClose]);
 
   return (
-    <div ref={ref} className="absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-50">
-      <p className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide">{label}</p>
+    <div ref={ref} className="absolute top-full left-0 mt-1 w-48 glass-heavy rounded-xl py-1 z-50">
+      <p className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-theme-muted">{label}</p>
       {items.map((item) => (
         <Link
           key={item.href}
           href={item.href}
-          className="block px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
+          className="block px-3 py-2 text-sm text-theme-secondary hover:bg-primary-500/10 hover:text-primary-500 transition-colors rounded-lg mx-1"
           onClick={onClose}
         >
           {item.label}
@@ -50,13 +51,13 @@ function NavLink({ href, children, onClick }: { href: string; children: React.Re
       onClick={onClick}
       className={`relative text-sm font-medium transition-colors ${
         isActive
-          ? 'text-primary-600 font-semibold'
-          : 'text-gray-600 hover:text-primary-600'
+          ? 'text-primary-500 font-semibold'
+          : 'text-theme-secondary hover:text-primary-500'
       }`}
     >
       {children}
       {isActive && (
-        <span className="absolute -bottom-[1.19rem] left-0 right-0 h-0.5 bg-primary-600 rounded-full" />
+        <span className="absolute -bottom-[1.19rem] left-0 right-0 h-0.5 bg-primary-500 rounded-full" />
       )}
     </Link>
   );
@@ -70,10 +71,10 @@ function MobileNavLink({ href, children, onClick }: { href: string; children: Re
     <Link
       href={href}
       onClick={onClick}
-      className={`block px-3 py-2 rounded-md transition-colors ${
+      className={`block px-3 py-2 rounded-lg transition-colors ${
         isActive
-          ? 'text-primary-600 font-semibold bg-primary-50'
-          : 'text-gray-700 hover:bg-gray-100'
+          ? 'text-primary-500 font-semibold bg-primary-500/10'
+          : 'text-theme-primary hover:bg-primary-500/5'
       }`}
     >
       {children}
@@ -83,7 +84,7 @@ function MobileNavLink({ href, children, onClick }: { href: string; children: Re
 
 function UserAvatar({ name }: { name: string }) {
   return (
-    <div className="w-8 h-8 bg-primary-100 text-primary-700 rounded-full flex items-center justify-center text-sm font-semibold">
+    <div className="w-8 h-8 bg-primary-500/15 text-primary-500 rounded-full flex items-center justify-center text-sm font-semibold">
       {name.charAt(0)}
     </div>
   );
@@ -107,7 +108,7 @@ function CountrySelector() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-primary-600 transition-colors px-2 py-1 rounded-lg hover:bg-gray-100"
+        className="flex items-center gap-1.5 text-sm font-medium text-theme-secondary hover:text-primary-500 transition-colors px-2 py-1 rounded-lg hover:bg-primary-500/5"
       >
         <span className="text-base">{country.flag}</span>
         <span className="hidden sm:inline">{country.code}</span>
@@ -116,19 +117,19 @@ function CountrySelector() {
         </svg>
       </button>
       {open && (
-        <div className="absolute top-full right-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-50">
-          <p className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide">Region</p>
+        <div className="absolute top-full right-0 mt-1 w-48 glass-heavy rounded-xl py-1 z-50">
+          <p className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-theme-muted">Region</p>
           {countries.map((c) => (
             <button
               key={c.code}
               onClick={() => { setCountryCode(c.code); setOpen(false); }}
-              className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-primary-50 transition-colors ${
-                c.code === country.code ? 'text-primary-600 font-semibold bg-primary-50' : 'text-gray-700'
+              className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2 hover:bg-primary-500/10 transition-colors rounded-lg mx-1 ${
+                c.code === country.code ? 'text-primary-500 font-semibold bg-primary-500/10' : 'text-theme-primary'
               }`}
             >
               <span className="text-base">{c.flag}</span>
               {c.name}
-              <span className="text-gray-400 ml-auto text-xs">{c.currencySymbol}</span>
+              <span className="text-theme-muted ml-auto text-xs">{c.currencySymbol}</span>
             </button>
           ))}
         </div>
@@ -156,17 +157,17 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="bg-white/80 backdrop-blur-lg border-b border-gray-200/60 sticky top-0 z-[1100]">
+    <nav className="glass-heavy border-b border-glass sticky top-0 z-[1100]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center shadow-lg shadow-primary-600/25">
                 <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <span className="text-xl font-bold text-gray-900">EV Charge Hub</span>
+              <span className="text-xl font-bold text-theme-primary">EV Charge Hub</span>
             </Link>
 
             <div className="hidden md:flex ml-10 gap-6 items-center">
@@ -193,7 +194,7 @@ export default function Navbar() {
                 <div className="relative">
                   <button
                     onClick={() => { setSmartMenuOpen(!smartMenuOpen); setAdminMenuOpen(false); }}
-                    className="flex items-center gap-1 text-gray-600 hover:text-primary-600 transition-colors text-sm font-medium"
+                    className="flex items-center gap-1 text-theme-secondary hover:text-primary-500 transition-colors text-sm font-medium"
                   >
                     Smart Features
                     <svg className={`w-4 h-4 transition-transform ${smartMenuOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -210,7 +211,7 @@ export default function Navbar() {
                 <div className="relative">
                   <button
                     onClick={() => { setAdminMenuOpen(!adminMenuOpen); setSmartMenuOpen(false); }}
-                    className="flex items-center gap-1 text-gray-600 hover:text-primary-600 transition-colors text-sm font-medium"
+                    className="flex items-center gap-1 text-theme-secondary hover:text-primary-500 transition-colors text-sm font-medium"
                   >
                     Admin
                     <svg className={`w-4 h-4 transition-transform ${adminMenuOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -226,11 +227,12 @@ export default function Navbar() {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
+            <ThemeToggle />
             <CountrySelector />
             {user ? (
               <>
                 <UserAvatar name={user.full_name} />
-                <span className="text-sm text-gray-700 font-medium">{user.full_name}</span>
+                <span className="text-sm text-theme-primary font-medium">{user.full_name}</span>
                 <span className="badge-blue capitalize">{user.role}</span>
                 <button onClick={logout} className="btn-secondary text-sm py-1.5">
                   Logout
@@ -245,10 +247,11 @@ export default function Navbar() {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          <div className="md:hidden flex items-center gap-2">
+            <ThemeToggle />
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+              className="p-2 rounded-lg text-theme-secondary hover:text-theme-primary hover:bg-primary-500/5 transition-colors"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {mobileOpen ? (
@@ -262,19 +265,19 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu with smooth animation */}
+      {/* Mobile menu */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ease-out ${
           mobileOpen ? 'max-h-[80vh] opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
-        <div className="border-t border-gray-200/60 bg-white/80 backdrop-blur-lg overflow-y-auto">
-          {/* User info header in mobile drawer */}
+        <div className="border-t border-glass glass-heavy overflow-y-auto">
+          {/* User info header */}
           {user && (
-            <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-3">
+            <div className="px-4 py-3 border-b border-glass flex items-center gap-3">
               <UserAvatar name={user.full_name} />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 truncate">{user.full_name}</p>
+                <p className="text-sm font-semibold text-theme-primary truncate">{user.full_name}</p>
                 <span className="badge-blue capitalize text-xs">{user.role}</span>
               </div>
             </div>
@@ -302,7 +305,7 @@ export default function Navbar() {
                 {canAccessSmartFeatures(user.role) && (
                   <>
                     <div className="pt-2 pb-1">
-                      <p className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Smart Features</p>
+                      <p className="px-3 text-xs font-semibold text-theme-muted uppercase tracking-wide">Smart Features</p>
                     </div>
                     {smartFeatures.map((item) => (
                       <MobileNavLink key={item.href} href={item.href} onClick={() => setMobileOpen(false)}>
@@ -316,7 +319,7 @@ export default function Navbar() {
                 {user.role === 'admin' && (
                   <>
                     <div className="pt-2 pb-1">
-                      <p className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wide">Admin</p>
+                      <p className="px-3 text-xs font-semibold text-theme-muted uppercase tracking-wide">Admin</p>
                     </div>
                     {adminFeatures.map((item) => (
                       <MobileNavLink key={item.href} href={item.href} onClick={() => setMobileOpen(false)}>
@@ -326,8 +329,8 @@ export default function Navbar() {
                   </>
                 )}
 
-                <div className="pt-2 border-t border-gray-100 mt-2">
-                  <button onClick={() => { logout(); setMobileOpen(false); }} className="block w-full text-left px-3 py-2 rounded-md text-red-600 hover:bg-red-50 transition-colors">
+                <div className="pt-2 border-t border-glass mt-2">
+                  <button onClick={() => { logout(); setMobileOpen(false); }} className="block w-full text-left px-3 py-2 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors">
                     Logout
                   </button>
                 </div>
@@ -337,7 +340,7 @@ export default function Navbar() {
                 <MobileNavLink href="/login" onClick={() => setMobileOpen(false)}>
                   Log in
                 </MobileNavLink>
-                <Link href="/register" className="block px-3 py-2 rounded-md text-primary-600 font-medium hover:bg-primary-50 transition-colors" onClick={() => setMobileOpen(false)}>
+                <Link href="/register" className="block px-3 py-2 rounded-lg text-primary-500 font-medium hover:bg-primary-500/10 transition-colors" onClick={() => setMobileOpen(false)}>
                   Sign up
                 </Link>
               </>

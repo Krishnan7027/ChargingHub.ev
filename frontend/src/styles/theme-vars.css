@@ -1,0 +1,167 @@
+/* ═══════════════════════════════════════════════════════════
+   Liquid Glass Theme — CSS Custom Properties
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Page Backgrounds ─────────────────────────────────── */
+  --bg-primary: #f0f4f8;
+  --bg-secondary: #e8eef4;
+  --bg-tertiary: #dde5ed;
+
+  /* ── Text ──────────────────────────────────────────────── */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-inverse: #f8fafc;
+
+  /* ── Borders ───────────────────────────────────────────── */
+  --border-default: rgba(0, 0, 0, 0.08);
+  --border-subtle: rgba(0, 0, 0, 0.04);
+
+  /* ── Glass Properties ──────────────────────────────────── */
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-heavy: rgba(255, 255, 255, 0.7);
+  --glass-bg-light: rgba(255, 255, 255, 0.4);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass-border-subtle: rgba(255, 255, 255, 0.4);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --glass-shadow-heavy: 0 12px 48px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
+  --glass-blur: 20px;
+  --glass-blur-heavy: 28px;
+  --glass-blur-light: 12px;
+
+  /* ── Glass Refraction (light streak on border) ─────────── */
+  --refraction-start: rgba(255, 255, 255, 0.6);
+  --refraction-mid: rgba(255, 255, 255, 0.15);
+  --refraction-end: rgba(255, 255, 255, 0.4);
+
+  /* ── Mesh Gradient Blobs ───────────────────────────────── */
+  --mesh-color-1: rgba(38, 168, 102, 0.25);
+  --mesh-color-2: rgba(12, 137, 235, 0.2);
+  --mesh-color-3: rgba(139, 92, 246, 0.15);
+
+  /* ── Component Surfaces ────────────────────────────────── */
+  --card-bg: rgba(255, 255, 255, 0.6);
+  --card-border: rgba(255, 255, 255, 0.7);
+  --card-hover-bg: rgba(255, 255, 255, 0.75);
+  --input-bg: rgba(255, 255, 255, 0.7);
+  --input-border: rgba(0, 0, 0, 0.1);
+  --input-focus-border: rgba(38, 168, 102, 0.5);
+
+  /* ── Button Surfaces ───────────────────────────────────── */
+  --btn-secondary-bg: rgba(255, 255, 255, 0.6);
+  --btn-secondary-border: rgba(255, 255, 255, 0.7);
+  --btn-ghost-hover: rgba(0, 0, 0, 0.05);
+
+  /* ── Badge Surfaces ────────────────────────────────────── */
+  --badge-green-bg: rgba(34, 197, 94, 0.12);
+  --badge-green-text: #15803d;
+  --badge-yellow-bg: rgba(234, 179, 8, 0.12);
+  --badge-yellow-text: #a16207;
+  --badge-red-bg: rgba(239, 68, 68, 0.12);
+  --badge-red-text: #b91c1c;
+  --badge-blue-bg: rgba(59, 130, 246, 0.12);
+  --badge-blue-text: #1d4ed8;
+  --badge-gray-bg: rgba(100, 116, 139, 0.1);
+  --badge-gray-text: #475569;
+
+  /* ── Scrollbar ─────────────────────────────────────────── */
+  --scrollbar-thumb: rgba(0, 0, 0, 0.15);
+  --scrollbar-track: transparent;
+
+  /* ── Overlay ───────────────────────────────────────────── */
+  --overlay-bg: rgba(0, 0, 0, 0.3);
+
+  /* ── Focus Ring ────────────────────────────────────────── */
+  --focus-ring: rgba(38, 168, 102, 0.5);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Dark Mode Overrides
+   ═══════════════════════════════════════════════════════════ */
+
+.dark {
+  /* ── Page Backgrounds ─────────────────────────────────── */
+  --bg-primary: #060b14;
+  --bg-secondary: #0c1220;
+  --bg-tertiary: #111827;
+
+  /* ── Text ──────────────────────────────────────────────── */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-inverse: #0f172a;
+
+  /* ── Borders ───────────────────────────────────────────── */
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+
+  /* ── Glass Properties ──────────────────────────────────── */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-bg-heavy: rgba(255, 255, 255, 0.08);
+  --glass-bg-light: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-border-subtle: rgba(255, 255, 255, 0.06);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+  --glass-shadow-heavy: 0 12px 48px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.25);
+  --glass-blur: 24px;
+  --glass-blur-heavy: 32px;
+  --glass-blur-light: 16px;
+
+  /* ── Glass Refraction ──────────────────────────────────── */
+  --refraction-start: rgba(255, 255, 255, 0.15);
+  --refraction-mid: rgba(255, 255, 255, 0.03);
+  --refraction-end: rgba(255, 255, 255, 0.1);
+
+  /* ── Mesh Gradient Blobs ───────────────────────────────── */
+  --mesh-color-1: rgba(38, 168, 102, 0.15);
+  --mesh-color-2: rgba(12, 137, 235, 0.12);
+  --mesh-color-3: rgba(139, 92, 246, 0.1);
+
+  /* ── Component Surfaces ────────────────────────────────── */
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-hover-bg: rgba(255, 255, 255, 0.08);
+  --input-bg: rgba(255, 255, 255, 0.06);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --input-focus-border: rgba(38, 168, 102, 0.5);
+
+  /* ── Button Surfaces ───────────────────────────────────── */
+  --btn-secondary-bg: rgba(255, 255, 255, 0.06);
+  --btn-secondary-border: rgba(255, 255, 255, 0.1);
+  --btn-ghost-hover: rgba(255, 255, 255, 0.06);
+
+  /* ── Badge Surfaces ────────────────────────────────────── */
+  --badge-green-bg: rgba(34, 197, 94, 0.15);
+  --badge-green-text: #4ade80;
+  --badge-yellow-bg: rgba(234, 179, 8, 0.15);
+  --badge-yellow-text: #fbbf24;
+  --badge-red-bg: rgba(239, 68, 68, 0.15);
+  --badge-red-text: #f87171;
+  --badge-blue-bg: rgba(59, 130, 246, 0.15);
+  --badge-blue-text: #60a5fa;
+  --badge-gray-bg: rgba(148, 163, 184, 0.12);
+  --badge-gray-text: #94a3b8;
+
+  /* ── Scrollbar ─────────────────────────────────────────── */
+  --scrollbar-thumb: rgba(255, 255, 255, 0.15);
+
+  /* ── Overlay ───────────────────────────────────────────── */
+  --overlay-bg: rgba(0, 0, 0, 0.6);
+
+  /* ── Focus Ring ────────────────────────────────────────── */
+  --focus-ring: rgba(74, 222, 128, 0.5);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Theme Transition (smooth color changes on toggle)
+   ═══════════════════════════════════════════════════════════ */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 0.3s ease,
+              border-color 0.3s ease,
+              color 0.3s ease,
+              box-shadow 0.3s ease !important;
+}

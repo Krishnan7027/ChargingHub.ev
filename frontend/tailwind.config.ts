@@ -5,6 +5,7 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -33,6 +34,33 @@ const config: Config = {
           800: '#054a86',
           900: '#0a3f6f',
         },
+        // Theme-aware surface colors via CSS variables
+        surface: {
+          primary: 'var(--bg-primary)',
+          secondary: 'var(--bg-secondary)',
+          tertiary: 'var(--bg-tertiary)',
+          glass: 'var(--glass-bg)',
+          card: 'var(--card-bg)',
+        },
+        // Theme-aware text colors
+        theme: {
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          muted: 'var(--text-muted)',
+        },
+      },
+      backdropBlur: {
+        glass: 'var(--glass-blur)',
+        'glass-heavy': 'var(--glass-blur-heavy)',
+        'glass-light': 'var(--glass-blur-light)',
+      },
+      boxShadow: {
+        glass: 'var(--glass-shadow)',
+        'glass-heavy': 'var(--glass-shadow-heavy)',
+      },
+      borderColor: {
+        glass: 'var(--glass-border)',
+        'glass-subtle': 'var(--glass-border-subtle)',
       },
     },
   },
