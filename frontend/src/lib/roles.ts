@@ -28,7 +28,6 @@ export function getSmartFeatures(role?: string) {
     { href: '/smart-schedule', label: 'Smart Schedule' },
     { href: '/battery-health', label: 'Battery Health' },
     { href: '/range-safety', label: 'Range Safety' },
-    { href: '/route-planner', label: 'Route Planner' },
     { href: '/reviews', label: 'Reviews' },
     { href: '/rewards', label: 'Rewards' },
     { href: '/payments', label: 'Payments' },
@@ -36,7 +35,7 @@ export function getSmartFeatures(role?: string) {
 
   if (role === 'admin' || role === 'manager') {
     // Remove customer-specific features
-    return allFeatures.filter(f => !['/route-planner', '/battery-health', '/range-safety', '/smart-schedule'].includes(f.href));
+    return allFeatures.filter(f => !['/battery-health', '/range-safety', '/smart-schedule'].includes(f.href));
   }
 
   return allFeatures;
