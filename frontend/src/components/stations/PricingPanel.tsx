@@ -22,9 +22,9 @@ export default function PricingPanel({ stationId }: { stationId: string }) {
       </h3>
 
       {current && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-3">
+        <div className="bg-green-500/10 border border-green-200 rounded-lg p-3 mb-3">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">Current Rate</span>
+            <span className="text-sm text-theme-secondary">Current Rate</span>
             <span className="text-lg font-bold text-green-700">{formatPricePerKwh(current.pricePerKwh, country)}</span>
           </div>
           <p className="text-xs text-green-600 mt-1">{current.ruleName}</p>
@@ -33,13 +33,13 @@ export default function PricingPanel({ stationId }: { stationId: string }) {
 
       {schedule?.rules && schedule.rules.length > 1 && (
         <div>
-          <p className="text-sm font-medium text-gray-600 mb-2">Price Schedule</p>
+          <p className="text-sm font-medium text-theme-secondary mb-2">Price Schedule</p>
           <div className="space-y-1.5">
             {schedule.rules.map((rule) => (
-              <div key={rule.id} className="flex items-center justify-between text-sm py-1.5 border-b border-gray-100 last:border-0">
+              <div key={rule.id} className="flex items-center justify-between text-sm py-1.5 border-b border-glass last:border-0">
                 <div>
                   <span className="font-medium">{rule.name}</span>
-                  <span className="text-gray-400 ml-2 text-xs">
+                  <span className="text-theme-muted ml-2 text-xs">
                     {rule.startTime}–{rule.endTime} ({rule.days.join(', ')})
                   </span>
                 </div>

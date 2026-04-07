@@ -23,12 +23,12 @@ const STATUS_FILTERS: { label: string; value: string }[] = [
 
 function paymentStatusColor(status: PaymentStatus): string {
   switch (status) {
-    case 'completed': return 'bg-green-100 text-green-700';
-    case 'pending': return 'bg-yellow-100 text-yellow-700';
-    case 'processing': return 'bg-blue-100 text-blue-700';
-    case 'failed': return 'bg-red-100 text-red-700';
-    case 'refunded': return 'bg-gray-100 text-gray-600';
-    default: return 'bg-gray-100 text-gray-600';
+    case 'completed': return 'bg-green-500/10 text-green-500';
+    case 'pending': return 'bg-yellow-500/10 text-yellow-500';
+    case 'processing': return 'bg-blue-500/10 text-blue-500';
+    case 'failed': return 'bg-red-500/10 text-red-500';
+    case 'refunded': return 'glass text-theme-secondary';
+    default: return 'glass text-theme-secondary';
   }
 }
 
@@ -83,23 +83,23 @@ export default function PaymentsPage() {
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           <div className="card">
-            <p className="text-xs text-gray-500 mb-1">Points Balance</p>
+            <p className="text-xs text-theme-muted mb-1">Points Balance</p>
             <p className="text-2xl font-bold text-primary-600">
               {wallet?.wallet?.totalPoints?.toLocaleString() ?? '0'}
             </p>
             {wallet?.level && (
-              <p className="text-xs text-gray-500 mt-1">{wallet.level.current.name}</p>
+              <p className="text-xs text-theme-muted mt-1">{wallet.level.current.name}</p>
             )}
           </div>
           <div className="card">
-            <p className="text-xs text-gray-500 mb-1">Total Spent</p>
-            <p className="text-2xl font-bold text-gray-900">{formatCurrency(totalSpent, country)}</p>
-            <p className="text-xs text-gray-400 mt-1">{paymentList.filter((p: Payment) => p.status === 'completed').length} transactions</p>
+            <p className="text-xs text-theme-muted mb-1">Total Spent</p>
+            <p className="text-2xl font-bold text-theme-primary">{formatCurrency(totalSpent, country)}</p>
+            <p className="text-xs text-theme-muted mt-1">{paymentList.filter((p: Payment) => p.status === 'completed').length} transactions</p>
           </div>
           <div className="card">
-            <p className="text-xs text-gray-500 mb-1">Pending</p>
+            <p className="text-xs text-theme-muted mb-1">Pending</p>
             <p className="text-2xl font-bold text-yellow-600">{formatCurrency(pendingAmount, country)}</p>
-            <p className="text-xs text-gray-400 mt-1">{paymentList.filter((p: Payment) => p.status === 'pending' || p.status === 'processing').length} pending</p>
+            <p className="text-xs text-theme-muted mt-1">{paymentList.filter((p: Payment) => p.status === 'pending' || p.status === 'processing').length} pending</p>
           </div>
         </div>
 
@@ -112,7 +112,7 @@ export default function PaymentsPage() {
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 statusFilter === f.value
                   ? 'bg-primary-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  : 'glass text-theme-secondary hover:bg-primary-500/10'
               }`}
             >
               {f.label}
@@ -123,7 +123,7 @@ export default function PaymentsPage() {
         {/* Payment List */}
         {isLoading ? (
           <div className="animate-pulse space-y-3">
-            {[1, 2, 3, 4].map((i) => <div key={i} className="card h-20 bg-gray-100" />)}
+            {[1, 2, 3, 4].map((i) => <div key={i} className="card h-20" />)}
           </div>
         ) : paymentList.length === 0 ? (
           <EmptyState
@@ -141,30 +141,30 @@ export default function PaymentsPage() {
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${paymentStatusColor(payment.status)}`}>
                         {payment.status}
                       </span>
-                      <span className="text-xs text-gray-400">
+                      <span className="text-xs text-theme-muted">
                         {new Date(payment.createdAt).toLocaleDateString(undefined, {
                           year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
                         })}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-theme-secondary">
                       {payment.paymentMethod} payment
                       {payment.sessionId && <span> for charging session</span>}
                       {payment.reservationId && <span> for reservation</span>}
                     </p>
                     {payment.paidAt && (
-                      <p className="text-xs text-gray-400 mt-0.5">
+                      <p className="text-xs text-theme-muted mt-0.5">
                         Paid {new Date(payment.paidAt).toLocaleDateString()}
                       </p>
                     )}
                     {payment.refundedAt && (
-                      <p className="text-xs text-gray-400 mt-0.5">
+                      <p className="text-xs text-theme-muted mt-0.5">
                         Refunded {new Date(payment.refundedAt).toLocaleDateString()}
                       </p>
                     )}
                   </div>
                   <div className="flex items-center gap-3">
-                    <p className={`text-lg font-bold ${payment.status === 'refunded' ? 'text-gray-400 line-through' : 'text-gray-900'}`}>
+                    <p className={`text-lg font-bold ${payment.status === 'refunded' ? 'text-theme-muted line-through' : 'text-theme-primary'}`}>
                       {formatCurrency(payment.amount, country)}
                     </p>
                     {payment.status === 'completed' && (

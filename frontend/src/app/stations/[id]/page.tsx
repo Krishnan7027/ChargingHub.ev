@@ -27,15 +27,15 @@ import type { ChargingSlot } from '@/types';
 function DetailSkeleton() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 animate-pulse">
-      <div className="h-4 bg-gray-200 rounded w-16 mb-4" />
-      <div className="h-8 bg-gray-200 rounded w-72 mb-2" />
-      <div className="h-4 bg-gray-200 rounded w-48 mb-8" />
-      <div className="h-24 bg-gray-200 rounded-2xl mb-6" />
+      <div className="h-4 bg-[var(--border-default)] rounded w-16 mb-4" />
+      <div className="h-8 bg-[var(--border-default)] rounded w-72 mb-2" />
+      <div className="h-4 bg-[var(--border-default)] rounded w-48 mb-8" />
+      <div className="h-24 bg-[var(--border-default)] rounded-2xl mb-6" />
       <div className="grid md:grid-cols-3 gap-6 mb-8">
-        {[1, 2, 3].map((i) => <div key={i} className="h-28 bg-gray-200 rounded-2xl" />)}
+        {[1, 2, 3].map((i) => <div key={i} className="h-28 bg-[var(--border-default)] rounded-2xl" />)}
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-        {[1, 2, 3, 4, 5, 6].map((i) => <div key={i} className="h-36 bg-gray-200 rounded-xl" />)}
+        {[1, 2, 3, 4, 5, 6].map((i) => <div key={i} className="h-36 bg-[var(--border-default)] rounded-xl" />)}
       </div>
     </div>
   );
@@ -140,13 +140,13 @@ export default function StationDetailPage() {
       <>
         <Navbar />
         <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-            <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="w-16 h-16 glass rounded-full flex items-center justify-center mb-4">
+            <svg className="w-8 h-8 text-theme-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-1">Station not found</h2>
-          <p className="text-gray-500 mb-4">This station may have been removed or doesn&apos;t exist.</p>
+          <h2 className="text-xl font-bold text-theme-primary mb-1">Station not found</h2>
+          <p className="text-theme-secondary mb-4">This station may have been removed or doesn&apos;t exist.</p>
           <button onClick={() => router.push('/map')} className="btn-primary">
             Browse stations
           </button>
@@ -164,7 +164,7 @@ export default function StationDetailPage() {
       <div className="max-w-5xl mx-auto px-4 py-6 sm:py-8 animate-in">
         {/* Header */}
         <div className="mb-6">
-          <button onClick={() => router.back()} className="btn-ghost text-sm py-1 px-2 -ml-2 mb-2 flex items-center gap-1 text-gray-500">
+          <button onClick={() => router.back()} className="btn-ghost text-sm py-1 px-2 -ml-2 mb-2 flex items-center gap-1 text-theme-secondary">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -172,8 +172,8 @@ export default function StationDetailPage() {
           </button>
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{station.name}</h1>
-              <p className="text-gray-500 mt-1 flex items-center gap-1.5">
+              <h1 className="text-2xl sm:text-3xl font-bold text-theme-primary">{station.name}</h1>
+              <p className="text-theme-secondary mt-1 flex items-center gap-1.5">
                 <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 </svg>
@@ -182,7 +182,7 @@ export default function StationDetailPage() {
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
               {station.rating > 0 && (
-                <div className="flex items-center gap-1 bg-yellow-50 px-2.5 py-1 rounded-lg">
+                <div className="flex items-center gap-1 bg-yellow-500/10 px-2.5 py-1 rounded-lg">
                   <svg className="w-4 h-4 text-yellow-500 fill-current" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
@@ -204,48 +204,48 @@ export default function StationDetailPage() {
         {/* Quick Info Cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 mb-8">
           <div className="card py-4 px-5">
-            <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">Hours</p>
+            <p className="text-xs text-theme-secondary uppercase tracking-wide font-medium">Hours</p>
             {station.operating_hours?.type === 'SCHEDULED' && station.operating_hours.schedule ? (
               <>
                 <p className="text-sm font-semibold mt-1 text-green-600">Scheduled</p>
-                <div className="text-xs text-gray-500 mt-0.5 space-y-0.5">
+                <div className="text-xs text-theme-secondary mt-0.5 space-y-0.5">
                   {Object.entries(station.operating_hours.schedule).slice(0, 3).map(([day, times]: [string, any]) => (
                     <p key={day}><span className="uppercase font-medium">{day}</span> {times.open}–{times.close}</p>
                   ))}
                   {Object.keys(station.operating_hours.schedule).length > 3 && (
-                    <p className="text-gray-400">+{Object.keys(station.operating_hours.schedule).length - 3} more</p>
+                    <p className="text-theme-muted">+{Object.keys(station.operating_hours.schedule).length - 3} more</p>
                   )}
                 </div>
               </>
             ) : (
               <>
                 <p className="text-lg font-semibold mt-1 text-green-600">24/7</p>
-                <p className="text-xs text-gray-400">Always Open</p>
+                <p className="text-xs text-theme-muted">Always Open</p>
               </>
             )}
           </div>
           <div className="card py-4 px-5">
-            <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">Availability</p>
+            <p className="text-xs text-theme-secondary uppercase tracking-wide font-medium">Availability</p>
             <p className="text-lg font-semibold mt-1">
               <span className={available > 0 ? 'text-green-600' : 'text-red-500'}>{available}</span>
-              <span className="text-gray-400 font-normal"> / {total}</span>
+              <span className="text-theme-muted font-normal"> / {total}</span>
             </p>
-            <p className="text-xs text-gray-400">{available > 0 ? 'Slots open' : 'All occupied'}</p>
+            <p className="text-xs text-theme-muted">{available > 0 ? 'Slots open' : 'All occupied'}</p>
           </div>
           <div className="card py-4 px-5 col-span-2 md:col-span-1">
-            <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">Amenities</p>
+            <p className="text-xs text-theme-secondary uppercase tracking-wide font-medium">Amenities</p>
             <div className="flex flex-wrap gap-1.5 mt-2">
               {station.amenities?.length ? station.amenities.map((a) => (
                 <span key={a} className="badge-gray capitalize">{a}</span>
               )) : (
-                <span className="text-xs text-gray-400">None listed</span>
+                <span className="text-xs text-theme-muted">None listed</span>
               )}
             </div>
           </div>
         </div>
 
         {station.description && (
-          <p className="text-gray-600 mb-8 leading-relaxed">{station.description}</p>
+          <p className="text-theme-secondary mb-8 leading-relaxed">{station.description}</p>
         )}
 
         {/* Smart Slot Allocation */}
@@ -271,7 +271,7 @@ export default function StationDetailPage() {
               }}
             />
           ) : (
-            <div className="card text-center py-8 text-gray-500">
+            <div className="card text-center py-8 text-theme-secondary">
               No slots configured yet.
             </div>
           )}
@@ -281,7 +281,7 @@ export default function StationDetailPage() {
         <div className="mb-8">
           <button
             onClick={() => setShowAdvanced(!showAdvanced)}
-            className="flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors mb-4"
+            className="flex items-center gap-2 text-sm font-medium text-theme-secondary hover:text-theme-secondary transition-colors mb-4"
           >
             <svg className={`w-4 h-4 transition-transform ${showAdvanced ? 'rotate-90' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -316,20 +316,20 @@ export default function StationDetailPage() {
           {selectedSlot && (
             <div className="space-y-5">
               {/* Slot summary */}
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+              <div className="flex items-center gap-3 p-3 bg-theme-secondary rounded-xl">
                 <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
                   <span className="text-lg font-bold text-primary-700">#{selectedSlot.slot_number}</span>
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">
+                  <p className="font-medium text-theme-primary">
                     {selectedSlot.charging_type.replace('_', ' ')} &middot; {selectedSlot.power_output_kw} kW
                   </p>
-                  <p className="text-sm text-gray-500">{selectedSlot.connector_type.toUpperCase()} connector</p>
+                  <p className="text-sm text-theme-secondary">{selectedSlot.connector_type.toUpperCase()} connector</p>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Start Time</label>
+                <label className="block text-sm font-medium text-theme-secondary mb-1.5">Start Time</label>
                 <input
                   type="datetime-local"
                   className="input"
@@ -338,7 +338,7 @@ export default function StationDetailPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">End Time</label>
+                <label className="block text-sm font-medium text-theme-secondary mb-1.5">End Time</label>
                 <input
                   type="datetime-local"
                   className="input"

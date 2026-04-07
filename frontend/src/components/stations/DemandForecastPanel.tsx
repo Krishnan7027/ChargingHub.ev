@@ -37,9 +37,9 @@ export default function DemandForecastPanel({ stationId }: { stationId: string }
 
       <div className="space-y-1.5">
         {visibleHours.map((h) => (
-          <div key={h.hour} className={`flex items-center gap-3 text-sm py-1 px-2 rounded ${h.hour === currentHour ? 'bg-gray-50 ring-1 ring-primary-200' : ''}`}>
-            <span className="w-16 text-gray-500 text-xs font-mono">{h.timeRange}</span>
-            <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
+          <div key={h.hour} className={`flex items-center gap-3 text-sm py-1 px-2 rounded ${h.hour === currentHour ? 'bg-theme-secondary ring-1 ring-primary-200' : ''}`}>
+            <span className="w-16 text-theme-secondary text-xs font-mono">{h.timeRange}</span>
+            <div className="flex-1 h-4 glass rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all ${barColors[h.demandLevel]}`}
                 style={{ width: `${Math.max(h.avgOccupancyRate, 5)}%` }}
@@ -56,7 +56,7 @@ export default function DemandForecastPanel({ stationId }: { stationId: string }
       </div>
 
       {today.peakHour !== null && (
-        <p className="text-xs text-gray-500 mt-3">
+        <p className="text-xs text-theme-secondary mt-3">
           Peak hour: {String(today.peakHour).padStart(2, '0')}:00
         </p>
       )}

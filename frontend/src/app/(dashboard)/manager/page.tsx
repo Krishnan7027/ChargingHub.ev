@@ -87,7 +87,7 @@ export default function ManagerDashboard() {
       <Navbar />
       <div className="max-w-5xl mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Station Manager Dashboard</h1>
+          <h1 className="text-2xl font-bold text-theme-primary">Station Manager Dashboard</h1>
           <button onClick={() => setShowAddForm(!showAddForm)} className="btn-primary">
             {showAddForm ? 'Cancel' : '+ Add Station'}
           </button>
@@ -96,38 +96,38 @@ export default function ManagerDashboard() {
         {/* Add Station Form */}
         {showAddForm && (
           <div className="card mb-6">
-            <h2 className="text-lg font-semibold mb-4">Register New Station</h2>
+            <h2 className="text-lg font-semibold text-theme-primary mb-4">Register New Station</h2>
             <form onSubmit={handleAddStation} className="grid md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Station Name</label>
+                <label className="block text-sm font-medium text-theme-secondary mb-1">Station Name</label>
                 <input className="input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <label className="block text-sm font-medium text-theme-secondary mb-1">Description</label>
                 <textarea className="input" rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
               </div>
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                <label className="block text-sm font-medium text-theme-secondary mb-1">Address</label>
                 <input className="input" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} required />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
+                <label className="block text-sm font-medium text-theme-secondary mb-1">City</label>
                 <input className="input" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} required />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">State</label>
+                <label className="block text-sm font-medium text-theme-secondary mb-1">State</label>
                 <input className="input" value={form.state} onChange={(e) => setForm({ ...form, state: e.target.value })} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
+                <label className="block text-sm font-medium text-theme-secondary mb-1">Latitude</label>
                 <input type="number" step="any" className="input" value={form.latitude} onChange={(e) => setForm({ ...form, latitude: e.target.value })} required />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
+                <label className="block text-sm font-medium text-theme-secondary mb-1">Longitude</label>
                 <input type="number" step="any" className="input" value={form.longitude} onChange={(e) => setForm({ ...form, longitude: e.target.value })} required />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Price per kWh ($)</label>
+                <label className="block text-sm font-medium text-theme-secondary mb-1">Price per kWh ($)</label>
                 <input type="number" step="0.01" className="input" value={form.pricingPerKwh} onChange={(e) => setForm({ ...form, pricingPerKwh: e.target.value })} />
               </div>
               <div className="md:col-span-2">
@@ -145,7 +145,7 @@ export default function ManagerDashboard() {
         {/* My Stations */}
         {isLoading ? (
           <div className="animate-pulse space-y-3">
-            {[1, 2].map((i) => <div key={i} className="card h-32 bg-gray-100" />)}
+            {[1, 2].map((i) => <div key={i} className="card h-32 bg-[var(--bg-tertiary)]" />)}
           </div>
         ) : !stations || stations.length === 0 ? (
           <EmptyState title="No stations registered yet" description="Add your first station using the button above." />
@@ -155,9 +155,9 @@ export default function ManagerDashboard() {
               <div key={station.id} className="card">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="font-semibold text-lg">{station.name}</h3>
-                    <p className="text-sm text-gray-500">{station.address}, {station.city}</p>
-                    <div className="flex gap-3 mt-2 text-sm text-gray-600">
+                    <h3 className="font-semibold text-lg text-theme-primary">{station.name}</h3>
+                    <p className="text-sm text-theme-secondary">{station.address}, {station.city}</p>
+                    <div className="flex gap-3 mt-2 text-sm text-theme-secondary">
                       <span>{station.total_slots || 0} slots</span>
                       <span>{station.available_slots || 0} available</span>
                       {station.pricing_per_kwh && <span>{formatPricePerKwh(station.pricing_per_kwh, country)}</span>}
@@ -184,11 +184,11 @@ export default function ManagerDashboard() {
         <Modal open={!!addSlotModal} onClose={() => setAddSlotModal(null)} title="Add Charging Slot">
           <form onSubmit={handleAddSlot} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Slot Number</label>
+              <label className="block text-sm font-medium text-theme-secondary mb-1">Slot Number</label>
               <input type="number" className="input" value={slotForm.slotNumber} onChange={(e) => setSlotForm({ ...slotForm, slotNumber: e.target.value })} required />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Charging Type</label>
+              <label className="block text-sm font-medium text-theme-secondary mb-1">Charging Type</label>
               <select className="input" value={slotForm.chargingType} onChange={(e) => setSlotForm({ ...slotForm, chargingType: e.target.value })}>
                 <option value="level1">Level 1</option>
                 <option value="level2">Level 2</option>
@@ -196,7 +196,7 @@ export default function ManagerDashboard() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Connector Type</label>
+              <label className="block text-sm font-medium text-theme-secondary mb-1">Connector Type</label>
               <select className="input" value={slotForm.connectorType} onChange={(e) => setSlotForm({ ...slotForm, connectorType: e.target.value })}>
                 <option value="type1">Type 1</option>
                 <option value="type2">Type 2</option>
@@ -206,7 +206,7 @@ export default function ManagerDashboard() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Power Output (kW)</label>
+              <label className="block text-sm font-medium text-theme-secondary mb-1">Power Output (kW)</label>
               <input type="number" step="0.1" className="input" value={slotForm.powerOutputKw} onChange={(e) => setSlotForm({ ...slotForm, powerOutputKw: e.target.value })} required />
             </div>
             <button type="submit" className="btn-primary w-full" disabled={addSlot.isPending}>

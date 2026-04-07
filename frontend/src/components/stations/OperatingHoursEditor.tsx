@@ -71,7 +71,7 @@ export default function OperatingHoursEditor({ value, onChange }: Props) {
     <div className="space-y-4">
       {/* Type selector */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1.5">Operating Hours</label>
+        <label className="block text-sm font-medium text-theme-secondary mb-1.5">Operating Hours</label>
         <select
           className="input"
           value={value.type}
@@ -83,10 +83,10 @@ export default function OperatingHoursEditor({ value, onChange }: Props) {
       </div>
 
       {isScheduled && (
-        <div className="bg-gray-50 rounded-xl p-4 space-y-4 border border-gray-200">
+        <div className="bg-theme-secondary rounded-xl p-4 space-y-4 border border-glass">
           {/* Day selector */}
           <div>
-            <p className="text-sm font-medium text-gray-700 mb-2">Open days</p>
+            <p className="text-sm font-medium text-theme-secondary mb-2">Open days</p>
             <div className="flex flex-wrap gap-2">
               {DAYS.map((d) => {
                 const active = !!schedule[d.key];
@@ -98,7 +98,7 @@ export default function OperatingHoursEditor({ value, onChange }: Props) {
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                       active
                         ? 'bg-primary-600 text-white shadow-sm'
-                        : 'bg-white text-gray-500 border border-gray-300 hover:border-primary-400'
+                        : 'bg-white text-theme-secondary border border-gray-300 hover:border-primary-400'
                     }`}
                   >
                     {d.short}
@@ -119,7 +119,7 @@ export default function OperatingHoursEditor({ value, onChange }: Props) {
                     onChange={(e) => setApplyAll(e.target.checked)}
                     className="w-4 h-4 text-primary-600 rounded border-gray-300 focus:ring-primary-500"
                   />
-                  <span className="text-sm text-gray-600">Same hours for all days</span>
+                  <span className="text-sm text-theme-secondary">Same hours for all days</span>
                 </label>
               </div>
 
@@ -127,7 +127,7 @@ export default function OperatingHoursEditor({ value, onChange }: Props) {
                 /* Shared time picker */
                 <div className="flex items-end gap-3">
                   <div className="flex-1">
-                    <label className="block text-xs text-gray-500 mb-1">Open</label>
+                    <label className="block text-xs text-theme-secondary mb-1">Open</label>
                     <input
                       type="time"
                       className="input"
@@ -137,9 +137,9 @@ export default function OperatingHoursEditor({ value, onChange }: Props) {
                       }}
                     />
                   </div>
-                  <span className="pb-2.5 text-gray-400">—</span>
+                  <span className="pb-2.5 text-theme-muted">—</span>
                   <div className="flex-1">
-                    <label className="block text-xs text-gray-500 mb-1">Close</label>
+                    <label className="block text-xs text-theme-secondary mb-1">Close</label>
                     <input
                       type="time"
                       className="input"
@@ -162,14 +162,14 @@ export default function OperatingHoursEditor({ value, onChange }: Props) {
                 <div className="space-y-2">
                   {DAYS.filter((d) => schedule[d.key]).map((d) => (
                     <div key={d.key} className="flex items-center gap-3">
-                      <span className="w-10 text-sm font-medium text-gray-600">{d.short}</span>
+                      <span className="w-10 text-sm font-medium text-theme-secondary">{d.short}</span>
                       <input
                         type="time"
                         className="input flex-1"
                         value={schedule[d.key]?.open || '09:00'}
                         onChange={(e) => updateDayTime(d.key, 'open', e.target.value)}
                       />
-                      <span className="text-gray-400">—</span>
+                      <span className="text-theme-muted">—</span>
                       <input
                         type="time"
                         className="input flex-1"
@@ -182,7 +182,7 @@ export default function OperatingHoursEditor({ value, onChange }: Props) {
               )}
 
               {/* Summary */}
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-theme-muted">
                 {selectedDays.length} day{selectedDays.length !== 1 ? 's' : ''} selected
               </p>
             </>
