@@ -8,11 +8,11 @@ import { useAuth } from '@/context/AuthContext';
 import type { SlotRanking, SlotAllocationResponse } from '@/types';
 
 const scoreBarColors: Record<string, string> = {
-  availability: 'bg-green-500',
-  chargingSpeed: 'bg-blue-500',
-  gridLoad: 'bg-yellow-500',
+  availability: 'bg-green-500/100',
+  chargingSpeed: 'bg-blue-500/100',
+  gridLoad: 'bg-yellow-500/100',
   congestion: 'bg-orange-500',
-  reservationFit: 'bg-purple-500',
+  reservationFit: 'bg-purple-500/100',
   chargeTime: 'bg-indigo-500',
 };
 
@@ -37,10 +37,10 @@ function ScoreBreakdown({ scores }: { scores: SlotRanking['scores'] }) {
       {Object.entries(scores).map(([key, val]) => (
         <div key={key}>
           <div className="flex items-center justify-between mb-0.5">
-            <span className="text-[9px] text-gray-400">{scoreLabels[key] || key}</span>
-            <span className="text-[9px] text-gray-500">{(val * 100).toFixed(0)}</span>
+            <span className="text-[9px] text-theme-muted">{scoreLabels[key] || key}</span>
+            <span className="text-[9px] text-theme-secondary">{(val * 100).toFixed(0)}</span>
           </div>
-          <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-1 glass rounded-full overflow-hidden">
             <div
               className={`h-full rounded-full ${scoreBarColors[key] || 'bg-gray-400'}`}
               style={{ width: `${val * 100}%` }}
@@ -62,19 +62,19 @@ function RankingCard({ ranking, rank, isTop, onReserve }: {
 
   return (
     <div className={`border rounded-lg p-3 transition-all ${
-      isTop ? 'border-primary-400 bg-primary-50 ring-1 ring-primary-200' : 'border-gray-200 bg-white'
+      isTop ? 'border-primary-400 bg-primary-50 ring-1 ring-primary-200' : 'border-glass bg-white'
     }`}>
       <div className="flex items-start gap-3">
         {/* Rank badge */}
         <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-          rank === 1 ? 'bg-primary-600 text-white' : rank === 2 ? 'bg-gray-200 text-gray-600' : 'bg-gray-100 text-gray-400'
+          rank === 1 ? 'bg-primary-600 text-white' : rank === 2 ? 'bg-gray-200 text-theme-secondary' : 'glass text-theme-muted'
         }`}>
           {rank}
         </div>
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-semibold text-gray-900">Slot #{ranking.slotNumber}</span>
+            <span className="font-semibold text-theme-primary">Slot #{ranking.slotNumber}</span>
             <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
               ranking.status === 'available' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
             }`}>
@@ -87,19 +87,19 @@ function RankingCard({ ranking, rank, isTop, onReserve }: {
             )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-gray-500">
+          <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-theme-secondary">
             <span>{typeLabels[ranking.chargingType] || ranking.chargingType}</span>
             <span>&middot;</span>
             <span>{ranking.connectorType.toUpperCase()}</span>
             <span>&middot;</span>
-            <span className="font-medium text-gray-700">{ranking.powerOutputKw} kW</span>
+            <span className="font-medium text-theme-secondary">{ranking.powerOutputKw} kW</span>
             <span>&middot;</span>
             <span>~{ranking.estimatedChargeMinutes} min charge</span>
           </div>
 
           {/* Expandable score breakdown */}
           {expanded && (
-            <div className="mt-2 pt-2 border-t border-gray-100">
+            <div className="mt-2 pt-2 border-t border-glass">
               <ScoreBreakdown scores={ranking.scores} />
             </div>
           )}
@@ -107,7 +107,7 @@ function RankingCard({ ranking, rank, isTop, onReserve }: {
 
         <div className="flex flex-col items-end gap-1 flex-shrink-0">
           <div className="text-lg font-bold text-primary-600">{Math.round(ranking.totalScore * 100)}</div>
-          <p className="text-[9px] text-gray-400">score</p>
+          <p className="text-[9px] text-theme-muted">score</p>
           <button
             onClick={() => setExpanded(!expanded)}
             className="text-[10px] text-primary-500 hover:text-primary-700"
@@ -176,14 +176,14 @@ export default function SmartSlotAllocation({ stationId, onSlotSelected }: Smart
         <svg className="w-5 h-5 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
         </svg>
-        <h3 className="font-semibold text-gray-900">Smart Slot Assignment</h3>
+        <h3 className="font-semibold text-theme-primary">Smart Slot Assignment</h3>
         <span className="ml-auto text-[10px] bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full font-medium">AI</span>
       </div>
 
       {/* Input form */}
       <div className="grid grid-cols-3 gap-3 mb-4">
         <div>
-          <label className="block text-[11px] text-gray-500 mb-1">Battery %</label>
+          <label className="block text-[11px] text-theme-secondary mb-1">Battery %</label>
           <input
             type="number"
             min={0} max={100}
@@ -193,7 +193,7 @@ export default function SmartSlotAllocation({ stationId, onSlotSelected }: Smart
           />
         </div>
         <div>
-          <label className="block text-[11px] text-gray-500 mb-1">Target %</label>
+          <label className="block text-[11px] text-theme-secondary mb-1">Target %</label>
           <input
             type="number"
             min={1} max={100}
@@ -203,7 +203,7 @@ export default function SmartSlotAllocation({ stationId, onSlotSelected }: Smart
           />
         </div>
         <div>
-          <label className="block text-[11px] text-gray-500 mb-1">Battery kWh</label>
+          <label className="block text-[11px] text-theme-secondary mb-1">Battery kWh</label>
           <input
             type="number"
             min={10} max={200}
@@ -221,7 +221,7 @@ export default function SmartSlotAllocation({ stationId, onSlotSelected }: Smart
       ) : isLoading ? (
         <div className="flex items-center justify-center py-8">
           <div className="animate-spin w-6 h-6 border-3 border-primary-600 border-t-transparent rounded-full" />
-          <span className="ml-2 text-sm text-gray-500">Analyzing slots...</span>
+          <span className="ml-2 text-sm text-theme-secondary">Analyzing slots...</span>
         </div>
       ) : data ? (
         <div>
@@ -236,27 +236,27 @@ export default function SmartSlotAllocation({ stationId, onSlotSelected }: Smart
               </div>
               <div className="grid grid-cols-3 gap-3 text-center mb-2">
                 <div>
-                  <p className="text-xs text-gray-500">Recommended</p>
-                  <p className="text-lg font-bold text-gray-900">Slot #{data.recommendation.slotNumber}</p>
+                  <p className="text-xs text-theme-secondary">Recommended</p>
+                  <p className="text-lg font-bold text-theme-primary">Slot #{data.recommendation.slotNumber}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">Start Time</p>
+                  <p className="text-xs text-theme-secondary">Start Time</p>
                   <p className="text-lg font-bold text-green-600">
                     {data.recommendation.chargingStartTime === 'immediate' ? 'Now' : `~${data.recommendation.availableIn}m`}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">Full Charge</p>
+                  <p className="text-xs text-theme-secondary">Full Charge</p>
                   <p className="text-lg font-bold text-blue-600">{data.recommendation.estimatedChargeMinutes} min</p>
                 </div>
               </div>
-              <p className="text-xs text-gray-600">{data.recommendation.reason}</p>
+              <p className="text-xs text-theme-secondary">{data.recommendation.reason}</p>
             </div>
           )}
 
           {/* Context factors */}
           <div className="flex flex-wrap gap-2 mb-3">
-            <span className="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+            <span className="text-[10px] glass text-theme-secondary px-2 py-0.5 rounded-full">
               {data.factors.availableSlots}/{data.factors.totalSlots} available
             </span>
             <span className={`text-[10px] px-2 py-0.5 rounded-full ${
@@ -275,7 +275,7 @@ export default function SmartSlotAllocation({ stationId, onSlotSelected }: Smart
 
           {/* Queue info */}
           {data.queue && (
-            <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div className="mb-4 p-3 bg-yellow-500/10 border border-yellow-200 rounded-lg">
               <p className="text-sm font-medium text-yellow-800 mb-1">All slots occupied</p>
               <p className="text-xs text-yellow-700">{data.queue.message}</p>
               {user && (
@@ -293,7 +293,7 @@ export default function SmartSlotAllocation({ stationId, onSlotSelected }: Smart
           {/* Slot rankings */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <p className="text-xs text-gray-500 font-medium">All Slots Ranked</p>
+              <p className="text-xs text-theme-secondary font-medium">All Slots Ranked</p>
               <button onClick={() => refetch()} className="text-[10px] text-primary-500 hover:text-primary-700">
                 Refresh
               </button>
@@ -310,7 +310,7 @@ export default function SmartSlotAllocation({ stationId, onSlotSelected }: Smart
           </div>
         </div>
       ) : (
-        <p className="text-sm text-gray-400 text-center py-4">Enter your battery details and click Find Best Slot</p>
+        <p className="text-sm text-theme-muted text-center py-4">Enter your battery details and click Find Best Slot</p>
       )}
     </div>
   );

@@ -9,9 +9,9 @@ export default function SmartPredictionPanel({ stationId }: { stationId: string 
 
   if (data.available) {
     return (
-      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+      <div className="bg-green-500/10 border border-green-200 rounded-lg p-4">
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+          <div className="w-3 h-3 bg-green-500/100 rounded-full animate-pulse" />
           <span className="font-medium text-green-800">{data.message}</span>
         </div>
         {data.slots && (
@@ -46,10 +46,10 @@ export default function SmartPredictionPanel({ stationId }: { stationId: string 
       {data.predictions.length > 0 && (
         <div className="space-y-2">
           {data.predictions.slice(0, 5).map((p, i) => (
-            <div key={i} className="flex items-center justify-between text-sm py-2 border-b border-gray-100 last:border-0">
+            <div key={i} className="flex items-center justify-between text-sm py-2 border-b border-glass last:border-0">
               <div>
                 <span className="font-medium">Slot #{p.slotNumber}</span>
-                <span className="text-gray-500 ml-2">~{p.predictedMinutes} min</span>
+                <span className="text-theme-secondary ml-2">~{p.predictedMinutes} min</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-16 bg-gray-200 rounded-full h-2">
@@ -58,7 +58,7 @@ export default function SmartPredictionPanel({ stationId }: { stationId: string 
                     style={{ width: `${p.confidence * 100}%` }}
                   />
                 </div>
-                <span className="text-xs text-gray-500">{Math.round(p.confidence * 100)}%</span>
+                <span className="text-xs text-theme-secondary">{Math.round(p.confidence * 100)}%</span>
               </div>
             </div>
           ))}

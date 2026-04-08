@@ -6,7 +6,7 @@ const levelColors: Record<string, string> = {
   low: 'bg-green-400',
   medium: 'bg-yellow-400',
   high: 'bg-orange-400',
-  critical: 'bg-red-500',
+  critical: 'bg-red-500/100',
 };
 
 const levelBadge: Record<string, string> = {
@@ -25,23 +25,23 @@ export default function CongestionPredictionPanel({ stationId }: { stationId: st
         <svg className="w-5 h-5 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
         </svg>
-        <h3 className="font-semibold text-gray-900">Congestion Forecast</h3>
+        <h3 className="font-semibold text-theme-primary">Congestion Forecast</h3>
       </div>
 
       {isLoading ? (
-        <div className="h-24 bg-gray-100 rounded-lg animate-pulse" />
+        <div className="h-24 glass rounded-lg animate-pulse" />
       ) : !data?.predictions?.length ? (
-        <p className="text-sm text-gray-400 text-center py-4">No congestion data available</p>
+        <p className="text-sm text-theme-muted text-center py-4">No congestion data available</p>
       ) : (
         <>
           {/* Current status */}
           {data.currentOccupancy && (
-            <div className="flex items-center justify-between mb-3 p-2 bg-gray-50 rounded-lg">
+            <div className="flex items-center justify-between mb-3 p-2 bg-theme-secondary rounded-lg">
               <div>
-                <p className="text-xs text-gray-500">Current Occupancy</p>
-                <p className="text-lg font-bold text-gray-800">{data.currentOccupancy.percentage.toFixed(0)}%</p>
+                <p className="text-xs text-theme-secondary">Current Occupancy</p>
+                <p className="text-lg font-bold text-theme-primary">{data.currentOccupancy.percentage.toFixed(0)}%</p>
               </div>
-              <span className={`text-xs px-2 py-1 rounded-full font-medium ${levelBadge[data.currentOccupancy.level] || 'bg-gray-100 text-gray-600'}`}>
+              <span className={`text-xs px-2 py-1 rounded-full font-medium ${levelBadge[data.currentOccupancy.level] || 'glass text-theme-secondary'}`}>
                 {data.currentOccupancy.level}
               </span>
             </div>
@@ -49,7 +49,7 @@ export default function CongestionPredictionPanel({ stationId }: { stationId: st
 
           {/* Best time */}
           {data.bestTimeToVisit && (
-            <div className="mb-3 p-2 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="mb-3 p-2 bg-blue-500/10 border border-blue-200 rounded-lg">
               <p className="text-xs text-blue-600 font-medium">Best time to visit</p>
               <p className="text-sm font-semibold text-blue-800">
                 {String(data.bestTimeToVisit.hour).padStart(2, '0')}:00
@@ -61,7 +61,7 @@ export default function CongestionPredictionPanel({ stationId }: { stationId: st
           )}
 
           {/* Hourly heatmap (next 12 hours) */}
-          <p className="text-xs text-gray-500 mb-1">Next 12 Hours</p>
+          <p className="text-xs text-theme-secondary mb-1">Next 12 Hours</p>
           <div className="grid grid-cols-12 gap-0.5">
             {data.predictions.slice(0, 12).map((p, i) => (
               <div key={i} className="text-center">
@@ -69,7 +69,7 @@ export default function CongestionPredictionPanel({ stationId }: { stationId: st
                   className={`h-6 rounded-sm ${levelColors[p.congestionLevel] || 'bg-gray-200'}`}
                   title={`${String(p.hour).padStart(2, '0')}:00 — ${p.congestionLevel} (${p.predictedOccupancyPct.toFixed(0)}%)`}
                 />
-                <p className="text-[8px] text-gray-400 mt-0.5">{p.hour}</p>
+                <p className="text-[8px] text-theme-muted mt-0.5">{p.hour}</p>
               </div>
             ))}
           </div>
@@ -79,7 +79,7 @@ export default function CongestionPredictionPanel({ stationId }: { stationId: st
             {['low', 'medium', 'high', 'critical'].map((level) => (
               <div key={level} className="flex items-center gap-1">
                 <div className={`w-2 h-2 rounded-full ${levelColors[level]}`} />
-                <span className="text-[9px] text-gray-400 capitalize">{level}</span>
+                <span className="text-[9px] text-theme-muted capitalize">{level}</span>
               </div>
             ))}
           </div>

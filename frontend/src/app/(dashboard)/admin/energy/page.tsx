@@ -8,7 +8,7 @@ import { usePlatformCarbon, usePlatformOptimization } from '@/hooks/useIntellige
 function StatCard({ label, value, unit, color }: { label: string; value: string | number; unit?: string; color: string }) {
   return (
     <div className="card">
-      <p className="text-xs text-gray-500">{label}</p>
+      <p className="text-xs text-theme-secondary">{label}</p>
       <p className={`text-2xl font-bold mt-1 ${color}`}>
         {value}{unit && <span className="text-sm font-normal ml-1">{unit}</span>}
       </p>
@@ -35,7 +35,7 @@ export default function EnergyDashboardPage() {
 
         {isLoading ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map((i) => <div key={i} className="card h-24 animate-pulse bg-gray-100" />)}
+            {[1, 2, 3, 4].map((i) => <div key={i} className="card h-24 animate-pulse glass" />)}
           </div>
         ) : (
           <>
@@ -54,7 +54,7 @@ export default function EnergyDashboardPage() {
                 <StatCard label="Gas Miles Offset" value={carbon.totals.milesOffset.toFixed(0)} unit="mi" color="text-purple-600" />
               </div>
             ) : (
-              <div className="card text-center py-6 text-gray-400 text-sm mb-8">No carbon data yet</div>
+              <div className="card text-center py-6 text-theme-muted text-sm mb-8">No carbon data yet</div>
             )}
 
             {/* Grid Status Overview */}
@@ -74,15 +74,15 @@ export default function EnergyDashboardPage() {
                         g.grid_status === 'warning' ? 'bg-yellow-500' :
                         g.grid_status === 'critical' ? 'bg-orange-500' : 'bg-red-500'
                       }`} />
-                      <span className="text-xs text-gray-500 capitalize">{g.grid_status}</span>
+                      <span className="text-xs text-theme-secondary capitalize">{g.grid_status}</span>
                     </div>
                     <p className="text-2xl font-bold text-gray-800">{g.count}</p>
-                    <p className="text-[10px] text-gray-400">stations &middot; avg {g.avg_load_pct}% load</p>
+                    <p className="text-[10px] text-theme-muted">stations &middot; avg {g.avg_load_pct}% load</p>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="card text-center py-6 text-gray-400 text-sm mb-8">No grid data yet</div>
+              <div className="card text-center py-6 text-theme-muted text-sm mb-8">No grid data yet</div>
             )}
 
             {/* Optimization Recommendations */}
@@ -99,7 +99,7 @@ export default function EnergyDashboardPage() {
                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
                       rec.priority === 'critical' ? 'bg-red-100 text-red-600' :
                       rec.priority === 'high' ? 'bg-orange-100 text-orange-600' :
-                      rec.priority === 'medium' ? 'bg-yellow-100 text-yellow-600' : 'bg-gray-100 text-gray-500'
+                      rec.priority === 'medium' ? 'bg-yellow-100 text-yellow-600' : 'glass text-theme-secondary'
                     }`}>
                       <span className="text-sm font-bold">{rec.count}</span>
                     </div>
@@ -107,7 +107,7 @@ export default function EnergyDashboardPage() {
                       <p className="text-sm font-medium text-gray-800 capitalize">
                         {rec.recommendation_type.replace(/_/g, ' ')}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-theme-secondary">
                         Priority: {rec.priority} &middot;
                         {Number(rec.total_savings_kwh) > 0 && ` ${Number(rec.total_savings_kwh).toFixed(0)} kWh savings &middot;`}
                         {Number(rec.total_cost_savings) > 0 && ` $${Number(rec.total_cost_savings).toFixed(2)} cost savings`}
@@ -117,7 +117,7 @@ export default function EnergyDashboardPage() {
                 ))}
               </div>
             ) : (
-              <div className="card text-center py-6 text-gray-400 text-sm">No active recommendations</div>
+              <div className="card text-center py-6 text-theme-muted text-sm">No active recommendations</div>
             )}
           </>
         )}

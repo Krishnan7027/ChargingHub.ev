@@ -1,3 +1,5 @@
+@import './theme-vars.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,13 +11,16 @@
   }
 
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    @apply antialiased;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
   /* Better focus-visible for keyboard navigation */
   *:focus-visible {
-    @apply outline-none ring-2 ring-primary-500 ring-offset-2;
+    @apply outline-none ring-2 ring-offset-2;
+    ring-color: var(--focus-ring);
   }
 
   /* Remove tap delay on mobile */
@@ -27,55 +32,160 @@
   ::selection {
     @apply bg-primary-200 text-primary-900;
   }
+  .dark ::selection {
+    @apply bg-primary-800 text-primary-100;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 3px;
+  }
 }
 
 @layer components {
+  /* ═══════════════════════════════════════════════════════
+     Glass Effects — Liquid Glass System
+     ═══════════════════════════════════════════════════════ */
+
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+
+  .glass-heavy {
+    background: var(--glass-bg-heavy);
+    backdrop-filter: blur(var(--glass-blur-heavy));
+    -webkit-backdrop-filter: blur(var(--glass-blur-heavy));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow-heavy);
+  }
+
+  .glass-light {
+    background: var(--glass-bg-light);
+    backdrop-filter: blur(var(--glass-blur-light));
+    -webkit-backdrop-filter: blur(var(--glass-blur-light));
+    border: 1px solid var(--glass-border-subtle);
+    box-shadow: var(--glass-shadow);
+  }
+
+  /* Refraction border — simulates light hitting glass edge */
+  .glass-refraction {
+    position: relative;
+  }
+  .glass-refraction::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      var(--refraction-start),
+      var(--refraction-mid) 40%,
+      var(--refraction-end)
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
   /* ── Buttons ────────────────────────────────────────── */
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 active:bg-primary-800
+    @apply bg-primary-600 hover:bg-primary-500 active:bg-primary-700
            text-white font-medium py-2.5 px-5 rounded-xl
-           transition-all duration-150
-           shadow-sm hover:shadow-md
-           disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none;
+           transition-all duration-200
+           disabled:opacity-50 disabled:cursor-not-allowed;
+    box-shadow: 0 4px 14px rgba(38, 168, 102, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 6px 20px rgba(38, 168, 102, 0.35), 0 2px 6px rgba(0, 0, 0, 0.1);
   }
 
   .btn-secondary {
-    @apply bg-white hover:bg-gray-50 active:bg-gray-100
-           text-gray-700 font-medium py-2.5 px-5 rounded-xl
-           border border-gray-300 transition-all duration-150
-           shadow-sm hover:shadow-md;
+    background: var(--btn-secondary-bg);
+    border: 1px solid var(--btn-secondary-border);
+    color: var(--text-primary);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    @apply font-medium py-2.5 px-5 rounded-xl
+           transition-all duration-200;
+    box-shadow: var(--glass-shadow);
+  }
+  .btn-secondary:hover {
+    background: var(--card-hover-bg);
   }
 
   .btn-danger {
-    @apply bg-red-600 hover:bg-red-700 active:bg-red-800
+    @apply bg-red-600 hover:bg-red-500 active:bg-red-700
            text-white font-medium py-2.5 px-5 rounded-xl
-           transition-all duration-150 shadow-sm hover:shadow-md;
+           transition-all duration-200;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.25);
   }
 
   .btn-ghost {
-    @apply text-gray-600 hover:text-gray-900 hover:bg-gray-100
-           font-medium py-2.5 px-5 rounded-xl
-           transition-all duration-150;
+    color: var(--text-secondary);
+    @apply font-medium py-2.5 px-5 rounded-xl
+           transition-all duration-200;
+  }
+  .btn-ghost:hover {
+    background: var(--btn-ghost-hover);
+    color: var(--text-primary);
   }
 
   /* ── Inputs ─────────────────────────────────────────── */
   .input {
-    @apply w-full px-4 py-2.5 border border-gray-300 rounded-xl
-           bg-white text-gray-900 placeholder:text-gray-400
-           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent
-           transition-all duration-150;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-primary);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    @apply w-full px-4 py-2.5 rounded-xl
+           placeholder:text-gray-400
+           transition-all duration-200;
+  }
+  .input:focus {
+    outline: none;
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+  }
+  .dark .input::placeholder {
+    color: var(--text-muted);
   }
 
   /* ── Cards ──────────────────────────────────────────── */
   .card {
-    @apply bg-white rounded-2xl shadow-sm border border-gray-200/80 p-6
-           transition-shadow duration-200;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    box-shadow: var(--glass-shadow);
+    @apply rounded-2xl p-6 transition-all duration-200;
   }
 
   .card-interactive {
-    @apply card cursor-pointer
-           hover:shadow-md hover:border-gray-300
-           active:shadow-sm;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    box-shadow: var(--glass-shadow);
+    @apply rounded-2xl p-6 cursor-pointer transition-all duration-200;
+  }
+  .card-interactive:hover {
+    background: var(--card-hover-bg);
+    box-shadow: var(--glass-shadow-heavy);
+    transform: translateY(-1px);
   }
 
   /* ── Badges ─────────────────────────────────────────── */
@@ -84,28 +194,64 @@
   }
 
   .badge-green {
-    @apply badge bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20;
+    @apply badge;
+    background: var(--badge-green-bg);
+    color: var(--badge-green-text);
   }
 
   .badge-yellow {
-    @apply badge bg-yellow-50 text-yellow-700 ring-1 ring-inset ring-yellow-600/20;
+    @apply badge;
+    background: var(--badge-yellow-bg);
+    color: var(--badge-yellow-text);
   }
 
   .badge-red {
-    @apply badge bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20;
+    @apply badge;
+    background: var(--badge-red-bg);
+    color: var(--badge-red-text);
   }
 
   .badge-blue {
-    @apply badge bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20;
+    @apply badge;
+    background: var(--badge-blue-bg);
+    color: var(--badge-blue-text);
   }
 
   .badge-gray {
-    @apply badge bg-gray-50 text-gray-600 ring-1 ring-inset ring-gray-500/10;
+    @apply badge;
+    background: var(--badge-gray-bg);
+    color: var(--badge-gray-text);
   }
 
-  /* ── Glass effect ───────────────────────────────────── */
-  .glass {
-    @apply bg-white/80 backdrop-blur-lg;
+  /* ── Animated Mesh Background ───────────────────────── */
+  .bg-mesh {
+    position: relative;
+    overflow: hidden;
+  }
+  .bg-mesh::before {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    background:
+      radial-gradient(ellipse at 20% 50%, var(--mesh-color-1) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, var(--mesh-color-2) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, var(--mesh-color-3) 0%, transparent 50%);
+    animation: mesh-drift 20s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes mesh-drift {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(2%, -3%) rotate(1deg); }
+    50% { transform: translate(-1%, 2%) rotate(-1deg); }
+    75% { transform: translate(3%, 1%) rotate(0.5deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bg-mesh::before {
+      animation: none;
+    }
   }
 }
 
@@ -144,4 +290,13 @@
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
+
+  /* Theme-aware text utilities */
+  .text-theme-primary { color: var(--text-primary); }
+  .text-theme-secondary { color: var(--text-secondary); }
+  .text-theme-muted { color: var(--text-muted); }
+
+  /* Theme-aware background */
+  .bg-theme-primary { background-color: var(--bg-primary); }
+  .bg-theme-secondary { background-color: var(--bg-secondary); }
 }

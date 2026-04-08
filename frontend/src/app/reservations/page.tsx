@@ -35,7 +35,7 @@ export default function ReservationsPage() {
               key={s}
               onClick={() => setFilter(s)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-                filter === s ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                filter === s ? 'bg-primary-600 text-white' : 'glass text-theme-secondary hover:bg-primary-500/10'
               }`}
             >
               {s === 'all' ? 'All' : s.charAt(0).toUpperCase() + s.slice(1)}
@@ -45,7 +45,7 @@ export default function ReservationsPage() {
 
         {isLoading ? (
           <div className="space-y-3">
-            {[1, 2, 3].map((i) => <div key={i} className="card h-28 animate-pulse bg-gray-100" />)}
+            {[1, 2, 3].map((i) => <div key={i} className="card h-28 animate-pulse" />)}
           </div>
         ) : !reservations || reservations.length === 0 ? (
           <EmptyState title="No reservations found" description="Find a station on the map to make your first reservation." />
@@ -56,12 +56,12 @@ export default function ReservationsPage() {
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-semibold">{res.station_name}</h3>
-                    <p className="text-sm text-gray-500">{res.station_address}</p>
-                    <div className="flex gap-3 mt-2 text-sm text-gray-600">
+                    <p className="text-sm text-theme-muted">{res.station_address}</p>
+                    <div className="flex gap-3 mt-2 text-sm text-theme-secondary">
                       <span>Slot #{res.slot_number}</span>
                       <span>{res.charging_type?.replace('_', ' ')}</span>
                     </div>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-theme-muted mt-1">
                       {new Date(res.scheduled_start).toLocaleString()} - {new Date(res.scheduled_end).toLocaleString()}
                     </p>
                   </div>

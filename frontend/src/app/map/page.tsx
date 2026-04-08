@@ -61,7 +61,7 @@ export default function MapPage() {
         <button
           onClick={() => setShowRecommendations(false)}
           className={`text-sm font-medium px-3 py-1.5 rounded-full transition-colors ${
-            !showRecommendations ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            !showRecommendations ? 'bg-primary-600 text-white' : 'glass text-theme-secondary hover:text-theme-primary'
           }`}
         >
           Nearby
@@ -69,7 +69,7 @@ export default function MapPage() {
         <button
           onClick={() => setShowRecommendations(true)}
           className={`text-sm font-medium px-3 py-1.5 rounded-full transition-colors ${
-            showRecommendations ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            showRecommendations ? 'bg-primary-600 text-white' : 'glass text-theme-secondary hover:text-theme-primary'
           }`}
         >
           Smart Picks
@@ -80,11 +80,11 @@ export default function MapPage() {
       {recommendations?.topPick && !showRecommendations && (
         <button
           onClick={() => setShowRecommendations(true)}
-          className="w-full bg-primary-50 border border-primary-200 rounded-xl p-3 text-left hover:bg-primary-100 transition-colors"
+          className="w-full glass glass-refraction rounded-xl p-3 text-left hover:bg-primary-500/10 transition-colors"
         >
-          <p className="text-xs text-primary-600 font-medium mb-0.5">AI Recommended</p>
-          <p className="font-semibold text-sm">{recommendations.topPick.name}</p>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-primary-500 font-medium mb-0.5">AI Recommended</p>
+          <p className="font-semibold text-sm text-theme-primary">{recommendations.topPick.name}</p>
+          <p className="text-xs text-theme-muted">
             {recommendations.topPick.distanceKm} km &middot; {recommendations.topPick.speedLabel} &middot;{' '}
             {recommendations.topPick.estimatedWaitMin === 0 ? 'No wait' : `~${recommendations.topPick.estimatedWaitMin} min wait`}
           </p>
@@ -92,7 +92,7 @@ export default function MapPage() {
       )}
 
       {/* Count */}
-      <p className="text-xs text-gray-400">
+      <p className="text-xs text-theme-muted">
         {showRecommendations
           ? `${recommendations?.recommendations?.length ?? 0} recommendations`
           : `${stations.length} station${stations.length !== 1 ? 's' : ''} found`}
@@ -125,8 +125,8 @@ export default function MapPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* ── Page header + Search ──────────────────────────── */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Find Charging Stations</h1>
-          <p className="text-sm text-gray-500">Discover nearby EV charging stations</p>
+          <h1 className="text-2xl font-bold text-theme-primary mb-1">Find Charging Stations</h1>
+          <p className="text-sm text-theme-secondary">Discover nearby EV charging stations</p>
         </div>
 
         {/* Search bar */}
@@ -144,11 +144,11 @@ export default function MapPage() {
                 }}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               />
-              <svg className="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-5 h-5 text-theme-muted absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
               {searchQuery && (
-                <button onClick={clearSearch} className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600">
+                <button onClick={clearSearch} className="absolute right-3 top-2.5 text-theme-muted hover:text-theme-primary">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
@@ -161,13 +161,13 @@ export default function MapPage() {
 
         {/* ── Location banner (error / denied) ─────────────── */}
         {showGeoError && (
-          <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-xl p-4 flex items-start gap-3">
+          <div className="mb-6 glass rounded-xl p-4 flex items-start gap-3" style={{ background: 'var(--badge-yellow-bg)' }}>
             <svg className="w-5 h-5 text-yellow-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <div className="flex-1">
-              <p className="text-sm font-medium text-yellow-800">Location access denied</p>
-              <p className="text-xs text-yellow-600 mt-0.5">Showing default area (San Francisco). Allow location for better results.</p>
+              <p className="text-sm font-medium text-theme-primary">Location access denied</p>
+              <p className="text-xs text-theme-secondary mt-0.5">Showing default area (San Francisco). Allow location for better results.</p>
             </div>
             <button onClick={() => setUseFallback(true)} className="btn-primary text-sm py-1.5 px-3 whitespace-nowrap">
               Use Default
@@ -180,16 +180,16 @@ export default function MapPage() {
 
           {/* ── Map container ────────────────────────────────── */}
           <div className="lg:w-[65%] lg:flex-shrink-0">
-            <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200 relative">
+            <div className="glass-heavy rounded-2xl overflow-hidden relative">
               {showLocating ? (
-                <div className="flex items-center justify-center h-[280px] sm:h-[380px] lg:h-[520px] bg-gray-50">
+                <div className="flex items-center justify-center h-[280px] sm:h-[380px] lg:h-[520px]">
                   <div className="text-center">
-                    <svg className="w-10 h-10 mx-auto mb-3 text-primary-600 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-10 h-10 mx-auto mb-3 text-primary-500 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
-                    <p className="text-gray-600 font-medium text-sm">Detecting your location...</p>
-                    <p className="text-gray-400 text-xs mt-1">This may take a moment</p>
+                    <p className="text-theme-secondary font-medium text-sm">Detecting your location...</p>
+                    <p className="text-theme-muted text-xs mt-1">This may take a moment</p>
                   </div>
                 </div>
               ) : (
@@ -212,10 +212,10 @@ export default function MapPage() {
                       setUseFallback(true);
                     }
                   }}
-                  className="absolute bottom-4 right-4 z-[500] bg-white shadow-lg border border-gray-200 rounded-xl px-3 py-2 flex items-center gap-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                  className="absolute bottom-4 right-4 z-[500] glass-heavy rounded-xl px-3 py-2 flex items-center gap-2 text-sm font-medium text-theme-primary hover:scale-105 transition-all"
                   title={position ? 'Re-center on your location' : 'Use current location'}
                 >
-                  <svg className="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-4 h-4 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
@@ -226,7 +226,7 @@ export default function MapPage() {
 
             {/* Location status chip below map */}
             {showMap && (
-              <div className="mt-2 flex items-center gap-1.5 text-xs text-gray-400">
+              <div className="mt-2 flex items-center gap-1.5 text-xs text-theme-muted">
                 <span className={`w-1.5 h-1.5 rounded-full ${position ? 'bg-green-500' : 'bg-yellow-500'}`} />
                 {position ? 'Using your location' : `Using default location (${country.name})`}
               </div>
@@ -249,9 +249,9 @@ function LoadingSkeleton() {
     <div className="space-y-3">
       {[1, 2, 3].map((i) => (
         <div key={i} className="card animate-pulse">
-          <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
-          <div className="h-3 bg-gray-200 rounded w-1/2 mb-2" />
-          <div className="h-3 bg-gray-200 rounded w-1/3" />
+          <div className="h-4 rounded w-3/4 mb-2" style={{ background: 'var(--border-default)' }} />
+          <div className="h-3 rounded w-1/2 mb-2" style={{ background: 'var(--border-default)' }} />
+          <div className="h-3 rounded w-1/3" style={{ background: 'var(--border-default)' }} />
         </div>
       ))}
     </div>
@@ -260,8 +260,8 @@ function LoadingSkeleton() {
 
 function EmptyList({ message }: { message: string }) {
   return (
-    <div className="text-center py-10 text-gray-500">
-      <svg className="w-10 h-10 mx-auto mb-3 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div className="text-center py-10 text-theme-muted">
+      <svg className="w-10 h-10 mx-auto mb-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
       </svg>
       <p className="text-sm">{message}</p>

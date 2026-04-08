@@ -14,33 +14,33 @@ const sourceLabels: Record<string, string> = {
 function ConfidenceBar({ value }: { value: number }) {
   const pct = Math.round(value * 100);
   const color =
-    pct >= 80 ? 'bg-green-500' : pct >= 50 ? 'bg-yellow-500' : 'bg-gray-400';
+    pct >= 80 ? 'bg-green-500/100' : pct >= 50 ? 'bg-yellow-500/100' : 'bg-gray-400';
   return (
     <div className="flex items-center gap-1.5">
       <div className="w-14 bg-gray-200 rounded-full h-1.5">
         <div className={`${color} h-1.5 rounded-full`} style={{ width: `${pct}%` }} />
       </div>
-      <span className="text-xs text-gray-500 tabular-nums">{pct}%</span>
+      <span className="text-xs text-theme-secondary tabular-nums">{pct}%</span>
     </div>
   );
 }
 
 function PredictionRow({ p, isBest }: { p: SlotPredictionEntry; isBest: boolean }) {
   return (
-    <div className={`flex items-center justify-between py-2.5 ${isBest ? '' : 'border-t border-gray-100'}`}>
+    <div className={`flex items-center justify-between py-2.5 ${isBest ? '' : 'border-t border-glass'}`}>
       <div className="flex items-center gap-3">
-        <span className={`text-sm font-semibold tabular-nums ${isBest ? 'text-primary-700' : 'text-gray-900'}`}>
+        <span className={`text-sm font-semibold tabular-nums ${isBest ? 'text-primary-700' : 'text-theme-primary'}`}>
           #{p.slotNumber}
         </span>
         <div>
-          <span className="text-sm text-gray-700">
+          <span className="text-sm text-theme-secondary">
             ~{p.predictedMinutes} min
           </span>
-          <span className="text-xs text-gray-400 ml-1.5">
+          <span className="text-xs text-theme-muted ml-1.5">
             {sourceLabels[p.source] || p.source}
           </span>
           {p.details.currentPct !== undefined && (
-            <span className="text-xs text-gray-400 ml-1">
+            <span className="text-xs text-theme-muted ml-1">
               ({p.details.currentPct}% → {p.details.targetPct}%)
             </span>
           )}
@@ -70,7 +70,7 @@ export default function PredictionBanner({ stationId }: { stationId: string }) {
   // ── Slots available: green banner ─────────────────────
   if (data.available) {
     return (
-      <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+      <div className="bg-green-500/10 border border-green-200 rounded-xl p-4">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
             <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -101,14 +101,14 @@ export default function PredictionBanner({ stationId }: { stationId: string }) {
   return (
     <div className="card">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-semibold flex items-center gap-2 text-gray-900">
+        <h3 className="font-semibold flex items-center gap-2 text-theme-primary">
           <svg className="w-5 h-5 text-accent-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           Slot Availability Prediction
         </h3>
         {best && (
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-theme-muted">
             Updates every 30s
           </span>
         )}
@@ -135,7 +135,7 @@ export default function PredictionBanner({ stationId }: { stationId: string }) {
       {/* Per-slot breakdown */}
       {predictions.length > 0 && (
         <div>
-          <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1">All slots</p>
+          <p className="text-xs text-theme-secondary uppercase tracking-wide font-medium mb-1">All slots</p>
           {predictions.slice(0, 6).map((p, i) => (
             <PredictionRow key={p.slotId} p={p} isBest={i === 0} />
           ))}
@@ -143,7 +143,7 @@ export default function PredictionBanner({ stationId }: { stationId: string }) {
       )}
 
       {predictions.length === 0 && !best && (
-        <p className="text-sm text-gray-500 py-2">{data.message}</p>
+        <p className="text-sm text-theme-secondary py-2">{data.message}</p>
       )}
     </div>
   );

@@ -10,7 +10,7 @@ import type { CityEvTrend } from '@/types';
 
 function GrowthBadge({ value }: { value: number }) {
   const v = Number(value);
-  if (v === 0) return <span className="text-[10px] text-gray-400">--</span>;
+  if (v === 0) return <span className="text-[10px] text-theme-muted">--</span>;
   const positive = v > 0;
   return (
     <span className={`text-[10px] font-medium ${positive ? 'text-green-600' : 'text-red-600'}`}>
@@ -21,46 +21,46 @@ function GrowthBadge({ value }: { value: number }) {
 
 function CityTrendCard({ trend }: { trend: CityEvTrend }) {
   return (
-    <div className="border border-gray-200 rounded-lg p-4 bg-white">
+    <div className="border border-glass rounded-lg p-4 bg-white">
       <div className="flex items-center justify-between mb-3">
-        <h4 className="font-semibold text-gray-900">{trend.city}</h4>
-        <span className="text-[10px] text-gray-400">{new Date(trend.stat_month).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+        <h4 className="font-semibold text-theme-primary">{trend.city}</h4>
+        <span className="text-[10px] text-theme-muted">{new Date(trend.stat_month).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
       </div>
 
       <div className="grid grid-cols-3 gap-3 mb-3">
         <div>
-          <p className="text-[10px] text-gray-500">Active Users</p>
-          <p className="text-lg font-bold text-gray-900">{trend.active_users}</p>
+          <p className="text-[10px] text-theme-secondary">Active Users</p>
+          <p className="text-lg font-bold text-theme-primary">{trend.active_users}</p>
           <GrowthBadge value={trend.user_growth_pct} />
         </div>
         <div>
-          <p className="text-[10px] text-gray-500">Sessions</p>
+          <p className="text-[10px] text-theme-secondary">Sessions</p>
           <p className="text-lg font-bold text-blue-600">{trend.total_sessions}</p>
           <GrowthBadge value={trend.session_growth_pct} />
         </div>
         <div>
-          <p className="text-[10px] text-gray-500">Energy (kWh)</p>
+          <p className="text-[10px] text-theme-secondary">Energy (kWh)</p>
           <p className="text-lg font-bold text-green-600">{Number(trend.total_energy_kwh).toFixed(0)}</p>
           <GrowthBadge value={trend.energy_growth_pct} />
         </div>
       </div>
 
       <div className="grid grid-cols-4 gap-2 text-center">
-        <div className="p-1.5 bg-gray-50 rounded">
-          <p className="text-xs font-medium text-gray-700">{trend.total_stations}</p>
-          <p className="text-[9px] text-gray-400">Stations</p>
+        <div className="p-1.5 bg-theme-secondary rounded">
+          <p className="text-xs font-medium text-theme-secondary">{trend.total_stations}</p>
+          <p className="text-[9px] text-theme-muted">Stations</p>
         </div>
-        <div className="p-1.5 bg-gray-50 rounded">
-          <p className="text-xs font-medium text-gray-700">{trend.total_slots}</p>
-          <p className="text-[9px] text-gray-400">Slots</p>
+        <div className="p-1.5 bg-theme-secondary rounded">
+          <p className="text-xs font-medium text-theme-secondary">{trend.total_slots}</p>
+          <p className="text-[9px] text-theme-muted">Slots</p>
         </div>
-        <div className="p-1.5 bg-gray-50 rounded">
-          <p className="text-xs font-medium text-gray-700">${Number(trend.total_revenue).toFixed(0)}</p>
-          <p className="text-[9px] text-gray-400">Revenue</p>
+        <div className="p-1.5 bg-theme-secondary rounded">
+          <p className="text-xs font-medium text-theme-secondary">${Number(trend.total_revenue).toFixed(0)}</p>
+          <p className="text-[9px] text-theme-muted">Revenue</p>
         </div>
-        <div className="p-1.5 bg-gray-50 rounded">
+        <div className="p-1.5 bg-theme-secondary rounded">
           <p className="text-xs font-medium text-green-600">{Number(trend.total_carbon_saved_kg).toFixed(0)}</p>
-          <p className="text-[9px] text-gray-400">kg CO2</p>
+          <p className="text-[9px] text-theme-muted">kg CO2</p>
         </div>
       </div>
     </div>
@@ -82,8 +82,8 @@ export default function SmartCityDashboard() {
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">Smart City Dashboard</h1>
-          <p className="text-gray-500 mt-1">EV mobility intelligence, infrastructure planning, and adoption trends</p>
+          <h1 className="text-3xl font-bold text-theme-primary">Smart City Dashboard</h1>
+          <p className="text-theme-secondary mt-1">EV mobility intelligence, infrastructure planning, and adoption trends</p>
         </div>
 
         {/* Heatmap Section */}
@@ -94,13 +94,13 @@ export default function SmartCityDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
               </svg>
-              <h2 className="text-xl font-bold text-gray-900">EV Charging Heatmap</h2>
+              <h2 className="text-xl font-bold text-theme-primary">EV Charging Heatmap</h2>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setHeatmapMode('demand')}
                 className={`text-xs px-3 py-1.5 rounded-full font-medium transition-colors ${
-                  heatmapMode === 'demand' ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  heatmapMode === 'demand' ? 'bg-primary-600 text-white' : 'glass text-theme-secondary hover:bg-[var(--border-default)]'
                 }`}
               >
                 Demand
@@ -108,7 +108,7 @@ export default function SmartCityDashboard() {
               <button
                 onClick={() => setHeatmapMode('gap')}
                 className={`text-xs px-3 py-1.5 rounded-full font-medium transition-colors ${
-                  heatmapMode === 'gap' ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  heatmapMode === 'gap' ? 'bg-red-600 text-white' : 'glass text-theme-secondary hover:bg-[var(--border-default)]'
                 }`}
               >
                 Infrastructure Gap
@@ -127,10 +127,10 @@ export default function SmartCityDashboard() {
               className="h-[450px]"
             />
           ) : (
-            <div className="flex items-center justify-center h-[400px] bg-gray-50 rounded-lg">
+            <div className="flex items-center justify-center h-[400px] bg-theme-secondary rounded-lg">
               <div className="text-center">
-                <p className="text-gray-500 mb-2">No heatmap data available yet</p>
-                <p className="text-xs text-gray-400">Run heatmap aggregation to generate charging density visualization</p>
+                <p className="text-theme-secondary mb-2">No heatmap data available yet</p>
+                <p className="text-xs text-theme-muted">Run heatmap aggregation to generate charging density visualization</p>
               </div>
             </div>
           )}
@@ -145,7 +145,7 @@ export default function SmartCityDashboard() {
                 <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
-                <h3 className="font-semibold text-gray-900">EV Adoption Trends</h3>
+                <h3 className="font-semibold text-theme-primary">EV Adoption Trends</h3>
               </div>
               <select
                 value={selectedCity}
@@ -170,7 +170,7 @@ export default function SmartCityDashboard() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-400 text-center py-12">
+              <p className="text-sm text-theme-muted text-center py-12">
                 No trend data available. Run monthly aggregation to generate city-level adoption metrics.
               </p>
             )}

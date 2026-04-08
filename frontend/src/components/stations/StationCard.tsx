@@ -46,7 +46,7 @@ export default function StationCard({ station, userLocation }: StationCardProps)
       <div className="flex justify-between items-start gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <h3 className="font-semibold text-gray-900 truncate">{station.name}</h3>
+            <h3 className="font-semibold text-theme-primary truncate">{station.name}</h3>
             {station.rating > 0 && (
               <span className="flex items-center gap-0.5 text-sm text-yellow-600 flex-shrink-0">
                 <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
@@ -56,34 +56,34 @@ export default function StationCard({ station, userLocation }: StationCardProps)
               </span>
             )}
           </div>
-          <p className="text-sm text-gray-500 mt-0.5 truncate">{station.address}, {station.city}</p>
+          <p className="text-sm text-theme-secondary mt-0.5 truncate">{station.address}, {station.city}</p>
         </div>
 
         <div className="flex items-center gap-2 flex-shrink-0">
           {distanceKm && (
-            <span className="text-xs text-gray-400 tabular-nums">{distanceKm} km</span>
+            <span className="text-xs text-theme-muted tabular-nums">{distanceKm} km</span>
           )}
-          <svg className="w-4 h-4 text-gray-300 group-hover:text-primary-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-4 h-4 text-theme-muted group-hover:text-primary-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </div>
       </div>
 
-      <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-glass">
         <div className="flex items-center gap-3">
           <span className={`inline-flex items-center gap-1.5 text-sm font-medium ${hasSlots ? 'text-green-600' : 'text-red-500'}`}>
             <span className={`w-2 h-2 rounded-full ${hasSlots ? 'bg-green-500' : 'bg-red-400'}`} />
             {available}/{total} available
           </span>
           {station.pricing_per_kwh && (
-            <span className="text-sm text-gray-400">{formatPricePerKwh(station.pricing_per_kwh, country)}</span>
+            <span className="text-sm text-theme-muted">{formatPricePerKwh(station.pricing_per_kwh, country)}</span>
           )}
         </div>
 
         {hasCoords && (
           <button
             onClick={handleGetDirections}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 rounded-xl px-3 py-1.5 transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-500 hover:text-primary-400 bg-primary-500/10 hover:bg-primary-500/15 rounded-xl px-3 py-1.5 transition-colors"
             title="Open in Google Maps"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

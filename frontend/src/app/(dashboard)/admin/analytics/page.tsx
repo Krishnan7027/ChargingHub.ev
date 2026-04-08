@@ -11,15 +11,15 @@ function BarChart({ data, labelKey, valueKey, color = 'bg-primary-500' }: {
   valueKey: string;
   color?: string;
 }) {
-  if (!data || data.length === 0) return <p className="text-gray-400 text-sm">No data</p>;
+  if (!data || data.length === 0) return <p className="text-theme-muted text-sm">No data</p>;
   const max = Math.max(...data.map((d) => Number(d[valueKey]) || 0), 1);
 
   return (
     <div className="space-y-2">
       {data.map((item, i) => (
         <div key={i} className="flex items-center gap-3">
-          <span className="text-xs text-gray-500 w-20 text-right truncate">{item[labelKey]}</span>
-          <div className="flex-1 bg-gray-100 rounded-full h-5 overflow-hidden">
+          <span className="text-xs text-theme-secondary w-20 text-right truncate">{item[labelKey]}</span>
+          <div className="flex-1 glass rounded-full h-5 overflow-hidden">
             <div
               className={`${color} h-full rounded-full transition-all flex items-center justify-end pr-2`}
               style={{ width: `${Math.max((Number(item[valueKey]) / max) * 100, 2)}%` }}
@@ -58,7 +58,7 @@ export default function AnalyticsPage() {
               value={dateRange.startDate}
               onChange={(e) => setDateRange((prev) => ({ ...prev, startDate: e.target.value }))}
             />
-            <span className="text-gray-400">to</span>
+            <span className="text-theme-muted">to</span>
             <input
               type="date"
               className="input text-sm"
@@ -79,7 +79,7 @@ export default function AnalyticsPage() {
 
         {isLoading ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map((i) => <div key={i} className="card h-24 animate-pulse bg-gray-100" />)}
+            {[1, 2, 3, 4].map((i) => <div key={i} className="card h-24 animate-pulse glass" />)}
           </div>
         ) : analytics ? (
           <>
@@ -94,7 +94,7 @@ export default function AnalyticsPage() {
                 { label: 'Unique Users', value: analytics.summary.total_unique_users, color: 'text-orange-600' },
               ].map((s) => (
                 <div key={s.label} className="card">
-                  <p className="text-xs text-gray-500">{s.label}</p>
+                  <p className="text-xs text-theme-secondary">{s.label}</p>
                   <p className={`text-2xl font-bold mt-1 ${s.color}`}>{s.value || 0}</p>
                 </div>
               ))}
@@ -129,7 +129,7 @@ export default function AnalyticsPage() {
               <div className="card">
                 <h3 className="font-semibold mb-4">Most Used Stations</h3>
                 {analytics.topStations.length === 0 ? (
-                  <p className="text-gray-400 text-sm">No data yet</p>
+                  <p className="text-theme-muted text-sm">No data yet</p>
                 ) : (
                   <div className="space-y-3">
                     {analytics.topStations.map((s, i) => (
@@ -137,11 +137,11 @@ export default function AnalyticsPage() {
                         <span className="text-lg font-bold text-gray-300 w-8">#{i + 1}</span>
                         <div className="flex-1">
                           <p className="font-medium text-sm">{s.name}</p>
-                          <p className="text-xs text-gray-500">{s.city}</p>
+                          <p className="text-xs text-theme-secondary">{s.city}</p>
                         </div>
                         <div className="text-right text-sm">
                           <p className="font-semibold">{s.total_sessions} sessions</p>
-                          <p className="text-xs text-gray-500">{s.total_energy_kwh} kWh</p>
+                          <p className="text-xs text-theme-secondary">{s.total_energy_kwh} kWh</p>
                         </div>
                       </div>
                     ))}
@@ -173,7 +173,7 @@ export default function AnalyticsPage() {
             </div>
           </>
         ) : (
-          <div className="card text-center py-12 text-gray-500">
+          <div className="card text-center py-12 text-theme-secondary">
             No analytics data available. Data is aggregated hourly from charging sessions.
           </div>
         )}

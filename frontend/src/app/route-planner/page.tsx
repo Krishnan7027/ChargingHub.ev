@@ -103,8 +103,8 @@ export default function RoutePlannerPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* ── Page header ──────────────────────────────────── */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">EV Route Planner</h1>
-          <p className="text-sm text-gray-500">Plan your trip with optimal charging stops</p>
+          <h1 className="text-2xl font-bold text-theme-primary mb-1">EV Route Planner</h1>
+          <p className="text-sm text-theme-muted">Plan your trip with optimal charging stops</p>
         </div>
 
         {/* ── Main layout: Map (left) + Form (right) ─────── */}
@@ -112,7 +112,7 @@ export default function RoutePlannerPage() {
 
           {/* ── Map container (matches /map page exactly) ──── */}
           <div className="lg:w-[65%] lg:flex-shrink-0">
-            <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200 relative">
+            <div className="glass-heavy rounded-2xl overflow-hidden relative">
               <StationMap
                 stations={mapStations}
                 center={mapCenter}
@@ -125,7 +125,7 @@ export default function RoutePlannerPage() {
             </div>
 
             {/* Location status chip below map (matches /map) */}
-            <div className="mt-2 flex items-center gap-1.5 text-xs text-gray-400">
+            <div className="mt-2 flex items-center gap-1.5 text-xs text-theme-muted">
               <span className={`w-1.5 h-1.5 rounded-full ${position ? 'bg-green-500' : 'bg-yellow-500'}`} />
               {position ? 'Using your location' : `Using default location (${country.name})`}
             </div>
@@ -154,12 +154,12 @@ export default function RoutePlannerPage() {
                 />
 
                 {/* Vehicle settings */}
-                <div className="pt-2 border-t border-gray-100">
-                  <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-3">Vehicle Settings</p>
+                <div className="pt-2 border-t" style={{ borderColor: 'var(--border-default)' }}>
+                  <p className="text-xs text-theme-muted uppercase tracking-wide font-medium mb-3">Vehicle Settings</p>
                   <div className="space-y-3">
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <label className="text-sm font-medium text-gray-700">Battery Level</label>
+                        <label className="text-sm font-medium text-theme-secondary">Battery Level</label>
                         <span className="text-sm font-semibold tabular-nums text-primary-600">{batteryPct}%</span>
                       </div>
                       <input
@@ -168,12 +168,12 @@ export default function RoutePlannerPage() {
                         max="100"
                         value={batteryPct}
                         onChange={(e) => { setBatteryPct(e.target.value); setPlan(null); }}
-                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary-600"
+                        className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-primary-600" style={{ background: 'var(--border-default)' }}
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Range (km)</label>
+                        <label className="block text-sm font-medium text-theme-secondary mb-1">Range (km)</label>
                         <input
                           type="number"
                           className="input text-sm"
@@ -185,7 +185,7 @@ export default function RoutePlannerPage() {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Capacity (kWh)</label>
+                        <label className="block text-sm font-medium text-theme-secondary mb-1">Capacity (kWh)</label>
                         <input
                           type="number"
                           className="input text-sm"
@@ -223,26 +223,26 @@ export default function RoutePlannerPage() {
               <div className="space-y-4 animate-in">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="card py-3 px-4 text-center">
-                    <p className="text-xs text-gray-500">Distance</p>
+                    <p className="text-xs text-theme-muted">Distance</p>
                     <p className="text-xl font-bold text-primary-600 tabular-nums">{plan.totalDistanceKm} km</p>
                   </div>
                   <div className="card py-3 px-4 text-center">
-                    <p className="text-xs text-gray-500">Stops</p>
+                    <p className="text-xs text-theme-muted">Stops</p>
                     <p className="text-xl font-bold text-accent-600 tabular-nums">{plan.totalStops}</p>
                   </div>
                   <div className="card py-3 px-4 text-center">
-                    <p className="text-xs text-gray-500">Charging Time</p>
+                    <p className="text-xs text-theme-muted">Charging Time</p>
                     <p className="text-xl font-bold text-yellow-600 tabular-nums">{plan.estimatedTotalChargingMin} min</p>
                   </div>
                   <div className="card py-3 px-4 text-center">
-                    <p className="text-xs text-gray-500">Est. Cost</p>
-                    <p className="text-xl font-bold text-green-600 tabular-nums">{formatCurrency(plan.estimatedTotalCost, country)}</p>
+                    <p className="text-xs text-theme-muted">Est. Cost</p>
+                    <p className="text-xl font-bold text-green-500 tabular-nums">{formatCurrency(plan.estimatedTotalCost, country)}</p>
                   </div>
                 </div>
 
                 {plan.stops.length > 0 && (
                   <div>
-                    <h3 className="text-sm font-semibold text-gray-700 mb-3">Charging Stops</h3>
+                    <h3 className="text-sm font-semibold text-theme-secondary mb-3">Charging Stops</h3>
                     <div className="space-y-3">
                       {plan.stops.map((stop) => (
                         <div key={stop.stopNumber} className="card py-4 px-5 border-l-4 border-l-primary-500">
@@ -254,8 +254,8 @@ export default function RoutePlannerPage() {
                                 </span>
                                 <h4 className="font-semibold text-sm truncate">{stop.stationName}</h4>
                               </div>
-                              <p className="text-xs text-gray-500 ml-8">{stop.address}, {stop.city}</p>
-                              <div className="flex flex-wrap gap-2 mt-2 ml-8 text-xs text-gray-500">
+                              <p className="text-xs text-theme-muted ml-8">{stop.address}, {stop.city}</p>
+                              <div className="flex flex-wrap gap-2 mt-2 ml-8 text-xs text-theme-muted">
                                 <span>{stop.distanceFromPrevKm} km</span>
                                 <span>{stop.chargingSpeedKw} kW</span>
                                 <span>{stop.availableSlots}/{stop.totalSlots} slots</span>
@@ -266,12 +266,12 @@ export default function RoutePlannerPage() {
                               {stop.estimatedWaitMin > 0 && (
                                 <p className="text-yellow-600">+{stop.estimatedWaitMin} min wait</p>
                               )}
-                              <p className="text-green-600 font-medium">{formatCurrency(stop.estimatedCost, country)}</p>
+                              <p className="text-green-500 font-medium">{formatCurrency(stop.estimatedCost, country)}</p>
                             </div>
                           </div>
                           <div className="mt-3 ml-8 flex items-center gap-2 text-xs">
-                            <span className="text-gray-500 tabular-nums">{stop.arrivalBatteryPct}%</span>
-                            <div className="flex-1 bg-gray-100 rounded-full h-2 relative">
+                            <span className="text-theme-muted tabular-nums">{stop.arrivalBatteryPct}%</span>
+                            <div className="flex-1 rounded-full h-2 relative" style={{ background: 'var(--border-default)' }}>
                               <div
                                 className="absolute inset-y-0 left-0 bg-yellow-400 rounded-full"
                                 style={{ width: `${stop.departureBatteryPct}%` }}
@@ -290,16 +290,16 @@ export default function RoutePlannerPage() {
                 )}
 
                 {plan.arrivalBatteryPct > 0 && (
-                  <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3">
-                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="bg-green-500/10 border rounded-xl p-4 flex items-center gap-3" style={{ borderColor: 'var(--border-default)' }}>
+                    <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
                     <div>
-                      <p className="font-medium text-green-800">Arrive with {plan.arrivalBatteryPct}% battery</p>
+                      <p className="font-medium text-green-500">Arrive with {plan.arrivalBatteryPct}% battery</p>
                       {plan.totalStops === 0 && (
-                        <p className="text-sm text-green-600">No charging stops needed!</p>
+                        <p className="text-sm text-green-500">No charging stops needed!</p>
                       )}
                     </div>
                   </div>
@@ -309,8 +309,8 @@ export default function RoutePlannerPage() {
 
             {/* Empty state */}
             {!plan && !planRoute.isPending && (
-              <div className="card text-center py-8 text-gray-400">
-                <svg className="w-10 h-10 mx-auto mb-3 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="card text-center py-8 text-theme-muted">
+                <svg className="w-10 h-10 mx-auto mb-3 text-theme-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                 </svg>
                 <p className="text-sm">Enter your trip details to get a route<br />with optimal charging stops</p>
