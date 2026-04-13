@@ -8,7 +8,7 @@ export function getPostLoginPath(role: string): string {
   switch (role) {
     case 'admin':   return '/admin';
     case 'manager': return '/manager';
-    default:        return '/map';
+    default:        return '/customer';
   }
 }
 

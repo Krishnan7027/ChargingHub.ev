@@ -171,10 +171,12 @@ export default function Navbar() {
             </Link>
 
             <div className="hidden md:flex ml-10 gap-6 items-center">
-              <NavLink href="/map">
-                Find Stations
-              </NavLink>
-              {canAccessRoutePlanner(user?.role) && (
+              {user?.role !== 'customer' && (
+                <NavLink href="/map">
+                  Find Stations
+                </NavLink>
+              )}
+              {user?.role !== 'customer' && canAccessRoutePlanner(user?.role) && (
                 <NavLink href="/route-planner">
                   Route Planner
                 </NavLink>
@@ -282,10 +284,12 @@ export default function Navbar() {
           )}
 
           <div className="px-4 py-3 space-y-1">
-            <MobileNavLink href="/map" onClick={() => setMobileOpen(false)}>
-              Find Stations
-            </MobileNavLink>
-            {canAccessRoutePlanner(user?.role) && (
+            {user?.role !== 'customer' && (
+              <MobileNavLink href="/map" onClick={() => setMobileOpen(false)}>
+                Find Stations
+              </MobileNavLink>
+            )}
+            {user?.role !== 'customer' && canAccessRoutePlanner(user?.role) && (
               <MobileNavLink href="/route-planner" onClick={() => setMobileOpen(false)}>
                 Route Planner
               </MobileNavLink>
