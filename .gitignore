@@ -18,3 +18,12 @@ test-results/
 playwright-report/
 .playwright-mcp/
 .mcp.json
+
+# Editor/tool configs
+.claude/
+.cursor/
+.cursorrules
+.opencode.json
+.windsurfrules
+AGENTS.md
+GEMINI.md
