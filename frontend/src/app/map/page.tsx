@@ -25,15 +25,20 @@ export default function MapPage() {
     ? { lat: position.latitude, lng: position.longitude }
     : country.defaultCenter;
 
+  // Always fetch nearby stations — use geolocation if available, otherwise country default
+  const queryLat = hasPosition ? position.latitude : country.defaultCenter.lat;
+  const queryLng = hasPosition ? position.longitude : country.defaultCenter.lng;
+
   const { data: nearbyStations, isLoading: nearbyLoading } = useNearbyStations(
-    hasPosition ? position.latitude : (useFallback ? country.defaultCenter.lat : null),
-    hasPosition ? position.longitude : (useFallback ? country.defaultCenter.lng : null),
+    queryLat,
+    queryLng,
+    hasPosition ? 25 : 100,
   );
 
   const { data: searchResult, isLoading: searchLoading } = useSearchStations(searchParams);
   const { data: recommendations } = useRecommendations({
-    latitude: position?.latitude ?? (useFallback ? country.defaultCenter.lat : null),
-    longitude: position?.longitude ?? (useFallback ? country.defaultCenter.lng : null),
+    latitude: queryLat,
+    longitude: queryLng,
   });
 
   const stations = searchParams.query ? (searchResult?.stations ?? []) : (nearbyStations ?? []);
@@ -49,9 +54,9 @@ export default function MapPage() {
     setSearchParams({});
   }, []);
 
-  const showLocating = geoLoading && !useFallback;
-  const showGeoError = geoError && !useFallback && !geoLoading;
-  const showMap = !showLocating && !showGeoError;
+  const showLocating = geoLoading && !nearbyStations;
+  const showGeoError = geoError && !hasPosition && !geoLoading;
+  const showMap = !showLocating;
 
   // ── Station list content (shared between layouts) ──────
   const stationList = (
@@ -167,7 +172,7 @@ export default function MapPage() {
             </svg>
             <div className="flex-1">
               <p className="text-sm font-medium text-theme-primary">Location access denied</p>
-              <p className="text-xs text-theme-secondary mt-0.5">Showing default area (San Francisco). Allow location for better results.</p>
+              <p className="text-xs text-theme-secondary mt-0.5">Showing stations across {country.name}. Allow location for better results.</p>
             </div>
             <button onClick={() => setUseFallback(true)} className="btn-primary text-sm py-1.5 px-3 whitespace-nowrap">
               Use Default

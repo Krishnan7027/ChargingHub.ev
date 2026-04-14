@@ -79,8 +79,8 @@ export const authApi = {
 
 // ── Stations ───────────────────────────────────────────────
 export const stationApi = {
-  getNearby: (lat: number, lng: number, radiusKm = 25) =>
-    http.get<Station[]>('/stations/nearby', { params: { latitude: lat, longitude: lng, radiusKm } }).then((r) => r.data),
+  getNearby: (lat: number, lng: number, radiusKm = 25, limit = 50) =>
+    http.get<Station[]>('/stations/nearby', { params: { latitude: lat, longitude: lng, radiusKm, limit } }).then((r) => r.data),
 
   search: (params: Record<string, string>) =>
     http.get<PaginatedResponse<Station>>('/stations/search', { params }).then((r) => r.data),

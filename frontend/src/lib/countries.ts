@@ -16,8 +16,8 @@ export const COUNTRIES: Record<string, CountryConfig> = {
     flag: '🇮🇳',
     currency: 'INR',
     currencySymbol: '₹',
-    defaultCenter: { lat: 20.5937, lng: 78.9629 },
-    defaultZoom: 5,
+    defaultCenter: { lat: 12.9716, lng: 77.5946 },
+    defaultZoom: 12,
     locale: 'en-IN',
   },
   US: {
