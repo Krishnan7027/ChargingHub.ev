@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { getPostLoginPath } from '@/lib/roles';
+import { getReturnAction, clearReturnAction } from '@/lib/navigationFlow';
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -24,7 +25,13 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       const u = await register(form);
-      router.push(getPostLoginPath(u.role));
+      const returnAction = getReturnAction();
+      if (returnAction) {
+        clearReturnAction();
+        router.push(returnAction.returnTo);
+      } else {
+        router.push(getPostLoginPath(u.role));
+      }
     } catch (err: any) {
       setError(err.message || 'Registration failed');
     } finally {

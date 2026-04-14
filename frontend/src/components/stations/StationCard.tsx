@@ -2,7 +2,9 @@
 
 import Link from 'next/link';
 import { useCountry } from '@/context/CountryContext';
+import { useAuth } from '@/context/AuthContext';
 import { formatPricePerKwh } from '@/lib/formatCurrency';
+import { buildDirectionsUrl, redirectToSignup } from '@/lib/navigationFlow';
 import type { Station } from '@/types';
 
 interface StationCardProps {
@@ -12,30 +14,33 @@ interface StationCardProps {
 
 export default function StationCard({ station, userLocation }: StationCardProps) {
   const { country } = useCountry();
+  const { user } = useAuth();
   const distanceKm = station.distance_meters
     ? (station.distance_meters / 1000).toFixed(1)
     : null;
   const available = station.available_slots ?? 0;
   const total = station.total_slots ?? 0;
   const hasSlots = available > 0;
-
   const hasCoords = station.latitude != null && station.longitude != null;
 
   function handleGetDirections(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
 
-    const dest = `${station.latitude},${station.longitude}`;
-    let url: string;
-
-    if (userLocation) {
-      url = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${dest}&travelmode=driving`;
+    if (user) {
+      const url = buildDirectionsUrl(
+        station.latitude,
+        station.longitude,
+        userLocation?.lat,
+        userLocation?.lng,
+      );
+      window.open(url, '_blank');
     } else {
-      // Fallback: destination only (Google Maps will use device location)
-      url = `https://www.google.com/maps/dir/?api=1&destination=${dest}&travelmode=driving`;
+      redirectToSignup(`/stations/${station.id}`, 'directions', {
+        lat: String(station.latitude),
+        lng: String(station.longitude),
+      });
     }
-
-    window.open(url, '_blank');
   }
 
   return (
@@ -84,7 +89,7 @@ export default function StationCard({ station, userLocation }: StationCardProps)
           <button
             onClick={handleGetDirections}
             className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-500 hover:text-primary-400 bg-primary-500/10 hover:bg-primary-500/15 rounded-xl px-3 py-1.5 transition-colors"
-            title="Open in Google Maps"
+            title={user ? 'Open in Google Maps' : 'Sign up to get directions'}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import StationCard from '@/components/stations/StationCard';
@@ -43,6 +43,15 @@ export default function MapPage() {
 
   const stations = searchParams.query ? (searchResult?.stations ?? []) : (nearbyStations ?? []);
   const loading = searchParams.query ? searchLoading : nearbyLoading;
+
+  // Build stationId → rank map from recommendations for numbered map markers
+  const stationRanks = useMemo(() => {
+    const ranks: Record<string, number> = {};
+    recommendations?.recommendations?.forEach((rec, i) => {
+      ranks[rec.stationId] = i + 1;
+    });
+    return Object.keys(ranks).length > 0 ? ranks : undefined;
+  }, [recommendations]);
 
   const handleSearch = useCallback(() => {
     if (!searchQuery.trim()) return;
@@ -204,6 +213,7 @@ export default function MapPage() {
                   onStationClick={(s) => router.push(`/stations/${s.id}`)}
                   className="h-[280px] sm:h-[380px] lg:h-[520px]"
                   currencySymbol={country.currencySymbol}
+                  stationRanks={stationRanks}
                 />
               )}
 

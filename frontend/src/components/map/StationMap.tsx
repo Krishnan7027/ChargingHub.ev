@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Station } from '@/types';
 
 interface LatLng {
@@ -14,6 +14,8 @@ interface StationMapProps {
   onStationClick?: (station: Station) => void;
   className?: string;
   currencySymbol?: string;
+  /** Map of stationId → rank (1-based). Ranked stations get a numbered badge. */
+  stationRanks?: Record<string, number>;
   // Route planner extensions
   routeLine?: { start: LatLng; end: LatLng; waypoints: LatLng[]; polyline?: LatLng[]; provider?: string };
   startMarker?: LatLng;
@@ -26,6 +28,7 @@ export default function StationMap({
   center,
   onStationClick,
   className = '',
+  stationRanks,
   routeLine,
   startMarker,
   endMarker,
@@ -39,6 +42,9 @@ export default function StationMap({
   const routeLayerRef = useRef<any[]>([]);
   const onClickRef = useRef(onStationClick);
   const onMapClickRef = useRef(onMapClick);
+
+  // Track when Leaflet + map are ready so marker effects can re-run
+  const [mapReady, setMapReady] = useState(false);
 
   onClickRef.current = onStationClick;
   onMapClickRef.current = onMapClick;
@@ -77,6 +83,9 @@ export default function StationMap({
           onMapClickRef.current?.({ lat: e.latlng.lat, lng: e.latlng.lng });
         });
       }
+
+      // Signal that map is ready — triggers marker + route effects
+      setMapReady(true);
     });
 
     return () => {
@@ -96,11 +105,11 @@ export default function StationMap({
     }
   }, [center.lat, center.lng, routeLine]);
 
-  // Update station markers
+  // Update station markers — depends on mapReady + stations
   useEffect(() => {
     const L = leafletRef.current;
     const map = mapInstanceRef.current;
-    if (!L || !map) return;
+    if (!L || !map || !mapReady) return;
 
     markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
@@ -108,20 +117,33 @@ export default function StationMap({
     stations.forEach((station) => {
       const available = station.available_slots ?? 0;
       const total = station.total_slots ?? 0;
+      const rank = stationRanks?.[station.id];
+      const isRanked = rank !== undefined;
       const color = available > 0 ? '#16A34A' : '#DC2626';
+
+      // Ranked stations get a larger marker with rank badge
+      const size = isRanked ? 40 : 32;
+      const rankBadge = isRanked
+        ? `<div style="position:absolute;top:-8px;right:-8px;background:#2563EB;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3)">${rank}</div>`
+        : '';
 
       const icon = L.divIcon({
         className: 'custom-marker',
-        html: `<div style="background:${color};color:white;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:12px;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3)">${available}</div>`,
-        iconSize: [32, 32],
-        iconAnchor: [16, 16],
+        html: `<div style="position:relative;background:${color};color:white;border-radius:50%;width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:${isRanked ? 14 : 12}px;border:${isRanked ? 3 : 2}px solid white;box-shadow:0 2px ${isRanked ? 10 : 6}px rgba(0,0,0,${isRanked ? 0.4 : 0.3})">${available}${rankBadge}</div>`,
+        iconSize: [size + 16, size + 16],
+        iconAnchor: [(size + 16) / 2, (size + 16) / 2],
       });
 
-      const marker = L.marker([station.latitude, station.longitude], { icon })
+      const rankLabel = isRanked ? `<br/><span style="color:#2563EB;font-weight:700;font-size:12px">⭐ Smart Pick #${rank}</span>` : '';
+
+      const marker = L.marker([station.latitude, station.longitude], {
+        icon,
+        zIndexOffset: isRanked ? 1000 - rank : 0,
+      })
         .addTo(map)
         .bindPopup(`
           <div style="min-width:180px">
-            <strong>${station.name}</strong><br/>
+            <strong>${station.name}</strong>${rankLabel}<br/>
             <span style="color:#666;font-size:12px">${station.address}</span><br/>
             <span style="color:${color};font-weight:600">${available}/${total} available</span>
             ${station.pricing_per_kwh ? `<br/><span style="font-size:12px">${currencySymbol}${station.pricing_per_kwh}/kWh</span>` : ''}
@@ -131,13 +153,13 @@ export default function StationMap({
       marker.on('click', () => onClickRef.current?.(station));
       markersRef.current.push(marker);
     });
-  }, [stations]);
+  }, [stations, mapReady, currencySymbol, stationRanks]);
 
   // Draw route line + start/end markers + numbered stop markers
   useEffect(() => {
     const L = leafletRef.current;
     const map = mapInstanceRef.current;
-    if (!L || !map) return;
+    if (!L || !map || !mapReady) return;
 
     // Clear previous route layers
     routeLayerRef.current.forEach((layer) => layer.remove());
@@ -173,7 +195,6 @@ export default function StationMap({
 
     // Draw route polyline + numbered stop markers
     if (routeLine) {
-      // Use real road polyline if available, otherwise fall back to waypoint lines
       const hasRealPolyline = routeLine.polyline && routeLine.polyline.length > 2;
       const routePoints: [number, number][] = hasRealPolyline
         ? routeLine.polyline!.map((p) => [p.lat, p.lng] as [number, number])
@@ -183,7 +204,6 @@ export default function StationMap({
             [routeLine.end.lat, routeLine.end.lng],
           ];
 
-      // Solid route line for real roads, dashed for fallback
       const polyline = L.polyline(routePoints, {
         color: '#2563EB',
         weight: hasRealPolyline ? 5 : 4,
@@ -194,7 +214,6 @@ export default function StationMap({
       }).addTo(map);
       routeLayerRef.current.push(polyline);
 
-      // Numbered stop markers for waypoints
       routeLine.waypoints.forEach((wp, i) => {
         const stopIcon = L.divIcon({
           className: 'custom-marker',
@@ -208,11 +227,10 @@ export default function StationMap({
         routeLayerRef.current.push(m);
       });
 
-      // Fit bounds to show entire route
       const bounds = L.latLngBounds(routePoints);
       map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
     }
-  }, [routeLine, startMarker, endMarker]);
+  }, [routeLine, startMarker, endMarker, mapReady]);
 
   return (
     <>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { getPostLoginPath } from '@/lib/roles';
+import { getReturnAction, clearReturnAction } from '@/lib/navigationFlow';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -21,7 +22,13 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const u = await login(email, password);
-      router.push(getPostLoginPath(u.role));
+      const returnAction = getReturnAction();
+      if (returnAction) {
+        clearReturnAction();
+        router.push(returnAction.returnTo);
+      } else {
+        router.push(getPostLoginPath(u.role));
+      }
     } catch (err: any) {
       setError(err.message || 'Login failed');
     } finally {

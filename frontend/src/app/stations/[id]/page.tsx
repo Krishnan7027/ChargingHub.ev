@@ -17,6 +17,7 @@ import Modal from '@/components/ui/Modal';
 import { useAuth } from '@/context/AuthContext';
 import { useCountry } from '@/context/CountryContext';
 import { formatPricePerKwh } from '@/lib/formatCurrency';
+import { getReturnAction, clearReturnAction, buildDirectionsUrl, redirectToSignup } from '@/lib/navigationFlow';
 import { useStation, useCreateReservation } from '@/hooks/useStations';
 import { useSocket } from '@/hooks/useSocket';
 import { subscribeToStation, unsubscribeFromStation } from '@/lib/socket';
@@ -109,6 +110,30 @@ export default function StationDetailPage() {
     return () => cleanups.forEach((fn) => fn());
   }, [on, stationId, queryClient]);
 
+  // Auto-trigger action after login redirect (e.g., directions)
+  useEffect(() => {
+    if (!station || !user) return;
+    const returnAction = getReturnAction();
+    if (returnAction?.action === 'directions' && returnAction.returnTo.includes(stationId)) {
+      clearReturnAction();
+      const url = buildDirectionsUrl(station.latitude, station.longitude);
+      window.open(url, '_blank');
+    }
+  }, [station, user, stationId]);
+
+  function handleDirections() {
+    if (!station) return;
+    if (user) {
+      const url = buildDirectionsUrl(station.latitude, station.longitude);
+      window.open(url, '_blank');
+    } else {
+      redirectToSignup(`/stations/${stationId}`, 'directions', {
+        lat: String(station.latitude),
+        lng: String(station.longitude),
+      });
+    }
+  }
+
   async function handleReserve() {
     if (!selectedSlot || !reserveForm.start || !reserveForm.end || !user) return;
     try {
@@ -192,6 +217,17 @@ export default function StationDetailPage() {
               {station.pricing_per_kwh && (
                 <span className="badge-blue text-sm">{formatPricePerKwh(station.pricing_per_kwh, country)}</span>
               )}
+              <button
+                onClick={handleDirections}
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-500 hover:text-primary-400 bg-primary-500/10 hover:bg-primary-500/15 rounded-xl px-3 py-1.5 transition-colors"
+                title={user ? 'Open in Google Maps' : 'Sign up to get directions'}
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Directions
+              </button>
             </div>
           </div>
         </div>
