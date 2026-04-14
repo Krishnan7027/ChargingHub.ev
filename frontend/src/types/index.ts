@@ -1219,3 +1219,22 @@ export interface ArrivalPrediction {
   queueDepth: number;
   recommendation: string;
 }
+
+// ── Favorites ──────────────────────────────────────────────
+export interface Favorite {
+  id: string;
+  user_id: string;
+  station_id: string;
+  created_at: string;
+  station_name?: string;
+  station_address?: string;
+  station_city?: string;
+  station_status?: string;
+  total_slots?: number;
+  available_slots?: number;
+}
+
+export interface FavoriteStatus {
+  isFavorited: boolean;
+  totalFavorites: number;
+}

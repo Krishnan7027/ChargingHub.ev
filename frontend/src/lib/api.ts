@@ -16,6 +16,7 @@ import type {
   StationReview, StationReviewsResponse, ReliabilityScore, CreateReviewData,
   WalletSummary, Badge, Reward, RewardRedemption, PointsTransaction, LeaderboardEntry,
   Payment, CostEstimateResponse, PlugChargeVehicle, PlugEventResult, ArrivalPrediction,
+  Favorite, FavoriteStatus,
 } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
@@ -547,4 +548,19 @@ export const predictionApi = {
 
   getDemandProfile: () =>
     http.get('/predictions/demand-profile').then((r) => r.data),
+};
+
+// ── Favorites ─────────────────────────────────────────────────
+export const favoriteApi = {
+  list: () =>
+    http.get<Favorite[]>('/favorites').then((r) => r.data),
+
+  add: (stationId: string) =>
+    http.post<Favorite>(`/favorites/${stationId}`).then((r) => r.data),
+
+  remove: (stationId: string) =>
+    http.delete(`/favorites/${stationId}`).then((r) => r.data),
+
+  getStatus: (stationId: string) =>
+    http.get<FavoriteStatus>(`/favorites/${stationId}/status`).then((r) => r.data),
 };

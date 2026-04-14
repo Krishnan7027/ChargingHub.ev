@@ -101,6 +101,8 @@ const EVENTS = {
   VEHICLE_PLUGGED: 'vehicle.plugged',
   VEHICLE_UNPLUGGED: 'vehicle.unplugged',
   USER_REGISTERED: 'user.registered',
+  FAVORITE_ADDED: 'favorite.added',
+  FAVORITE_REMOVED: 'favorite.removed',
 };
 
 module.exports = { publish, on, subscribeRedis, EVENTS };
