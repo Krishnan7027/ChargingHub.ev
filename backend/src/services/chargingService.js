@@ -219,6 +219,31 @@ const chargingService = {
   async getStationSessions(stationId, params) {
     return ChargingSession.findByStation(stationId, params);
   },
+
+  async getUserHistory(userId, params = {}) {
+    const page = parseInt(params.page, 10) || 1;
+    const limit = Math.min(parseInt(params.limit, 10) || 20, 100);
+    const { sessions, total } = await ChargingSession.findHistoryByUser(userId, {
+      ...params,
+      page,
+      limit,
+    });
+    return { sessions, total, page, limit };
+  },
+
+  async getHistoryDetail(sessionId, userId) {
+    const session = await ChargingSession.getHistoryDetail(sessionId, userId);
+    if (!session) {
+      const err = new Error('Session not found');
+      err.statusCode = 404;
+      throw err;
+    }
+    return session;
+  },
+
+  async getUserStats(userId) {
+    return ChargingSession.getUserStats(userId);
+  },
 };
 
 module.exports = chargingService;
