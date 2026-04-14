@@ -29,6 +29,7 @@ const env = {
     max: parseInt(process.env.RATE_LIMIT_MAX, 10) || 100,
   },
   osrmBaseUrl: process.env.OSRM_BASE_URL || 'https://router.project-osrm.org',
+  ocmApiKey: process.env.OCM_API_KEY || '',
   redis: {
     host: process.env.REDIS_HOST || '127.0.0.1',
     port: parseInt(process.env.REDIS_PORT, 10) || 6379,
