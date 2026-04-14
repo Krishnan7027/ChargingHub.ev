@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import StationMap from '@/components/map/StationMap';
 import LocationSearchInput from '@/components/route/LocationSearchInput';
@@ -9,7 +9,8 @@ import { useGeolocation } from '@/hooks/useGeolocation';
 import { useAuth } from '@/context/AuthContext';
 import { useCountry } from '@/context/CountryContext';
 import { formatCurrency } from '@/lib/formatCurrency';
-import { getReturnAction, clearReturnAction, redirectToSignup } from '@/lib/navigationFlow';
+import { useAuthAction } from '@/hooks/useAuthAction';
+import AuthModal from '@/components/ui/AuthModal';
 import toast from 'react-hot-toast';
 import type { RoutePlan, Station } from '@/types';
 
@@ -38,6 +39,7 @@ export default function RoutePlannerPage() {
   const { position } = useGeolocation();
   const { country } = useCountry();
   const { user } = useAuth();
+  const { requireAuth, authModalProps } = useAuthAction();
   const planRoute = usePlanRoute();
 
   const [startLocation, setStartLocation] = useState<LocationState | null>(null);
@@ -383,19 +385,13 @@ export default function RoutePlannerPage() {
 
                 {/* Start Journey button */}
                 <button
-                  onClick={() => {
-                    if (user) {
-                      window.open(buildGoogleMapsUrl(plan), '_blank');
-                    } else {
-                      redirectToSignup('/route-planner', 'start-journey');
-                    }
-                  }}
+                  onClick={() => requireAuth(() => window.open(buildGoogleMapsUrl(plan), '_blank'))}
                   className="btn-primary w-full flex items-center justify-center gap-2 py-3 text-base"
                 >
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                   </svg>
-                  {user ? 'Start Journey' : 'Sign up to Start Journey'}
+                  Start Journey
                 </button>
               </div>
             )}
@@ -412,6 +408,7 @@ export default function RoutePlannerPage() {
           </div>
         </div>
       </main>
+      <AuthModal {...authModalProps} />
     </>
   );
 }

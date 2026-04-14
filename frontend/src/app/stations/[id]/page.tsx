@@ -17,7 +17,9 @@ import Modal from '@/components/ui/Modal';
 import { useAuth } from '@/context/AuthContext';
 import { useCountry } from '@/context/CountryContext';
 import { formatPricePerKwh } from '@/lib/formatCurrency';
-import { getReturnAction, clearReturnAction, buildDirectionsUrl, redirectToSignup } from '@/lib/navigationFlow';
+import { getReturnAction, clearReturnAction, buildDirectionsUrl } from '@/lib/navigationFlow';
+import { useAuthAction } from '@/hooks/useAuthAction';
+import AuthModal from '@/components/ui/AuthModal';
 import { useStation, useCreateReservation } from '@/hooks/useStations';
 import { useSocket } from '@/hooks/useSocket';
 import { subscribeToStation, unsubscribeFromStation } from '@/lib/socket';
@@ -53,6 +55,7 @@ export default function StationDetailPage() {
 
   const { data: station, isLoading, error } = useStation(stationId);
   const createReservation = useCreateReservation();
+  const { requireAuth, authModalProps } = useAuthAction();
 
   const [selectedSlot, setSelectedSlot] = useState<ChargingSlot | null>(null);
   const [reserveForm, setReserveForm] = useState({ start: '', end: '' });
@@ -123,15 +126,9 @@ export default function StationDetailPage() {
 
   function handleDirections() {
     if (!station) return;
-    if (user) {
-      const url = buildDirectionsUrl(station.latitude, station.longitude);
-      window.open(url, '_blank');
-    } else {
-      redirectToSignup(`/stations/${stationId}`, 'directions', {
-        lat: String(station.latitude),
-        lng: String(station.longitude),
-      });
-    }
+    requireAuth(() => {
+      window.open(buildDirectionsUrl(station.latitude, station.longitude), '_blank');
+    });
   }
 
   async function handleReserve() {
@@ -409,6 +406,8 @@ export default function StationDetailPage() {
             </div>
           )}
         </Modal>
+
+        <AuthModal {...authModalProps} />
       </div>
     </>
   );
