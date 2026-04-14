@@ -17,6 +17,21 @@ interface LocationState {
   lng: number;
 }
 
+function formatDuration(minutes: number): string {
+  if (minutes < 60) return `${minutes} min`;
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return m > 0 ? `${h}h ${m}m` : `${h}h`;
+}
+
+function buildGoogleMapsUrl(plan: RoutePlan): string {
+  const origin = `${plan.route.start.lat},${plan.route.start.lng}`;
+  const dest = `${plan.route.end.lat},${plan.route.end.lng}`;
+  const waypoints = plan.stops.map((s) => `${s.latitude},${s.longitude}`).join('|');
+  const base = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${dest}`;
+  return waypoints ? `${base}&waypoints=${waypoints}` : base;
+}
+
 export default function RoutePlannerPage() {
   const { position } = useGeolocation();
   const { country } = useCountry();
@@ -96,6 +111,7 @@ export default function RoutePlannerPage() {
 
   const routeLineData = plan ? plan.route : undefined;
   const canPlan = !!startLocation && !!endLocation;
+  const isRealRouting = plan?.route?.provider && plan.route.provider !== 'haversine-fallback';
 
   return (
     <>
@@ -104,13 +120,13 @@ export default function RoutePlannerPage() {
         {/* ── Page header ──────────────────────────────────── */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-theme-primary mb-1">EV Route Planner</h1>
-          <p className="text-sm text-theme-muted">Plan your trip with optimal charging stops</p>
+          <p className="text-sm text-theme-muted">Real-road routing with optimal charging stops</p>
         </div>
 
         {/* ── Main layout: Map (left) + Form (right) ─────── */}
         <div className="flex flex-col lg:flex-row gap-6">
 
-          {/* ── Map container (matches /map page exactly) ──── */}
+          {/* ── Map container ────────────────────────────── */}
           <div className="lg:w-[65%] lg:flex-shrink-0">
             <div className="glass-heavy rounded-2xl overflow-hidden relative">
               <StationMap
@@ -124,10 +140,18 @@ export default function RoutePlannerPage() {
               />
             </div>
 
-            {/* Location status chip below map (matches /map) */}
-            <div className="mt-2 flex items-center gap-1.5 text-xs text-theme-muted">
-              <span className={`w-1.5 h-1.5 rounded-full ${position ? 'bg-green-500' : 'bg-yellow-500'}`} />
-              {position ? 'Using your location' : `Using default location (${country.name})`}
+            {/* Status chips below map */}
+            <div className="mt-2 flex items-center gap-3 text-xs text-theme-muted flex-wrap">
+              <span className="flex items-center gap-1.5">
+                <span className={`w-1.5 h-1.5 rounded-full ${position ? 'bg-green-500' : 'bg-yellow-500'}`} />
+                {position ? 'Using your location' : `Default (${country.name})`}
+              </span>
+              {plan && (
+                <span className="flex items-center gap-1.5">
+                  <span className={`w-1.5 h-1.5 rounded-full ${isRealRouting ? 'bg-blue-500' : 'bg-yellow-500'}`} />
+                  {isRealRouting ? 'Road-based routing' : 'Approximate routing'}
+                </span>
+              )}
             </div>
           </div>
 
@@ -218,28 +242,71 @@ export default function RoutePlannerPage() {
               </form>
             </div>
 
-            {/* Route results */}
+            {/* ── Route results ──────────────────────────────── */}
             {plan && (
               <div className="space-y-4 animate-in">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="card py-3 px-4 text-center">
-                    <p className="text-xs text-theme-muted">Distance</p>
-                    <p className="text-xl font-bold text-primary-600 tabular-nums">{plan.totalDistanceKm} km</p>
+
+                {/* Fallback warning */}
+                {!isRealRouting && (
+                  <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3 flex items-center gap-2 text-sm">
+                    <svg className="w-5 h-5 text-yellow-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <span className="text-yellow-700 dark:text-yellow-400">Live road routing unavailable — showing approximate route</span>
                   </div>
-                  <div className="card py-3 px-4 text-center">
-                    <p className="text-xs text-theme-muted">Stops</p>
-                    <p className="text-xl font-bold text-accent-600 tabular-nums">{plan.totalStops}</p>
+                )}
+
+                {/* Route summary card */}
+                <div className="card p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      {isRealRouting && (
+                        <span className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 text-xs font-medium px-2 py-0.5 rounded-full">
+                          Fastest Route
+                        </span>
+                      )}
+                    </div>
+                    <a
+                      href={buildGoogleMapsUrl(plan)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-blue-600 hover:text-blue-700 dark:text-blue-400 flex items-center gap-1"
+                    >
+                      Open in Maps
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
                   </div>
-                  <div className="card py-3 px-4 text-center">
-                    <p className="text-xs text-theme-muted">Charging Time</p>
-                    <p className="text-xl font-bold text-yellow-600 tabular-nums">{plan.estimatedTotalChargingMin} min</p>
-                  </div>
-                  <div className="card py-3 px-4 text-center">
-                    <p className="text-xs text-theme-muted">Est. Cost</p>
-                    <p className="text-xl font-bold text-green-500 tabular-nums">{formatCurrency(plan.estimatedTotalCost, country)}</p>
+
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                    <div>
+                      <p className="text-xs text-theme-muted">Distance</p>
+                      <p className="text-xl font-bold text-primary-600 tabular-nums">{plan.totalDistanceKm} km</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-theme-muted">Total Time</p>
+                      <p className="text-xl font-bold text-blue-600 tabular-nums">
+                        {plan.totalDurationMin ? formatDuration(plan.totalDurationMin) : '—'}
+                      </p>
+                      {plan.totalDrivingMin && plan.totalStops > 0 && (
+                        <p className="text-xs text-theme-muted">
+                          {formatDuration(plan.totalDrivingMin)} driving + {formatDuration(plan.estimatedTotalChargingMin)} charging
+                        </p>
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-xs text-theme-muted">Charging Stops</p>
+                      <p className="text-xl font-bold text-accent-600 tabular-nums">{plan.totalStops}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-theme-muted">Est. Cost</p>
+                      <p className="text-xl font-bold text-green-500 tabular-nums">{formatCurrency(plan.estimatedTotalCost, country)}</p>
+                    </div>
                   </div>
                 </div>
 
+                {/* Charging stops */}
                 {plan.stops.length > 0 && (
                   <div>
                     <h3 className="text-sm font-semibold text-theme-secondary mb-3">Charging Stops</h3>
@@ -256,9 +323,14 @@ export default function RoutePlannerPage() {
                               </div>
                               <p className="text-xs text-theme-muted ml-8">{stop.address}, {stop.city}</p>
                               <div className="flex flex-wrap gap-2 mt-2 ml-8 text-xs text-theme-muted">
-                                <span>{stop.distanceFromPrevKm} km</span>
+                                <span>{stop.distanceFromPrevKm} km from prev</span>
                                 <span>{stop.chargingSpeedKw} kW</span>
-                                <span>{stop.availableSlots}/{stop.totalSlots} slots</span>
+                                <span className={stop.availableSlots > 0 ? 'text-green-600' : 'text-red-500'}>
+                                  {stop.availableSlots}/{stop.totalSlots} slots
+                                </span>
+                                {stop.detourKm !== undefined && stop.detourKm > 0.5 && (
+                                  <span className="text-yellow-600">+{stop.detourKm} km detour</span>
+                                )}
                               </div>
                             </div>
                             <div className="text-right text-xs flex-shrink-0">
@@ -289,6 +361,7 @@ export default function RoutePlannerPage() {
                   </div>
                 )}
 
+                {/* Arrival banner */}
                 {plan.arrivalBatteryPct > 0 && (
                   <div className="bg-green-500/10 border rounded-xl p-4 flex items-center gap-3" style={{ borderColor: 'var(--border-default)' }}>
                     <div className="w-8 h-8 bg-green-500/20 rounded-full flex items-center justify-center flex-shrink-0">

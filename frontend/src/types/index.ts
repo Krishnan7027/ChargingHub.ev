@@ -225,6 +225,7 @@ export interface ChargingStop {
   latitude: number;
   longitude: number;
   distanceFromPrevKm: number;
+  detourKm?: number;
   arrivalBatteryPct: number;
   departureBatteryPct: number;
   estimatedChargingMin: number;
@@ -237,8 +238,16 @@ export interface ChargingStop {
   estimatedCost: number;
 }
 
+export interface RouteDirection {
+  instruction: string;
+  distanceKm: number;
+  durationMin: number;
+}
+
 export interface RoutePlan {
   totalDistanceKm: number;
+  totalDurationMin?: number;
+  totalDrivingMin?: number;
   totalStops: number;
   estimatedTotalChargingMin: number;
   estimatedTotalCost: number;
@@ -248,7 +257,10 @@ export interface RoutePlan {
     start: { lat: number; lng: number };
     end: { lat: number; lng: number };
     waypoints: Array<{ lat: number; lng: number }>;
+    polyline?: Array<{ lat: number; lng: number }>;
+    provider?: string;
   };
+  directions?: RouteDirection[];
 }
 
 /** @deprecated Use SlotPrediction instead — unified prediction type */
