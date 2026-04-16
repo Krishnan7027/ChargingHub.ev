@@ -313,19 +313,13 @@ export default function HomePage() {
               <motion.div
                 key={i}
                 variants={scaleIn}
-                whileHover={{
-                  scale: 1.06,
-                  y: -6,
-                  boxShadow: '0 20px 40px rgba(38, 168, 102, 0.15), 0 0 30px rgba(38, 168, 102, 0.08)',
-                }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className="glass glass-refraction rounded-2xl p-6 text-center cursor-default group/stat"
+                className="glass glass-refraction rounded-2xl p-6 text-center cursor-default group/stat
+                  hover:-translate-y-1.5 hover:scale-[1.04] hover:shadow-[0_20px_40px_rgba(38,168,102,0.12)]
+                  transition-all duration-300 ease-out will-change-transform [backface-visibility:hidden]"
               >
-                <motion.div
-                  className="w-10 h-10 mx-auto mb-3 rounded-xl bg-primary-500/15 text-primary-600 dark:text-primary-400 flex items-center justify-center group-hover/stat:bg-primary-500 group-hover/stat:text-white transition-colors duration-300"
-                >
+                <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-primary-500/15 text-primary-600 dark:text-primary-400 flex items-center justify-center group-hover/stat:bg-primary-500 group-hover/stat:text-white transition-colors duration-300">
                   {stat.icon}
-                </motion.div>
+                </div>
                 <div className="text-2xl md:text-3xl font-bold text-theme-primary tabular-nums">
                   {stat.value}
                 </div>
@@ -368,14 +362,9 @@ export default function HomePage() {
                       <div className="md:hidden absolute left-[2.25rem] top-[5.5rem] bottom-[-2rem] w-[2px] bg-gradient-to-b from-primary-500/20 to-primary-500/5" />
                     )}
 
-                    <motion.div
-                      whileHover={{
-                        scale: 1.04,
-                        y: -6,
-                        boxShadow: '0 20px 50px rgba(0, 0, 0, 0.12), 0 0 30px rgba(38, 168, 102, 0.1)',
-                      }}
-                      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                      className="card glass-refraction text-center p-8 group/step"
+                    <div className="card glass-refraction text-center p-8 group/step
+                      hover:-translate-y-1.5 hover:scale-[1.03] hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)]
+                      transition-all duration-300 ease-out will-change-transform [backface-visibility:hidden]"
                     >
                       {/* Step number badge */}
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-bold tracking-wider bg-primary-600 text-white shadow-md">
@@ -383,17 +372,16 @@ export default function HomePage() {
                       </div>
 
                       {/* Icon */}
-                      <motion.div
-                        whileHover={{ rotate: [0, -8, 8, 0], scale: 1.1 }}
-                        transition={{ duration: 0.5 }}
-                        className={`w-16 h-16 bg-gradient-to-br ${step.gradient} rounded-2xl flex items-center justify-center mx-auto mt-4 mb-6 shadow-lg text-white group-hover/step:shadow-xl group-hover/step:shadow-primary-500/20 transition-shadow duration-300`}
+                      <div className={`w-16 h-16 bg-gradient-to-br ${step.gradient} rounded-2xl flex items-center justify-center mx-auto mt-4 mb-6 shadow-lg text-white
+                        group-hover/step:shadow-xl group-hover/step:shadow-primary-500/20 group-hover/step:scale-110
+                        transition-all duration-300`}
                       >
                         {step.icon}
-                      </motion.div>
+                      </div>
 
                       <h3 className="text-xl font-semibold mb-3 text-theme-primary">{step.title}</h3>
                       <p className="text-theme-secondary leading-relaxed text-sm">{step.desc}</p>
-                    </motion.div>
+                    </div>
                   </motion.div>
                 ))}
               </motion.div>
@@ -424,39 +412,29 @@ export default function HomePage() {
                 <motion.div
                   key={i}
                   variants={staggerItem}
-                  whileHover={{
-                    scale: 1.04,
-                    y: -6,
-                    boxShadow: '0 25px 50px rgba(0, 0, 0, 0.1), 0 0 40px rgba(38, 168, 102, 0.08)',
-                  }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                  className="group relative glass glass-refraction rounded-2xl p-8 hover:border-primary-500/30 hover:bg-primary-500/5"
+                  className="group relative glass glass-refraction rounded-2xl p-8
+                    hover:-translate-y-1.5 hover:scale-[1.03] hover:shadow-[0_25px_50px_rgba(0,0,0,0.08)]
+                    hover:border-primary-500/30 hover:bg-primary-500/5
+                    transition-all duration-300 ease-out will-change-transform [backface-visibility:hidden]"
                 >
                   <div className="flex items-center gap-3 mb-6">
-                    <motion.div
-                      whileHover={{ rotate: 360 }}
-                      transition={{ duration: 0.6 }}
-                      className="w-11 h-11 rounded-xl bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center group-hover:bg-primary-600 group-hover:text-white transition-colors duration-300"
-                    >
+                    <div className="w-11 h-11 rounded-xl bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center group-hover:bg-primary-600 group-hover:text-white transition-all duration-300">
                       {card.icon}
-                    </motion.div>
+                    </div>
                     <h3 className="text-lg font-semibold text-theme-primary">{card.role}</h3>
                   </div>
                   <ul className="space-y-4">
                     {card.items.map((item, j) => (
-                      <motion.li
+                      <li
                         key={j}
-                        initial={{ opacity: 0, x: -10 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: j * 0.08 }}
-                        className="flex items-start gap-3 text-theme-secondary"
+                        className="flex items-start gap-3 text-theme-secondary animate-in"
+                        style={{ animationDelay: `${j * 80}ms` }}
                       >
                         <svg className="w-5 h-5 text-primary-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                         <span>{item}</span>
-                      </motion.li>
+                      </li>
                     ))}
                   </ul>
                 </motion.div>

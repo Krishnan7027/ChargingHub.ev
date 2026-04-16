@@ -7,7 +7,7 @@ import { formatPricePerKwh } from '@/lib/formatCurrency';
 import { buildDirectionsUrl } from '@/lib/navigationFlow';
 import { useAuthAction } from '@/hooks/useAuthAction';
 import AuthModal from '@/components/ui/AuthModal';
-import { cardHover, staggerItem, pulseVariants, buttonTap } from '@/lib/animations';
+import { staggerItem, pulseVariants } from '@/lib/animations';
 import type { Station } from '@/types';
 
 interface StationCardProps {
@@ -49,12 +49,11 @@ export default function StationCard({ station, userLocation }: StationCardProps)
         variants={staggerItem}
         initial="hidden"
         animate="visible"
-        whileHover={cardHover.hover}
-        className="will-change-transform"
+        className="will-change-transform [backface-visibility:hidden]"
       >
         <Link
           href={`/stations/${station.id}`}
-          className="card-interactive group block"
+          className="card-interactive group block hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300 ease-out"
         >
           <div className="flex justify-between items-start gap-3">
             <div className="min-w-0 flex-1">
@@ -76,16 +75,14 @@ export default function StationCard({ station, userLocation }: StationCardProps)
               {distanceKm && (
                 <span className="text-xs text-theme-muted tabular-nums">{distanceKm} km</span>
               )}
-              <motion.svg
-                className="w-4 h-4 text-theme-muted group-hover:text-primary-500 transition-colors"
+              <svg
+                className="w-4 h-4 text-theme-muted group-hover:text-primary-500 group-hover:translate-x-0.5 transition-all duration-200"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                whileHover={{ x: 3 }}
-                transition={{ type: 'spring', stiffness: 400 }}
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </motion.svg>
+              </svg>
             </div>
           </div>
 
@@ -105,11 +102,9 @@ export default function StationCard({ station, userLocation }: StationCardProps)
             </div>
 
             {hasCoords && (
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={buttonTap}
+              <button
                 onClick={handleGetDirections}
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-500 hover:text-primary-400 bg-primary-500/10 hover:bg-primary-500/15 rounded-xl px-3 py-1.5 transition-colors"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-500 hover:text-primary-400 bg-primary-500/10 hover:bg-primary-500/15 hover:scale-105 active:scale-95 rounded-xl px-3 py-1.5 transition-all duration-200"
                 title="Get directions"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -117,7 +112,7 @@ export default function StationCard({ station, userLocation }: StationCardProps)
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <span className="hidden sm:inline">Directions</span>
-              </motion.button>
+              </button>
             )}
           </div>
         </Link>
