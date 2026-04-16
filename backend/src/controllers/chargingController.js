@@ -72,6 +72,33 @@ const chargingController = {
       next(err);
     }
   },
+
+  async getUserHistory(req, res, next) {
+    try {
+      const result = await chargingService.getUserHistory(req.user.id, req.query);
+      res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async getHistoryDetail(req, res, next) {
+    try {
+      const session = await chargingService.getHistoryDetail(req.params.sessionId, req.user.id);
+      res.json(session);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async getUserStats(req, res, next) {
+    try {
+      const stats = await chargingService.getUserStats(req.user.id);
+      res.json(stats);
+    } catch (err) {
+      next(err);
+    }
+  },
 };
 
 module.exports = chargingController;

@@ -17,6 +17,7 @@ import type {
   WalletSummary, Badge, Reward, RewardRedemption, PointsTransaction, LeaderboardEntry,
   Payment, CostEstimateResponse, PlugChargeVehicle, PlugEventResult, ArrivalPrediction,
   Favorite, FavoriteStatus,
+  SessionHistoryResponse, SessionHistoryStats, SessionHistoryFilters, SessionHistoryItem,
 } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
@@ -563,4 +564,16 @@ export const favoriteApi = {
 
   getStatus: (stationId: string) =>
     http.get<FavoriteStatus>(`/favorites/${stationId}/status`).then((r) => r.data),
+};
+
+// ── Session History ───────────────────────────────────────────
+export const sessionHistoryApi = {
+  list: (filters?: SessionHistoryFilters) =>
+    http.get<SessionHistoryResponse>('/charging/history', { params: filters }).then((r) => r.data),
+
+  getDetail: (sessionId: string) =>
+    http.get<SessionHistoryItem>(`/charging/history/${sessionId}`).then((r) => r.data),
+
+  getStats: () =>
+    http.get<SessionHistoryStats>('/charging/history/stats').then((r) => r.data),
 };

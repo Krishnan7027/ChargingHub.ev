@@ -225,6 +225,7 @@ export interface ChargingStop {
   latitude: number;
   longitude: number;
   distanceFromPrevKm: number;
+  detourKm?: number;
   arrivalBatteryPct: number;
   departureBatteryPct: number;
   estimatedChargingMin: number;
@@ -237,8 +238,16 @@ export interface ChargingStop {
   estimatedCost: number;
 }
 
+export interface RouteDirection {
+  instruction: string;
+  distanceKm: number;
+  durationMin: number;
+}
+
 export interface RoutePlan {
   totalDistanceKm: number;
+  totalDurationMin?: number;
+  totalDrivingMin?: number;
   totalStops: number;
   estimatedTotalChargingMin: number;
   estimatedTotalCost: number;
@@ -248,7 +257,10 @@ export interface RoutePlan {
     start: { lat: number; lng: number };
     end: { lat: number; lng: number };
     waypoints: Array<{ lat: number; lng: number }>;
+    polyline?: Array<{ lat: number; lng: number }>;
+    provider?: string;
   };
+  directions?: RouteDirection[];
 }
 
 /** @deprecated Use SlotPrediction instead — unified prediction type */
@@ -1237,4 +1249,53 @@ export interface Favorite {
 export interface FavoriteStatus {
   isFavorited: boolean;
   totalFavorites: number;
+}
+
+// ── Session History ────────────────────────────────────────
+export interface SessionHistoryItem {
+  id: string;
+  user_id: string;
+  slot_id: string;
+  reservation_id: string | null;
+  status: SessionStatus;
+  start_percentage: number;
+  current_percentage: number;
+  target_percentage: number;
+  energy_delivered_kwh: number;
+  average_power_kw: number;
+  cost: number;
+  started_at: string;
+  completed_at: string | null;
+  station_name: string;
+  station_id: string;
+  slot_number: number;
+  charging_type: string;
+  connector_type: string;
+  power_output_kw: number;
+}
+
+export interface SessionHistoryResponse {
+  sessions: SessionHistoryItem[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface SessionHistoryStats {
+  totalSessions: number;
+  totalEnergyKwh: number;
+  totalCost: number;
+  avgDurationMin: number;
+  avgEnergyPerSession: number;
+}
+
+export interface SessionHistoryFilters {
+  status?: string;
+  station_id?: string;
+  start_date?: string;
+  end_date?: string;
+  sort_by?: string;
+  sort_order?: string;
+  page?: number;
+  limit?: number;
 }
