@@ -110,7 +110,11 @@
     box-shadow: 0 4px 14px rgba(38, 168, 102, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1);
   }
   .btn-primary:hover {
-    box-shadow: 0 6px 20px rgba(38, 168, 102, 0.35), 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 20px rgba(38, 168, 102, 0.4), 0 2px 6px rgba(0, 0, 0, 0.1),
+                0 0 30px rgba(38, 168, 102, 0.15);
+  }
+  .btn-primary:active {
+    box-shadow: 0 2px 8px rgba(38, 168, 102, 0.3), 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .btn-secondary {
@@ -158,7 +162,7 @@
   .input:focus {
     outline: none;
     border-color: var(--input-focus-border);
-    box-shadow: 0 0 0 3px var(--focus-ring);
+    box-shadow: 0 0 0 3px var(--focus-ring), 0 0 20px rgba(38, 168, 102, 0.1);
   }
   .dark .input::placeholder {
     color: var(--text-muted);
@@ -184,8 +188,8 @@
   }
   .card-interactive:hover {
     background: var(--card-hover-bg);
-    box-shadow: var(--glass-shadow-heavy);
-    transform: translateY(-1px);
+    box-shadow: var(--glass-shadow-heavy), 0 0 40px rgba(38, 168, 102, 0.06);
+    transform: translateY(-2px);
   }
 
   /* ── Badges ─────────────────────────────────────────── */
@@ -270,6 +274,13 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  /* Map marker pulse animation */
+  @keyframes marker-pulse {
+    0% { transform: scale(1); opacity: 0.6; }
+    70% { transform: scale(1.8); opacity: 0; }
+    100% { transform: scale(1.8); opacity: 0; }
   }
 
   /* Stagger delay utilities */

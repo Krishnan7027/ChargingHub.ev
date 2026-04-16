@@ -1,13 +1,58 @@
 'use client';
 
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import Navbar from '@/components/layout/Navbar';
 import { useEffect, useState } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+import {
+  fadeInUp,
+  fadeInLeft,
+  fadeInRight,
+  staggerContainer,
+  staggerItem,
+  scaleIn,
+  sectionVariants,
+  buttonHover,
+  buttonTap,
+} from '@/lib/animations';
+
+const EVHeroScene = dynamic(() => import('@/components/three/EVHeroScene'), {
+  ssr: false,
+  loading: () => <div className="w-full h-full" />,
+});
+const ParticleField = dynamic(() => import('@/components/three/ParticleField'), {
+  ssr: false,
+});
 
 function formatNumber(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M+`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(n >= 10_000 ? 0 : 1)}K+`;
   return `${n}`;
+}
+
+/** Scroll-triggered section wrapper */
+function AnimatedSection({ children, className, delay = 0 }: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-60px' });
+
+  return (
+    <motion.div
+      ref={ref}
+      variants={sectionVariants}
+      initial="hidden"
+      animate={isInView ? 'visible' : 'hidden'}
+      transition={{ delay }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
 }
 
 const steps = [
@@ -158,7 +203,7 @@ export default function HomePage() {
     <>
       <Navbar />
       <main>
-        {/* ═══ Hero Section ═══════════════════════════════════════ */}
+        {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 dark:from-primary-950 dark:via-primary-900 dark:to-primary-800 text-white">
           {/* Decorative dot grid */}
           <svg className="absolute inset-0 w-full h-full opacity-[0.07]" aria-hidden="true">
@@ -170,52 +215,109 @@ export default function HomePage() {
             <rect width="100%" height="100%" fill="url(#hero-dots)" />
           </svg>
 
+          {/* Particle field background */}
+          <ParticleField />
+
           {/* Gradient orbs */}
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-400/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary-300/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
+          <motion.div
+            className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-400/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.2, 0.3, 0.2],
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary-300/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4"
+            animate={{
+              scale: [1, 1.15, 1],
+              opacity: [0.1, 0.2, 0.1],
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          />
 
           <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 pb-32 md:pb-40">
-            <div className="max-w-3xl">
-              <h1 className="animate-in text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight">
+            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+            <div className="max-w-3xl lg:max-w-xl lg:flex-1">
+              <motion.h1
+                variants={fadeInUp}
+                initial="hidden"
+                animate="visible"
+                className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight"
+              >
                 Find & Reserve EV Charging Stations
-              </h1>
-              <p className="animate-in delay-75 mt-6 text-lg md:text-xl text-primary-100 dark:text-primary-200 leading-relaxed max-w-2xl">
+              </motion.h1>
+              <motion.p
+                variants={fadeInUp}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.15 }}
+                className="mt-6 text-lg md:text-xl text-primary-100 dark:text-primary-200 leading-relaxed max-w-2xl"
+              >
                 Discover nearby charging stations, check real-time slot availability,
                 and reserve your spot before you arrive. Smart predictions tell you
                 when the next slot opens up.
-              </p>
-              <div className="animate-in delay-150 mt-10 flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/map"
-                  className="inline-flex items-center justify-center px-9 py-4 bg-white dark:bg-white/95 text-primary-700 font-semibold rounded-xl hover:bg-primary-50 dark:hover:bg-white transition-all text-lg shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/25"
-                >
-                  <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  Find Stations Nearby
-                </Link>
-                <Link
-                  href="/register"
-                  className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg shadow-lg shadow-black/10"
-                >
-                  Get Started Free
-                </Link>
-              </div>
+              </motion.p>
+              <motion.div
+                variants={fadeInUp}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.3 }}
+                className="mt-10 flex flex-col sm:flex-row gap-4"
+              >
+                <motion.div whileHover={buttonHover} whileTap={buttonTap}>
+                  <Link
+                    href="/map"
+                    className="inline-flex items-center justify-center px-9 py-4 bg-white dark:bg-white/95 text-primary-700 font-semibold rounded-xl hover:bg-primary-50 dark:hover:bg-white transition-all text-lg shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/25"
+                  >
+                    <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Find Stations Nearby
+                  </Link>
+                </motion.div>
+                <motion.div whileHover={buttonHover} whileTap={buttonTap}>
+                  <Link
+                    href="/register"
+                    className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg shadow-lg shadow-black/10"
+                  >
+                    Get Started Free
+                  </Link>
+                </motion.div>
+              </motion.div>
+            </div>
+
+            {/* 3D EV Scene — hidden on mobile for performance */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5, duration: 0.8, ease: 'easeOut' }}
+              className="hidden lg:block lg:flex-1 w-full h-[400px] lg:h-[480px]"
+            >
+              <EVHeroScene />
+            </motion.div>
             </div>
           </div>
 
           <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[var(--bg-primary)] to-transparent" />
         </section>
 
-        {/* ═══ Stats Cards — 2x2 grid, glass style ════════════════ */}
+        {/* Stats Cards */}
         <section className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-20">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6"
+          >
             {statCards.map((stat, i) => (
-              <div
+              <motion.div
                 key={i}
-                className="animate-in glass glass-refraction rounded-2xl p-6 text-center transition-all duration-300 hover:scale-[1.03]"
-                style={{ animationDelay: `${i * 75 + 150}ms` }}
+                variants={scaleIn}
+                whileHover={{ scale: 1.05, y: -2 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                className="glass glass-refraction rounded-2xl p-6 text-center"
               >
                 <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-primary-500/15 text-primary-600 dark:text-primary-400 flex items-center justify-center">
                   {stat.icon}
@@ -226,99 +328,132 @@ export default function HomePage() {
                 <div className="text-sm text-theme-muted mt-1 font-medium">
                   {stat.label}
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </section>
 
-        {/* ═══ How It Works — Step-based layout ═══════════════════ */}
+        {/* How It Works */}
         <section className="py-20 md:py-28">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="animate-in text-3xl md:text-4xl font-bold text-theme-primary">
+            <AnimatedSection className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-theme-primary">
                 How It Works
               </h2>
-              <p className="animate-in delay-75 mt-4 text-theme-secondary text-lg max-w-2xl mx-auto">
+              <p className="mt-4 text-theme-secondary text-lg max-w-2xl mx-auto">
                 Get started in three simple steps and never worry about finding a charger again.
               </p>
-            </div>
+            </AnimatedSection>
 
-            {/* Steps — horizontal on desktop, vertical on mobile */}
+            {/* Steps */}
             <div className="relative">
               {/* Connector line (desktop only) */}
               <div className="hidden md:block absolute top-[4.5rem] left-[16%] right-[16%] h-[2px] bg-gradient-to-r from-blue-500/30 via-primary-500/30 to-amber-500/30" />
 
-              <div className="grid md:grid-cols-3 gap-12 md:gap-8">
+              <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-80px' }}
+                className="grid md:grid-cols-3 gap-12 md:gap-8"
+              >
                 {steps.map((step, i) => (
-                  <div key={i} className="relative">
+                  <motion.div key={i} variants={staggerItem} className="relative">
                     {/* Mobile connector line */}
                     {i < steps.length - 1 && (
                       <div className="md:hidden absolute left-[2.25rem] top-[5.5rem] bottom-[-2rem] w-[2px] bg-gradient-to-b from-primary-500/20 to-primary-500/5" />
                     )}
 
-                    <div className="card glass-refraction text-center p-8 hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300">
+                    <motion.div
+                      whileHover={{ scale: 1.03, y: -4 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                      className="card glass-refraction text-center p-8"
+                    >
                       {/* Step number badge */}
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-bold tracking-wider bg-primary-600 text-white shadow-md">
                         STEP {step.number}
                       </div>
 
                       {/* Icon */}
-                      <div
+                      <motion.div
+                        whileHover={{ rotate: [0, -5, 5, 0] }}
+                        transition={{ duration: 0.5 }}
                         className={`w-16 h-16 bg-gradient-to-br ${step.gradient} rounded-2xl flex items-center justify-center mx-auto mt-4 mb-6 shadow-lg text-white`}
                       >
                         {step.icon}
-                      </div>
+                      </motion.div>
 
                       <h3 className="text-xl font-semibold mb-3 text-theme-primary">{step.title}</h3>
                       <p className="text-theme-secondary leading-relaxed text-sm">{step.desc}</p>
-                    </div>
-                  </div>
+                    </motion.div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
 
-        {/* ═══ Roles Section ══════════════════════════════════════ */}
+        {/* Roles Section */}
         <section className="bg-theme-secondary py-20 md:py-28">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="animate-in text-3xl md:text-4xl font-bold text-theme-primary">
+            <AnimatedSection className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-theme-primary">
                 For Everyone in the EV Ecosystem
               </h2>
-              <p className="animate-in delay-75 mt-4 text-theme-secondary text-lg max-w-2xl mx-auto">
+              <p className="mt-4 text-theme-secondary text-lg max-w-2xl mx-auto">
                 Whether you drive an EV, manage a station, or oversee the platform, we have you covered.
               </p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-8">
+            </AnimatedSection>
+
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-80px' }}
+              className="grid md:grid-cols-3 gap-8"
+            >
               {roles.map((card, i) => (
-                <div
+                <motion.div
                   key={i}
-                  className="group relative glass glass-refraction rounded-2xl p-8 transition-all duration-300 hover:shadow-lg hover:border-primary-500/30 hover:bg-primary-500/5"
+                  variants={staggerItem}
+                  whileHover={{ scale: 1.03, y: -4 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                  className="group relative glass glass-refraction rounded-2xl p-8 hover:border-primary-500/30 hover:bg-primary-500/5"
                 >
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-11 h-11 rounded-xl bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center group-hover:bg-primary-600 group-hover:text-white transition-colors duration-300">
+                    <motion.div
+                      whileHover={{ rotate: 360 }}
+                      transition={{ duration: 0.6 }}
+                      className="w-11 h-11 rounded-xl bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center group-hover:bg-primary-600 group-hover:text-white transition-colors duration-300"
+                    >
                       {card.icon}
-                    </div>
+                    </motion.div>
                     <h3 className="text-lg font-semibold text-theme-primary">{card.role}</h3>
                   </div>
                   <ul className="space-y-4">
                     {card.items.map((item, j) => (
-                      <li key={j} className="flex items-start gap-3 text-theme-secondary">
+                      <motion.li
+                        key={j}
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: j * 0.08 }}
+                        className="flex items-start gap-3 text-theme-secondary"
+                      >
                         <svg className="w-5 h-5 text-primary-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                         <span>{item}</span>
-                      </li>
+                      </motion.li>
                     ))}
                   </ul>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </section>
 
-        {/* ═══ CTA Section ════════════════════════════════════════ */}
+        {/* CTA Section */}
         <section className="relative overflow-hidden bg-gradient-to-r from-primary-700 to-primary-900 dark:from-primary-800 dark:to-primary-950 py-20 md:py-28">
           <svg className="absolute inset-0 w-full h-full opacity-[0.05]" aria-hidden="true">
             <defs>
@@ -328,36 +463,63 @@ export default function HomePage() {
             </defs>
             <rect width="100%" height="100%" fill="url(#cta-grid)" />
           </svg>
+
+          {/* Animated orb */}
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-400/10 rounded-full blur-3xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.1, 0.2, 0.1],
+            }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+          />
+
           <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="animate-in text-3xl md:text-4xl font-bold text-white mb-4">
-              Ready to charge smarter?
-            </h2>
-            <p className="animate-in delay-75 text-primary-200 text-lg mb-10 max-w-2xl mx-auto">
-              Join thousands of EV owners who never worry about finding a charger again.
-            </p>
-            <div className="animate-in delay-150 flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/register"
-                className="inline-flex items-center justify-center px-9 py-4 bg-white dark:bg-white/95 text-primary-700 font-semibold rounded-xl hover:bg-primary-50 dark:hover:bg-white transition-all text-lg shadow-lg"
-              >
-                Create Free Account
-              </Link>
-              <Link
-                href="/map"
-                className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg"
-              >
-                Explore the Map
-              </Link>
-            </div>
+            <AnimatedSection>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Ready to charge smarter?
+              </h2>
+            </AnimatedSection>
+            <AnimatedSection delay={0.1}>
+              <p className="text-primary-200 text-lg mb-10 max-w-2xl mx-auto">
+                Join thousands of EV owners who never worry about finding a charger again.
+              </p>
+            </AnimatedSection>
+            <AnimatedSection delay={0.2}>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <motion.div whileHover={buttonHover} whileTap={buttonTap}>
+                  <Link
+                    href="/register"
+                    className="inline-flex items-center justify-center px-9 py-4 bg-white dark:bg-white/95 text-primary-700 font-semibold rounded-xl hover:bg-primary-50 dark:hover:bg-white transition-all text-lg shadow-lg"
+                  >
+                    Create Free Account
+                  </Link>
+                </motion.div>
+                <motion.div whileHover={buttonHover} whileTap={buttonTap}>
+                  <Link
+                    href="/map"
+                    className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg"
+                  >
+                    Explore the Map
+                  </Link>
+                </motion.div>
+              </div>
+            </AnimatedSection>
           </div>
         </section>
 
-        {/* ═══ Footer ═════════════════════════════════════════════ */}
+        {/* Footer */}
         <footer className="bg-[var(--bg-tertiary)] text-theme-muted border-t border-[var(--border-default)]">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-40px' }}
+              className="grid grid-cols-2 md:grid-cols-5 gap-8"
+            >
               {/* Brand column */}
-              <div className="col-span-2 md:col-span-1">
+              <motion.div variants={staggerItem} className="col-span-2 md:col-span-1">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
                     <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -369,11 +531,11 @@ export default function HomePage() {
                 <p className="text-sm leading-relaxed">
                   EV Charging Station Discovery & Reservation Platform
                 </p>
-              </div>
+              </motion.div>
 
               {/* Link columns */}
               {Object.entries(footerLinks).map(([heading, links]) => (
-                <div key={heading}>
+                <motion.div key={heading} variants={staggerItem}>
                   <h4 className="text-sm font-semibold text-theme-primary uppercase tracking-wider mb-4">
                     {heading}
                   </h4>
@@ -386,9 +548,9 @@ export default function HomePage() {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
             {/* Bottom bar */}
             <div className="mt-12 pt-8 border-t border-[var(--border-default)] flex flex-col sm:flex-row justify-between items-center gap-4">

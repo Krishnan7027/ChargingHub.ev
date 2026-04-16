@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import Navbar from '@/components/layout/Navbar';
+import PageTransition from '@/components/ui/PageTransition';
 import SlotGrid from '@/components/stations/SlotGrid';
 import PredictionBanner from '@/components/stations/PredictionBanner';
 import DemandForecastPanel from '@/components/stations/DemandForecastPanel';
@@ -183,6 +184,7 @@ export default function StationDetailPage() {
   return (
     <>
       <Navbar />
+      <PageTransition>
       <div className="max-w-5xl mx-auto px-4 py-6 sm:py-8 animate-in">
         {/* Header */}
         <div className="mb-6">
@@ -409,6 +411,7 @@ export default function StationDetailPage() {
 
         <AuthModal {...authModalProps} />
       </div>
+      </PageTransition>
     </>
   );
 }

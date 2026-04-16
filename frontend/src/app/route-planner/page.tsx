@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import Navbar from '@/components/layout/Navbar';
+import PageTransition from '@/components/ui/PageTransition';
 import StationMap from '@/components/map/StationMap';
 import LocationSearchInput from '@/components/route/LocationSearchInput';
 import { usePlanRoute } from '@/hooks/useIntelligent';
@@ -121,6 +122,7 @@ export default function RoutePlannerPage() {
   return (
     <>
       <Navbar />
+      <PageTransition>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* ── Page header ──────────────────────────────────── */}
         <div className="mb-6">
@@ -408,6 +410,7 @@ export default function RoutePlannerPage() {
           </div>
         </div>
       </main>
+      </PageTransition>
       <AuthModal {...authModalProps} />
     </>
   );

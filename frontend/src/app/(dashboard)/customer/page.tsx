@@ -14,6 +14,7 @@ import { useSocket } from '@/hooks/useSocket';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
+import PageTransition from '@/components/ui/PageTransition';
 
 export default function CustomerDashboard() {
   const { user } = useAuth();
@@ -74,6 +75,7 @@ export default function CustomerDashboard() {
   return (
     <ProtectedRoute roles={['customer']}>
       <Navbar />
+      <PageTransition>
       <div className="max-w-6xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold text-theme-primary mb-6">Welcome, {user?.full_name}</h1>
 
@@ -316,6 +318,7 @@ export default function CustomerDashboard() {
           )}
         </div>
       </div>
+      </PageTransition>
     </ProtectedRoute>
   );
 }

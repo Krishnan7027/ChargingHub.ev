@@ -127,9 +127,13 @@ export default function StationMap({
         ? `<div style="position:absolute;top:-8px;right:-8px;background:#2563EB;color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:bold;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3)">${rank}</div>`
         : '';
 
+      const pulseRing = available > 0
+        ? `<div style="position:absolute;inset:-6px;border-radius:50%;border:2px solid ${color};opacity:0;animation:marker-pulse 2s ease-out infinite"></div>`
+        : '';
+
       const icon = L.divIcon({
         className: 'custom-marker',
-        html: `<div style="position:relative;background:${color};color:white;border-radius:50%;width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:${isRanked ? 14 : 12}px;border:${isRanked ? 3 : 2}px solid white;box-shadow:0 2px ${isRanked ? 10 : 6}px rgba(0,0,0,${isRanked ? 0.4 : 0.3})">${available}${rankBadge}</div>`,
+        html: `<div style="position:relative;background:${color};color:white;border-radius:50%;width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:${isRanked ? 14 : 12}px;border:${isRanked ? 3 : 2}px solid white;box-shadow:0 2px ${isRanked ? 10 : 6}px rgba(0,0,0,${isRanked ? 0.4 : 0.3});transition:transform 0.2s ease">${available}${rankBadge}${pulseRing}</div>`,
         iconSize: [size + 16, size + 16],
         iconAnchor: [(size + 16) / 2, (size + 16) / 2],
       });

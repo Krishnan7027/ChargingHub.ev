@@ -3,6 +3,7 @@
 import { useFavorites } from '@/hooks/useFavorites';
 import { useToggleFavorite } from '@/hooks/useFavorites';
 import Link from 'next/link';
+import PageTransition from '@/components/ui/PageTransition';
 
 export default function FavoritesPage() {
   const { data: favorites, isLoading, error } = useFavorites();
@@ -10,6 +11,7 @@ export default function FavoritesPage() {
 
   if (isLoading) {
     return (
+      <PageTransition>
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold mb-6 dark:text-white">My Favorite Stations</h1>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -22,21 +24,25 @@ export default function FavoritesPage() {
           ))}
         </div>
       </div>
+      </PageTransition>
     );
   }
 
   if (error) {
     return (
+      <PageTransition>
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold mb-6 dark:text-white">My Favorite Stations</h1>
         <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl p-6">
           Failed to load favorites. Please try again.
         </div>
       </div>
+      </PageTransition>
     );
   }
 
   return (
+    <PageTransition>
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6 dark:text-white">My Favorite Stations</h1>
 
@@ -102,5 +108,6 @@ export default function FavoritesPage() {
         </div>
       )}
     </div>
+    </PageTransition>
   );
 }

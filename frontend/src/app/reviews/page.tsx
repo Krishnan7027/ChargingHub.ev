@@ -1,6 +1,7 @@
 'use client';
 
 import Navbar from '@/components/layout/Navbar';
+import PageTransition from '@/components/ui/PageTransition';
 import StationReviewsDashboard from '@/components/reviews/StationReviewsDashboard';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -30,9 +31,11 @@ export default function ReviewsPage() {
   return (
     <>
       <Navbar />
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <StationReviewsDashboard />
-      </div>
+      <PageTransition>
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <StationReviewsDashboard />
+        </div>
+      </PageTransition>
     </>
   );
 }

@@ -5,6 +5,7 @@ import { useSessionHistory, useSessionStats } from '@/hooks/useSessionHistory';
 import { useCountry } from '@/context/CountryContext';
 import { formatCurrency } from '@/lib/formatCurrency';
 import Link from 'next/link';
+import PageTransition from '@/components/ui/PageTransition';
 import type { SessionHistoryFilters } from '@/types';
 
 export default function ChargingHistoryPage() {
@@ -26,6 +27,7 @@ export default function ChargingHistoryPage() {
   const totalPages = history ? Math.ceil(history.total / history.limit) : 0;
 
   return (
+    <PageTransition>
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6 dark:text-white">Charging History</h1>
 
@@ -196,5 +198,6 @@ export default function ChargingHistoryPage() {
         </>
       )}
     </div>
+    </PageTransition>
   );
 }

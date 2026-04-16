@@ -1,6 +1,7 @@
 'use client';
 
 import Navbar from '@/components/layout/Navbar';
+import PageTransition from '@/components/ui/PageTransition';
 import StatusBadge from '@/components/ui/StatusBadge';
 import EmptyState from '@/components/ui/EmptyState';
 import ProtectedRoute from '@/components/ui/ProtectedRoute';
@@ -74,6 +75,7 @@ export default function PaymentsPage() {
   return (
     <ProtectedRoute roles={['customer', 'manager', 'admin']}>
       <Navbar />
+      <PageTransition>
       <div className="max-w-5xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">Payments & Wallet</h1>
@@ -183,6 +185,7 @@ export default function PaymentsPage() {
           </div>
         )}
       </div>
+      </PageTransition>
     </ProtectedRoute>
   );
 }
