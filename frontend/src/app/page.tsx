@@ -18,11 +18,12 @@ import {
   buttonTap,
 } from '@/lib/animations';
 
+const SafeCanvas = dynamic(() => import('@/components/three/SafeCanvas'), { ssr: false });
 const EVHeroScene = dynamic(() => import('@/components/three/EVHeroScene'), {
   ssr: false,
   loading: () => <div className="w-full h-full" />,
 });
-const ParticleField = dynamic(() => import('@/components/three/ParticleField'), {
+const ParticleBackground = dynamic(() => import('@/components/ui/ParticleBackground'), {
   ssr: false,
 });
 
@@ -202,7 +203,10 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="relative">
+        {/* Full-page particle background — responds to mouse, never blocks clicks */}
+        <ParticleBackground />
+
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 dark:from-primary-950 dark:via-primary-900 dark:to-primary-800 text-white">
           {/* Decorative dot grid */}
@@ -214,9 +218,6 @@ export default function HomePage() {
             </defs>
             <rect width="100%" height="100%" fill="url(#hero-dots)" />
           </svg>
-
-          {/* Particle field background */}
-          <ParticleField />
 
           {/* Gradient orbs */}
           <motion.div
@@ -265,26 +266,22 @@ export default function HomePage() {
                 transition={{ delay: 0.3 }}
                 className="mt-10 flex flex-col sm:flex-row gap-4"
               >
-                <motion.div whileHover={buttonHover} whileTap={buttonTap}>
-                  <Link
-                    href="/map"
-                    className="inline-flex items-center justify-center px-9 py-4 bg-white dark:bg-white/95 text-primary-700 font-semibold rounded-xl hover:bg-primary-50 dark:hover:bg-white transition-all text-lg shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/25"
-                  >
-                    <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    Find Stations Nearby
-                  </Link>
-                </motion.div>
-                <motion.div whileHover={buttonHover} whileTap={buttonTap}>
-                  <Link
-                    href="/register"
-                    className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg shadow-lg shadow-black/10"
-                  >
-                    Get Started Free
-                  </Link>
-                </motion.div>
+                <Link
+                  href="/map"
+                  className="inline-flex items-center justify-center px-9 py-4 bg-white dark:bg-white/95 text-primary-700 font-semibold rounded-xl hover:bg-primary-50 dark:hover:bg-white transition-all text-lg shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/25 hover:scale-[1.03] active:scale-[0.97]"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  Find Stations Nearby
+                </Link>
+                <Link
+                  href="/register"
+                  className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg shadow-lg shadow-black/10 hover:scale-[1.03] active:scale-[0.97]"
+                >
+                  Get Started Free
+                </Link>
               </motion.div>
             </div>
 
@@ -295,7 +292,9 @@ export default function HomePage() {
               transition={{ delay: 0.5, duration: 0.8, ease: 'easeOut' }}
               className="hidden lg:block lg:flex-1 w-full h-[400px] lg:h-[480px]"
             >
-              <EVHeroScene />
+              <SafeCanvas>
+                <EVHeroScene />
+              </SafeCanvas>
             </motion.div>
             </div>
           </div>
@@ -315,13 +314,19 @@ export default function HomePage() {
               <motion.div
                 key={i}
                 variants={scaleIn}
-                whileHover={{ scale: 1.05, y: -2 }}
+                whileHover={{
+                  scale: 1.06,
+                  y: -6,
+                  boxShadow: '0 20px 40px rgba(38, 168, 102, 0.15), 0 0 30px rgba(38, 168, 102, 0.08)',
+                }}
                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className="glass glass-refraction rounded-2xl p-6 text-center"
+                className="glass glass-refraction rounded-2xl p-6 text-center cursor-default group/stat"
               >
-                <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-primary-500/15 text-primary-600 dark:text-primary-400 flex items-center justify-center">
+                <motion.div
+                  className="w-10 h-10 mx-auto mb-3 rounded-xl bg-primary-500/15 text-primary-600 dark:text-primary-400 flex items-center justify-center group-hover/stat:bg-primary-500 group-hover/stat:text-white transition-colors duration-300"
+                >
                   {stat.icon}
-                </div>
+                </motion.div>
                 <div className="text-2xl md:text-3xl font-bold text-theme-primary tabular-nums">
                   {stat.value}
                 </div>
@@ -365,9 +370,13 @@ export default function HomePage() {
                     )}
 
                     <motion.div
-                      whileHover={{ scale: 1.03, y: -4 }}
+                      whileHover={{
+                        scale: 1.04,
+                        y: -6,
+                        boxShadow: '0 20px 50px rgba(0, 0, 0, 0.12), 0 0 30px rgba(38, 168, 102, 0.1)',
+                      }}
                       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                      className="card glass-refraction text-center p-8"
+                      className="card glass-refraction text-center p-8 group/step"
                     >
                       {/* Step number badge */}
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-bold tracking-wider bg-primary-600 text-white shadow-md">
@@ -376,9 +385,9 @@ export default function HomePage() {
 
                       {/* Icon */}
                       <motion.div
-                        whileHover={{ rotate: [0, -5, 5, 0] }}
+                        whileHover={{ rotate: [0, -8, 8, 0], scale: 1.1 }}
                         transition={{ duration: 0.5 }}
-                        className={`w-16 h-16 bg-gradient-to-br ${step.gradient} rounded-2xl flex items-center justify-center mx-auto mt-4 mb-6 shadow-lg text-white`}
+                        className={`w-16 h-16 bg-gradient-to-br ${step.gradient} rounded-2xl flex items-center justify-center mx-auto mt-4 mb-6 shadow-lg text-white group-hover/step:shadow-xl group-hover/step:shadow-primary-500/20 transition-shadow duration-300`}
                       >
                         {step.icon}
                       </motion.div>
@@ -416,7 +425,11 @@ export default function HomePage() {
                 <motion.div
                   key={i}
                   variants={staggerItem}
-                  whileHover={{ scale: 1.03, y: -4 }}
+                  whileHover={{
+                    scale: 1.04,
+                    y: -6,
+                    boxShadow: '0 25px 50px rgba(0, 0, 0, 0.1), 0 0 40px rgba(38, 168, 102, 0.08)',
+                  }}
                   transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                   className="group relative glass glass-refraction rounded-2xl p-8 hover:border-primary-500/30 hover:bg-primary-500/5"
                 >
@@ -487,22 +500,18 @@ export default function HomePage() {
             </AnimatedSection>
             <AnimatedSection delay={0.2}>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <motion.div whileHover={buttonHover} whileTap={buttonTap}>
-                  <Link
-                    href="/register"
-                    className="inline-flex items-center justify-center px-9 py-4 bg-white dark:bg-white/95 text-primary-700 font-semibold rounded-xl hover:bg-primary-50 dark:hover:bg-white transition-all text-lg shadow-lg"
-                  >
-                    Create Free Account
-                  </Link>
-                </motion.div>
-                <motion.div whileHover={buttonHover} whileTap={buttonTap}>
-                  <Link
-                    href="/map"
-                    className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg"
-                  >
-                    Explore the Map
-                  </Link>
-                </motion.div>
+                <Link
+                  href="/register"
+                  className="inline-flex items-center justify-center px-9 py-4 bg-white dark:bg-white/95 text-primary-700 font-semibold rounded-xl hover:bg-primary-50 dark:hover:bg-white transition-all text-lg shadow-lg hover:scale-[1.03] active:scale-[0.97]"
+                >
+                  Create Free Account
+                </Link>
+                <Link
+                  href="/map"
+                  className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg hover:scale-[1.03] active:scale-[0.97]"
+                >
+                  Explore the Map
+                </Link>
               </div>
             </AnimatedSection>
           </div>

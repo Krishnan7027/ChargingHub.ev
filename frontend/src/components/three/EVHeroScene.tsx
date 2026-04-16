@@ -2,7 +2,7 @@
 
 import { useRef, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { Float, RoundedBox, Environment, ContactShadows } from '@react-three/drei'
+import { Float, RoundedBox, ContactShadows } from '@react-three/drei'
 import * as THREE from 'three'
 
 /** Stylized EV charging station built from drei primitives */
@@ -200,7 +200,7 @@ export default function EVHeroScene() {
       camera={{ position: [2.5, 1.5, 3.5], fov: 35 }}
       dpr={[1, 1.5]}
       gl={{ antialias: true, alpha: true }}
-      style={{ background: 'transparent' }}
+      style={{ background: 'transparent', pointerEvents: 'none' }}
     >
       <ambientLight intensity={0.4} />
       <directionalLight
@@ -223,7 +223,8 @@ export default function EVHeroScene() {
         far={4}
       />
 
-      <Environment preset="city" environmentIntensity={0.3} />
+      {/* Hemisphere light replaces Environment to avoid network HDR fetch */}
+      <hemisphereLight args={['#b1e5fd', '#1a5c3a', 0.5]} />
     </Canvas>
   )
 }
