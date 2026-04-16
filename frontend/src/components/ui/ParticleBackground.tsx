@@ -5,8 +5,6 @@ import { useRef, useEffect, useCallback } from 'react'
 interface Particle {
   x: number
   y: number
-  baseX: number
-  baseY: number
   vx: number
   vy: number
   size: number
@@ -15,7 +13,7 @@ interface Particle {
 }
 
 /**
- * Full-page particle background using 2D Canvas.
+ * Particle background scoped to its parent container.
  * - Responds to mouse movement (particles push away from cursor)
  * - Uses pointer-events: none so it never blocks clicks
  * - Draws connection lines between nearby particles
@@ -28,20 +26,16 @@ export default function ParticleBackground() {
   const rafRef = useRef<number>(0)
 
   const initParticles = useCallback((width: number, height: number) => {
-    const count = Math.min(Math.floor((width * height) / 12000), 120)
+    const count = Math.min(Math.floor((width * height) / 15000), 80)
     const particles: Particle[] = []
     for (let i = 0; i < count; i++) {
-      const x = Math.random() * width
-      const y = Math.random() * height
       particles.push({
-        x,
-        y,
-        baseX: x,
-        baseY: y,
+        x: Math.random() * width,
+        y: Math.random() * height,
         vx: (Math.random() - 0.5) * 0.3,
         vy: (Math.random() - 0.5) * 0.3,
         size: 1.5 + Math.random() * 2,
-        opacity: 0.15 + Math.random() * 0.35,
+        opacity: 0.2 + Math.random() * 0.4,
         speed: 0.2 + Math.random() * 0.4,
       })
     }
@@ -49,45 +43,42 @@ export default function ParticleBackground() {
   }, [])
 
   useEffect(() => {
-    // Respect reduced motion
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
+    const parent = canvas.parentElement
+    if (!parent) return
 
     function resize() {
-      if (!canvas) return
-      canvas.width = window.innerWidth
-      canvas.height = canvas.parentElement?.scrollHeight || window.innerHeight
+      if (!canvas || !parent) return
+      const rect = parent.getBoundingClientRect()
+      canvas.width = rect.width
+      canvas.height = rect.height
       initParticles(canvas.width, canvas.height)
     }
     resize()
 
-    // Observe parent height changes (content may load async)
-    const ro = new ResizeObserver(() => {
-      if (!canvas || !canvas.parentElement) return
-      const h = canvas.parentElement.scrollHeight
-      if (Math.abs(canvas.height - h) > 50) {
-        canvas.height = h
-        initParticles(canvas.width, canvas.height)
-      }
-    })
-    if (canvas.parentElement) ro.observe(canvas.parentElement)
+    const ro = new ResizeObserver(resize)
+    ro.observe(parent)
 
     window.addEventListener('resize', resize, { passive: true })
 
     function handleMouseMove(e: MouseEvent) {
-      mouseRef.current.x = e.clientX
-      mouseRef.current.y = e.clientY + window.scrollY
+      if (!parent) return
+      const rect = parent.getBoundingClientRect()
+      mouseRef.current.x = e.clientX - rect.left
+      mouseRef.current.y = e.clientY - rect.top
     }
     function handleMouseLeave() {
       mouseRef.current.x = -9999
       mouseRef.current.y = -9999
     }
-    window.addEventListener('mousemove', handleMouseMove, { passive: true })
-    window.addEventListener('mouseleave', handleMouseLeave, { passive: true })
+    // Listen on the parent section so mouse tracking is scoped
+    parent.addEventListener('mousemove', handleMouseMove, { passive: true } as EventListenerOptions)
+    parent.addEventListener('mouseleave', handleMouseLeave, { passive: true } as EventListenerOptions)
 
     const CONNECTION_DIST = 120
     const MOUSE_RADIUS = 150
@@ -100,13 +91,10 @@ export default function ParticleBackground() {
       const mx = mouseRef.current.x
       const my = mouseRef.current.y
 
-      // Update + draw particles
       for (const p of particles) {
-        // Drift
         p.x += p.vx * p.speed
         p.y += p.vy * p.speed
 
-        // Bounce off edges softly
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1
 
@@ -120,14 +108,13 @@ export default function ParticleBackground() {
           p.y += (dy / dist) * force * 3
         }
 
-        // Draw particle
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
         ctx.fillStyle = `rgba(52, 211, 153, ${p.opacity})`
         ctx.fill()
       }
 
-      // Draw connections
+      // Connection lines
       ctx.lineWidth = 0.5
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
@@ -135,11 +122,11 @@ export default function ParticleBackground() {
           const dy = particles[i].y - particles[j].y
           const dist = Math.sqrt(dx * dx + dy * dy)
           if (dist < CONNECTION_DIST) {
-            const alpha = (1 - dist / CONNECTION_DIST) * 0.12
+            const alpha = (1 - dist / CONNECTION_DIST) * 0.15
             ctx.beginPath()
             ctx.moveTo(particles[i].x, particles[i].y)
             ctx.lineTo(particles[j].x, particles[j].y)
-            ctx.strokeStyle = `rgba(38, 168, 102, ${alpha})`
+            ctx.strokeStyle = `rgba(52, 211, 153, ${alpha})`
             ctx.stroke()
           }
         }
@@ -152,8 +139,8 @@ export default function ParticleBackground() {
     return () => {
       cancelAnimationFrame(rafRef.current)
       window.removeEventListener('resize', resize)
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('mouseleave', handleMouseLeave)
+      parent.removeEventListener('mousemove', handleMouseMove)
+      parent.removeEventListener('mouseleave', handleMouseLeave)
       ro.disconnect()
     }
   }, [initParticles])

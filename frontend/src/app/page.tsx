@@ -203,12 +203,11 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
-      <main className="relative">
-        {/* Full-page particle background — responds to mouse, never blocks clicks */}
-        <ParticleBackground />
-
+      <main>
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 dark:from-primary-950 dark:via-primary-900 dark:to-primary-800 text-white">
+          {/* Particle effect — hero banner only */}
+          <ParticleBackground />
           {/* Decorative dot grid */}
           <svg className="absolute inset-0 w-full h-full opacity-[0.07]" aria-hidden="true">
             <defs>
