@@ -215,6 +215,7 @@ v1.use('/route-planner', require('./routes/routePlanner'));
 v1.use('/intelligent', require('./routes/intelligent'));
 v1.use('/payments', require('./routes/payments'));
 v1.use('/plug-charge', require('./routes/plugCharge'));
+v1.use('/favorites', require('./routes/favorites'));
 
 // Mount v1 and keep /api/ as alias for backward compatibility
 app.use('/api/v1', v1);

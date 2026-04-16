@@ -15,7 +15,7 @@ interface StationMapProps {
   className?: string;
   currencySymbol?: string;
   // Route planner extensions
-  routeLine?: { start: LatLng; end: LatLng; waypoints: LatLng[] };
+  routeLine?: { start: LatLng; end: LatLng; waypoints: LatLng[]; polyline?: LatLng[]; provider?: string };
   startMarker?: LatLng;
   endMarker?: LatLng;
   onMapClick?: (latlng: LatLng) => void;
@@ -173,19 +173,24 @@ export default function StationMap({
 
     // Draw route polyline + numbered stop markers
     if (routeLine) {
-      const points: [number, number][] = [
-        [routeLine.start.lat, routeLine.start.lng],
-        ...routeLine.waypoints.map((w) => [w.lat, w.lng] as [number, number]),
-        [routeLine.end.lat, routeLine.end.lng],
-      ];
+      // Use real road polyline if available, otherwise fall back to waypoint lines
+      const hasRealPolyline = routeLine.polyline && routeLine.polyline.length > 2;
+      const routePoints: [number, number][] = hasRealPolyline
+        ? routeLine.polyline!.map((p) => [p.lat, p.lng] as [number, number])
+        : [
+            [routeLine.start.lat, routeLine.start.lng],
+            ...routeLine.waypoints.map((w) => [w.lat, w.lng] as [number, number]),
+            [routeLine.end.lat, routeLine.end.lng],
+          ];
 
-      // Dashed route line
-      const polyline = L.polyline(points, {
-        color: '#178750',
-        weight: 4,
-        opacity: 0.8,
-        dashArray: '12, 8',
+      // Solid route line for real roads, dashed for fallback
+      const polyline = L.polyline(routePoints, {
+        color: '#2563EB',
+        weight: hasRealPolyline ? 5 : 4,
+        opacity: 0.85,
+        dashArray: hasRealPolyline ? undefined : '12, 8',
         lineCap: 'round',
+        lineJoin: 'round',
       }).addTo(map);
       routeLayerRef.current.push(polyline);
 
@@ -193,16 +198,18 @@ export default function StationMap({
       routeLine.waypoints.forEach((wp, i) => {
         const stopIcon = L.divIcon({
           className: 'custom-marker',
-          html: `<div style="background:#178750;color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:13px;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3)">${i + 1}</div>`,
-          iconSize: [28, 28],
-          iconAnchor: [14, 14],
+          html: `<div style="background:#F59E0B;color:white;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:13px;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3)">${i + 1}</div>`,
+          iconSize: [30, 30],
+          iconAnchor: [15, 15],
         });
-        const m = L.marker([wp.lat, wp.lng], { icon: stopIcon }).addTo(map);
+        const m = L.marker([wp.lat, wp.lng], { icon: stopIcon })
+          .addTo(map)
+          .bindPopup(`<strong>Stop ${i + 1}</strong>`);
         routeLayerRef.current.push(m);
       });
 
       // Fit bounds to show entire route
-      const bounds = L.latLngBounds(points);
+      const bounds = L.latLngBounds(routePoints);
       map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
     }
   }, [routeLine, startMarker, endMarker]);

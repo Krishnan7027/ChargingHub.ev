@@ -28,6 +28,7 @@ const env = {
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 900000,
     max: parseInt(process.env.RATE_LIMIT_MAX, 10) || 100,
   },
+  osrmBaseUrl: process.env.OSRM_BASE_URL || 'https://router.project-osrm.org',
   redis: {
     host: process.env.REDIS_HOST || '127.0.0.1',
     port: parseInt(process.env.REDIS_PORT, 10) || 6379,
