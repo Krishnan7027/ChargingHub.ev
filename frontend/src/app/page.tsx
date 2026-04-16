@@ -312,19 +312,23 @@ export default function HomePage() {
             {statCards.map((stat, i) => (
               <motion.div
                 key={i}
-                variants={scaleIn}
-                className="glass glass-refraction rounded-2xl p-6 text-center cursor-default group/stat
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.08 + 0.1, duration: 0.4, ease: 'easeOut' }}
+              >
+                <div className="glass glass-refraction rounded-2xl p-6 text-center cursor-default group/stat
                   hover:-translate-y-1.5 hover:scale-[1.04] hover:shadow-[0_20px_40px_rgba(38,168,102,0.12)]
                   transition-all duration-300 ease-out will-change-transform [backface-visibility:hidden]"
-              >
-                <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-primary-500/15 text-primary-600 dark:text-primary-400 flex items-center justify-center group-hover/stat:bg-primary-500 group-hover/stat:text-white transition-colors duration-300">
-                  {stat.icon}
-                </div>
-                <div className="text-2xl md:text-3xl font-bold text-theme-primary tabular-nums">
-                  {stat.value}
-                </div>
-                <div className="text-sm text-theme-muted mt-1 font-medium">
-                  {stat.label}
+                >
+                  <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-primary-500/15 text-primary-600 dark:text-primary-400 flex items-center justify-center group-hover/stat:bg-primary-500 group-hover/stat:text-white transition-colors duration-300">
+                    {stat.icon}
+                  </div>
+                  <div className="text-2xl md:text-3xl font-bold text-theme-primary tabular-nums">
+                    {stat.value}
+                  </div>
+                  <div className="text-sm text-theme-muted mt-1 font-medium">
+                    {stat.label}
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -412,31 +416,33 @@ export default function HomePage() {
                 <motion.div
                   key={i}
                   variants={staggerItem}
-                  className="group relative glass glass-refraction rounded-2xl p-8
+                >
+                  <div className="group relative glass glass-refraction rounded-2xl p-8
                     hover:-translate-y-1.5 hover:scale-[1.03] hover:shadow-[0_25px_50px_rgba(0,0,0,0.08)]
                     hover:border-primary-500/30 hover:bg-primary-500/5
                     transition-all duration-300 ease-out will-change-transform [backface-visibility:hidden]"
-                >
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-11 h-11 rounded-xl bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center group-hover:bg-primary-600 group-hover:text-white transition-all duration-300">
-                      {card.icon}
+                  >
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-11 h-11 rounded-xl bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center group-hover:bg-primary-600 group-hover:text-white transition-all duration-300">
+                        {card.icon}
+                      </div>
+                      <h3 className="text-lg font-semibold text-theme-primary">{card.role}</h3>
                     </div>
-                    <h3 className="text-lg font-semibold text-theme-primary">{card.role}</h3>
+                    <ul className="space-y-4">
+                      {card.items.map((item, j) => (
+                        <li
+                          key={j}
+                          className="flex items-start gap-3 text-theme-secondary animate-in"
+                          style={{ animationDelay: `${j * 80}ms` }}
+                        >
+                          <svg className="w-5 h-5 text-primary-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <ul className="space-y-4">
-                    {card.items.map((item, j) => (
-                      <li
-                        key={j}
-                        className="flex items-start gap-3 text-theme-secondary animate-in"
-                        style={{ animationDelay: `${j * 80}ms` }}
-                      >
-                        <svg className="w-5 h-5 text-primary-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
                 </motion.div>
               ))}
             </motion.div>
