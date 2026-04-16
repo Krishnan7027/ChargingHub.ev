@@ -8,6 +8,7 @@
     "dev": "nodemon src/server.js",
     "migrate": "node src/migrations/run.js",
     "seed": "node src/migrations/seed.js",
+    "seed:india": "node src/migrations/seed-indian-stations.js",
     "test": "jest --coverage"
   },
   "dependencies": {

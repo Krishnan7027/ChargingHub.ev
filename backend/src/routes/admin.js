@@ -1,6 +1,8 @@
 const { Router } = require('express');
 const adminController = require('../controllers/adminController');
+const ingestionController = require('../controllers/ingestionController');
 const { authenticate, authorize } = require('../middleware/auth');
+const { validate } = require('../middleware/validate');
 
 const router = Router();
 
@@ -19,5 +21,9 @@ router.delete('/users/:id', adminController.deleteUser);
 
 // Station management
 router.get('/stations', adminController.getAllStations);
+
+// Station ingestion (OpenChargeMap)
+router.post('/ingest/region', ingestionController.ingestRegionValidation, validate, ingestionController.ingestRegion);
+router.post('/ingest/india', ingestionController.ingestIndianStations);
 
 module.exports = router;
