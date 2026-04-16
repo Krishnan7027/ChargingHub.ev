@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
+import PageTransition from '@/components/ui/PageTransition';
 import ProtectedRoute from '@/components/ui/ProtectedRoute';
 import { usePlatformCarbon, usePlatformOptimization } from '@/hooks/useIntelligent';
 
@@ -25,6 +26,7 @@ export default function EnergyDashboardPage() {
   return (
     <ProtectedRoute roles={['admin']}>
       <Navbar />
+      <PageTransition>
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">Energy Intelligence</h1>
@@ -122,6 +124,7 @@ export default function EnergyDashboardPage() {
           </>
         )}
       </div>
+      </PageTransition>
     </ProtectedRoute>
   );
 }

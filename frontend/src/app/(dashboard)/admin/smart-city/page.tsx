@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
+import PageTransition from '@/components/ui/PageTransition';
 import HeatmapMap from '@/components/mobility/HeatmapMap';
 import InfrastructurePlanningPanel from '@/components/mobility/InfrastructurePlanningPanel';
 import ChargingBehaviorPanel from '@/components/mobility/ChargingBehaviorPanel';
@@ -80,6 +81,7 @@ export default function SmartCityDashboard() {
   return (
     <>
       <Navbar />
+      <PageTransition>
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-theme-primary">Smart City Dashboard</h1>
@@ -185,6 +187,7 @@ export default function SmartCityDashboard() {
           <InfrastructurePlanningPanel />
         </div>
       </div>
+      </PageTransition>
     </>
   );
 }

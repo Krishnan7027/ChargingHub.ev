@@ -11,6 +11,7 @@ import {
 import { useCountry } from '@/context/CountryContext';
 import { formatCurrency } from '@/lib/formatCurrency';
 import toast from 'react-hot-toast';
+import PageTransition from '@/components/ui/PageTransition';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'overview' | 'stations' | 'users'>('overview');
@@ -65,6 +66,7 @@ export default function AdminDashboard() {
   return (
     <ProtectedRoute roles={['admin']}>
       <Navbar />
+      <PageTransition>
       <div className="max-w-6xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold text-theme-primary mb-6">Admin Dashboard</h1>
 
@@ -193,6 +195,7 @@ export default function AdminDashboard() {
           </>
         )}
       </div>
+      </PageTransition>
     </ProtectedRoute>
   );
 }
