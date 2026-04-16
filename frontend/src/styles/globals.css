@@ -184,12 +184,14 @@
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
     box-shadow: var(--glass-shadow);
-    @apply rounded-2xl p-6 cursor-pointer transition-all duration-200;
+    transform: translateZ(0);
+    @apply rounded-2xl p-6 cursor-pointer;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out, background 0.3s ease-out;
   }
   .card-interactive:hover {
     background: var(--card-hover-bg);
     box-shadow: var(--glass-shadow-heavy), 0 0 40px rgba(38, 168, 102, 0.06);
-    transform: translateY(-2px);
+    transform: translateY(-2px) translateZ(0);
   }
 
   /* ── Badges ─────────────────────────────────────────── */

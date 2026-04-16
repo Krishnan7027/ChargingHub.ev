@@ -53,7 +53,7 @@ export default function StationCard({ station, userLocation }: StationCardProps)
       >
         <Link
           href={`/stations/${station.id}`}
-          className="card-interactive group block hover:-translate-y-1 hover:scale-[1.02] transition-all duration-300 ease-out"
+          className="card-interactive group block hover:-translate-y-1 transition-[transform,box-shadow] duration-300 ease-out [transform:translateZ(0)]"
         >
           <div className="flex justify-between items-start gap-3">
             <div className="min-w-0 flex-1">
@@ -104,7 +104,7 @@ export default function StationCard({ station, userLocation }: StationCardProps)
             {hasCoords && (
               <button
                 onClick={handleGetDirections}
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-500 hover:text-primary-400 bg-primary-500/10 hover:bg-primary-500/15 hover:scale-105 active:scale-95 rounded-xl px-3 py-1.5 transition-all duration-200"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-500 hover:text-primary-400 bg-primary-500/10 hover:bg-primary-500/15 active:translate-y-px rounded-xl px-3 py-1.5 transition-[transform,background,color] duration-200"
                 title="Get directions"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -267,7 +267,7 @@ export default function HomePage() {
               >
                 <Link
                   href="/map"
-                  className="inline-flex items-center justify-center px-9 py-4 bg-white dark:bg-white/95 text-primary-700 font-semibold rounded-xl hover:bg-primary-50 dark:hover:bg-white transition-all text-lg shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/25 hover:scale-[1.03] active:scale-[0.97]"
+                  className="inline-flex items-center justify-center px-9 py-4 bg-white dark:bg-white/95 text-primary-700 font-semibold rounded-xl hover:bg-primary-50 dark:hover:bg-white transition-all text-lg shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/25 hover:-translate-y-0.5 active:translate-y-px"
                 >
                   <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -277,7 +277,7 @@ export default function HomePage() {
                 </Link>
                 <Link
                   href="/register"
-                  className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg shadow-lg shadow-black/10 hover:scale-[1.03] active:scale-[0.97]"
+                  className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg shadow-lg shadow-black/10 hover:-translate-y-0.5 active:translate-y-px"
                 >
                   Get Started Free
                 </Link>
@@ -317,8 +317,8 @@ export default function HomePage() {
                 transition={{ delay: i * 0.08 + 0.1, duration: 0.4, ease: 'easeOut' }}
               >
                 <div className="glass glass-refraction rounded-2xl p-6 text-center cursor-default group/stat
-                  hover:-translate-y-1.5 hover:scale-[1.04] hover:shadow-[0_20px_40px_rgba(38,168,102,0.12)]
-                  transition-all duration-300 ease-out will-change-transform [backface-visibility:hidden]"
+                  hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(38,168,102,0.12)]
+                  transition-[transform,box-shadow] duration-300 ease-out [transform:translateZ(0)]"
                 >
                   <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-primary-500/15 text-primary-600 dark:text-primary-400 flex items-center justify-center group-hover/stat:bg-primary-500 group-hover/stat:text-white transition-colors duration-300">
                     {stat.icon}
@@ -367,8 +367,8 @@ export default function HomePage() {
                     )}
 
                     <div className="card glass-refraction text-center p-8 group/step
-                      hover:-translate-y-1.5 hover:scale-[1.03] hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)]
-                      transition-all duration-300 ease-out will-change-transform [backface-visibility:hidden]"
+                      hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)]
+                      transition-[transform,box-shadow] duration-300 ease-out [transform:translateZ(0)]"
                     >
                       {/* Step number badge */}
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-xs font-bold tracking-wider bg-primary-600 text-white shadow-md">
@@ -377,8 +377,8 @@ export default function HomePage() {
 
                       {/* Icon */}
                       <div className={`w-16 h-16 bg-gradient-to-br ${step.gradient} rounded-2xl flex items-center justify-center mx-auto mt-4 mb-6 shadow-lg text-white
-                        group-hover/step:shadow-xl group-hover/step:shadow-primary-500/20 group-hover/step:scale-110
-                        transition-all duration-300`}
+                        group-hover/step:shadow-xl group-hover/step:shadow-primary-500/20 group-hover/step:-translate-y-1
+                        transition-[transform,box-shadow] duration-300 [transform:translateZ(0)]`}
                       >
                         {step.icon}
                       </div>
@@ -418,9 +418,9 @@ export default function HomePage() {
                   variants={staggerItem}
                 >
                   <div className="group relative glass glass-refraction rounded-2xl p-8
-                    hover:-translate-y-1.5 hover:scale-[1.03] hover:shadow-[0_25px_50px_rgba(0,0,0,0.08)]
+                    hover:-translate-y-2 hover:shadow-[0_25px_50px_rgba(0,0,0,0.08)]
                     hover:border-primary-500/30 hover:bg-primary-500/5
-                    transition-all duration-300 ease-out will-change-transform [backface-visibility:hidden]"
+                    transition-[transform,box-shadow,background,border-color] duration-300 ease-out [transform:translateZ(0)]"
                   >
                     <div className="flex items-center gap-3 mb-6">
                       <div className="w-11 h-11 rounded-xl bg-primary-500/10 text-primary-600 dark:text-primary-400 flex items-center justify-center group-hover:bg-primary-600 group-hover:text-white transition-all duration-300">
@@ -485,13 +485,13 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   href="/register"
-                  className="inline-flex items-center justify-center px-9 py-4 bg-white dark:bg-white/95 text-primary-700 font-semibold rounded-xl hover:bg-primary-50 dark:hover:bg-white transition-all text-lg shadow-lg hover:scale-[1.03] active:scale-[0.97]"
+                  className="inline-flex items-center justify-center px-9 py-4 bg-white dark:bg-white/95 text-primary-700 font-semibold rounded-xl hover:bg-primary-50 dark:hover:bg-white transition-all text-lg shadow-lg hover:-translate-y-0.5 active:translate-y-px"
                 >
                   Create Free Account
                 </Link>
                 <Link
                   href="/map"
-                  className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg hover:scale-[1.03] active:scale-[0.97]"
+                  className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg hover:-translate-y-0.5 active:translate-y-px"
                 >
                   Explore the Map
                 </Link>
