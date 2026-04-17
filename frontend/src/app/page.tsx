@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import Navbar from '@/components/layout/Navbar';
+import { openAuthModal } from '@/lib/authModal';
 import { useEffect, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
@@ -275,12 +276,14 @@ export default function HomePage() {
                   </svg>
                   Find Stations Nearby
                 </Link>
-                <Link
-                  href="/register"
-                  className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg shadow-lg shadow-black/10 hover:-translate-y-0.5 active:translate-y-px"
-                >
-                  Get Started Free
-                </Link>
+                <motion.div whileHover={buttonHover} whileTap={buttonTap}>
+                  <button
+                    onClick={() => openAuthModal('signup')}
+                    className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg shadow-lg shadow-black/10 hover:-translate-y-0.5 active:translate-y-px"
+                  >
+                    Get Started Free
+                  </button>
+                </motion.div>
               </motion.div>
             </div>
 
@@ -483,12 +486,12 @@ export default function HomePage() {
             </AnimatedSection>
             <AnimatedSection delay={0.2}>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="/register"
+                <button
+                  onClick={() => openAuthModal('signup')}
                   className="inline-flex items-center justify-center px-9 py-4 bg-white dark:bg-white/95 text-primary-700 font-semibold rounded-xl hover:bg-primary-50 dark:hover:bg-white transition-all text-lg shadow-lg hover:-translate-y-0.5 active:translate-y-px"
                 >
                   Create Free Account
-                </Link>
+                </button>
                 <Link
                   href="/map"
                   className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg hover:-translate-y-0.5 active:translate-y-px"

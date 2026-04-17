@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
-import { authApi, setToken, getToken } from '@/lib/api';
+import { authApi, otpApi, setToken, getToken } from '@/lib/api';
 import { getSocket, disconnectSocket } from '@/lib/socket';
 import type { User } from '@/types';
 
@@ -13,6 +13,8 @@ interface AuthState {
   register: (data: { email: string; password: string; fullName: string; phone?: string; role?: string }) => Promise<User>;
   logout: () => void;
   refreshProfile: () => Promise<void>;
+  sendOtp: (identifier: string, type: 'email' | 'mobile') => Promise<void>;
+  loginWithOtp: (identifier: string, type: 'email' | 'mobile', otp: string) => Promise<User>;
 }
 
 const AuthContext = createContext<AuthState | null>(null);
@@ -66,8 +68,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(u);
   }, []);
 
+  const sendOtp = useCallback(async (identifier: string, type: 'email' | 'mobile') => {
+    await otpApi.sendOtp({ identifier, type });
+  }, []);
+
+  const loginWithOtp = useCallback(async (identifier: string, type: 'email' | 'mobile', otp: string): Promise<User> => {
+    const { user: u, token } = await otpApi.verifyOtp({ identifier, type, otp });
+    setToken(token);
+    setUser(u);
+    getSocket();
+    return u;
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, refreshProfile }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, refreshProfile, sendOtp, loginWithOtp }}>
       {children}
     </AuthContext.Provider>
   );

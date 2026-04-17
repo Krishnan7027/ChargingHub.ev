@@ -1,7 +1,8 @@
 'use client';
 
 import { useAuth } from '@/context/AuthContext';
-import { redirectToSignup } from '@/lib/navigationFlow';
+import { saveReturnAction } from '@/lib/navigationFlow';
+import { openAuthModal } from '@/lib/authModal';
 
 interface AuthActionGuardProps {
   /** Current page path */
@@ -18,8 +19,8 @@ interface AuthActionGuardProps {
 
 /**
  * Wraps an action button with auth check.
- * If logged in → calls onAuthenticated().
- * If not → saves intent and redirects to signup.
+ * If logged in -> calls onAuthenticated().
+ * If not -> saves intent and opens auth modal.
  */
 export default function AuthActionGuard({
   returnTo,
@@ -37,7 +38,8 @@ export default function AuthActionGuard({
     if (user) {
       onAuthenticated();
     } else {
-      redirectToSignup(returnTo, action, data);
+      saveReturnAction(returnTo, action, data);
+      openAuthModal();
     }
   }
 

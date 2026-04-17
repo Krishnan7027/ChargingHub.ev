@@ -10,6 +10,8 @@ import { motion, AnimatePresence, useScroll, useTransform, useMotionValueEvent }
 import { dropdownVariants, buttonHover, buttonTap } from '@/lib/animations';
 
 import { useState, useRef, useEffect } from 'react';
+import UserDropdown from '@/components/ui/UserDropdown';
+import AuthModal from '@/components/ui/AuthModal';
 
 function DropdownMenu({ label, items, onClose }: {
   label: string;
@@ -183,9 +185,9 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [smartMenuOpen, setSmartMenuOpen] = useState(false);
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
-  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'signup'>('login');
   const [scrolled, setScrolled] = useState(false);
-  const profileRef = useRef<HTMLDivElement>(null);
 
   const { scrollY } = useScroll();
   const navBlur = useTransform(scrollY, [0, 80], [28, 40]);
@@ -195,18 +197,20 @@ export default function Navbar() {
     setScrolled(latest > 20);
   });
 
-  // Close profile dropdown on outside click
+  // Listen for open-auth-modal custom events (from openAuthModal helper)
   useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (profileRef.current && !profileRef.current.contains(e.target as Node)) setProfileMenuOpen(false);
+    function handleOpenAuth(e: Event) {
+      const detail = (e as CustomEvent).detail;
+      setAuthModalMode(detail?.mode || 'login');
+      setAuthModalOpen(true);
     }
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
+    window.addEventListener('open-auth-modal', handleOpenAuth);
+    return () => window.removeEventListener('open-auth-modal', handleOpenAuth);
   }, []);
 
   const dashboardPath = user
     ? user.role === 'admin' ? '/admin' : user.role === 'manager' ? '/manager' : '/customer'
-    : '/login';
+    : '/';
 
   const smartFeatures = getSmartFeatures(user?.role);
 
@@ -324,101 +328,9 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <CountrySelector />
             {user ? (
-              <div ref={profileRef} className="relative">
-                <button
-                  onClick={() => { setProfileMenuOpen(!profileMenuOpen); setSmartMenuOpen(false); setAdminMenuOpen(false); }}
-                  className="flex items-center gap-2 hover:bg-primary-500/5 rounded-xl px-2 py-1.5 transition-colors"
-                >
-                  <UserAvatar name={user.full_name} />
-                  <span className="text-sm text-theme-primary font-medium">{user.full_name}</span>
-                  <span className="badge-blue capitalize">{user.role}</span>
-                  <motion.svg
-                    animate={{ rotate: profileMenuOpen ? 180 : 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="w-3.5 h-3.5 text-theme-muted"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </motion.svg>
-                </button>
-                <AnimatePresence>
-                  {profileMenuOpen && (
-                    <motion.div
-                      variants={dropdownVariants}
-                      initial="hidden"
-                      animate="visible"
-                      exit="exit"
-                      className="absolute top-full right-0 mt-2 w-56 glass-heavy rounded-xl py-2 z-50"
-                    >
-                      {/* User info header */}
-                      <div className="px-4 py-2 border-b border-glass mb-1">
-                        <p className="text-sm font-semibold text-theme-primary">{user.full_name}</p>
-                        <p className="text-xs text-theme-muted">{user.email}</p>
-                      </div>
-
-                      <Link
-                        href={dashboardPath}
-                        onClick={() => setProfileMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-theme-secondary hover:bg-primary-500/10 hover:text-primary-500 transition-colors mx-1 rounded-lg"
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                        </svg>
-                        Dashboard
-                      </Link>
-                      <Link
-                        href="/reservations"
-                        onClick={() => setProfileMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-theme-secondary hover:bg-primary-500/10 hover:text-primary-500 transition-colors mx-1 rounded-lg"
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        My Reservations
-                      </Link>
-                      <Link
-                        href="/charging-history"
-                        onClick={() => setProfileMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-theme-secondary hover:bg-primary-500/10 hover:text-primary-500 transition-colors mx-1 rounded-lg"
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                        Charging History
-                      </Link>
-                      <Link
-                        href="/favorites"
-                        onClick={() => setProfileMenuOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-theme-secondary hover:bg-primary-500/10 hover:text-primary-500 transition-colors mx-1 rounded-lg"
-                      >
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                        Favorites
-                      </Link>
-
-                      <div className="border-t border-glass mt-1 pt-1">
-                        <button
-                          onClick={() => { logout(); setProfileMenuOpen(false); }}
-                          className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-500 hover:bg-red-500/10 transition-colors mx-1 rounded-lg"
-                        >
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                          </svg>
-                          Logout
-                        </button>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              <UserDropdown />
             ) : (
-              <>
-                <Link href="/login" className="btn-secondary text-sm py-1.5">Log in</Link>
-                <motion.div whileHover={buttonHover} whileTap={buttonTap}>
-                  <Link href="/register" className="btn-primary text-sm py-1.5 inline-block">Sign up</Link>
-                </motion.div>
-              </>
+              <button onClick={() => { setAuthModalMode('login'); setAuthModalOpen(true); }} className="btn-primary text-sm py-1.5">Login</button>
             )}
           </div>
 
@@ -511,27 +423,34 @@ export default function Navbar() {
                       </>
                     )}
 
-                    <div className="pt-2 border-t border-glass mt-2">
+                    <div className="pt-2 border-t border-glass mt-2 space-y-1">
+                      <MobileNavLink href="/profile" onClick={() => setMobileOpen(false)}>
+                        Profile
+                      </MobileNavLink>
+                      <MobileNavLink href="/my-ev" onClick={() => setMobileOpen(false)}>
+                        My EV
+                      </MobileNavLink>
                       <button onClick={() => { logout(); setMobileOpen(false); }} className="block w-full text-left px-3 py-2 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors">
                         Logout
                       </button>
                     </div>
                   </>
                 ) : (
-                  <>
-                    <MobileNavLink href="/login" onClick={() => setMobileOpen(false)}>
-                      Log in
-                    </MobileNavLink>
-                    <Link href="/register" className="block px-3 py-2 rounded-lg text-primary-500 font-medium hover:bg-primary-500/10 transition-colors" onClick={() => setMobileOpen(false)}>
-                      Sign up
-                    </Link>
-                  </>
+                  <button onClick={() => { setMobileOpen(false); setAuthModalMode('login'); setAuthModalOpen(true); }} className="block w-full text-left px-3 py-2 rounded-lg text-primary-500 font-medium hover:bg-primary-500/10 transition-colors">
+                    Login
+                  </button>
                 )}
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+      <AuthModal
+        open={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        onAuthenticated={() => setAuthModalOpen(false)}
+        initialMode={authModalMode}
+      />
     </motion.nav>
   );
 }

@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { getPostLoginPath } from '@/lib/roles';
+import { openAuthModal } from '@/lib/authModal';
 import type { UserRole } from '@/types';
 
 interface Props {
@@ -18,11 +19,11 @@ export default function ProtectedRoute({ children, roles }: Props) {
   useEffect(() => {
     if (loading) return;
     if (!user) {
-      router.replace('/login');
+      router.replace('/');
+      setTimeout(() => openAuthModal(), 150);
       return;
     }
     if (roles && !roles.includes(user.role)) {
-      // Redirect to their own dashboard instead of home
       router.replace(getPostLoginPath(user.role));
     }
   }, [user, loading, roles, router]);

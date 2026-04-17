@@ -200,6 +200,14 @@ const authLimiter = rateLimit({
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
 
+// Stricter limit for OTP endpoints
+const otpLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { error: 'Too many OTP requests' },
+});
+app.use('/api/auth/send-otp', otpLimiter);
+
 // ── Audit helper on every request ──────────────────────────
 app.use(auditMiddleware);
 
@@ -216,6 +224,7 @@ v1.use('/intelligent', require('./routes/intelligent'));
 v1.use('/payments', require('./routes/payments'));
 v1.use('/plug-charge', require('./routes/plugCharge'));
 v1.use('/favorites', require('./routes/favorites'));
+v1.use('/vehicles', require('./routes/vehicles'));
 
 // Mount v1 and keep /api/ as alias for backward compatibility
 app.use('/api/v1', v1);

@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { modalOverlayVariants, modalContentVariants } from '@/lib/animations';
 
@@ -14,6 +15,11 @@ interface ModalProps {
 
 export default function Modal({ open, onClose, title, children, maxWidth = 'max-w-md' }: ModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -28,7 +34,9 @@ export default function Modal({ open, onClose, title, children, maxWidth = 'max-
     };
   }, [open, onClose]);
 
-  return (
+  if (!mounted) return null;
+
+  const modal = (
     <AnimatePresence>
       {open && (
         <motion.div
@@ -37,8 +45,8 @@ export default function Modal({ open, onClose, title, children, maxWidth = 'max-
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
-          style={{ background: 'var(--overlay-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+          className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4"
+          style={{ background: 'rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
           onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
         >
           <motion.div
@@ -46,7 +54,7 @@ export default function Modal({ open, onClose, title, children, maxWidth = 'max-
             initial="hidden"
             animate="visible"
             exit="exit"
-            className={`glass-heavy glass-refraction w-full ${maxWidth} max-h-[90vh] overflow-y-auto
+            className={`glass-heavy glass-refraction w-full ${maxWidth} max-h-[85vh] overflow-y-auto
               rounded-t-2xl sm:rounded-2xl`}
           >
             {title && (
@@ -70,4 +78,6 @@ export default function Modal({ open, onClose, title, children, maxWidth = 'max-
       )}
     </AnimatePresence>
   );
+
+  return createPortal(modal, document.body);
 }
