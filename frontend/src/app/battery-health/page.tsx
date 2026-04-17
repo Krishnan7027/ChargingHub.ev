@@ -1,6 +1,7 @@
 'use client';
 
 import Navbar from '@/components/layout/Navbar';
+import PageTransition from '@/components/ui/PageTransition';
 import BatteryHealthDashboard from '@/components/battery/BatteryHealthDashboard';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -30,9 +31,11 @@ export default function BatteryHealthPage() {
   return (
     <>
       <Navbar />
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <BatteryHealthDashboard />
-      </div>
+      <PageTransition>
+        <div className="max-w-5xl mx-auto px-4 py-8">
+          <BatteryHealthDashboard />
+        </div>
+      </PageTransition>
     </>
   );
 }

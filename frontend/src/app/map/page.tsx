@@ -10,6 +10,7 @@ import { useGeolocation } from '@/hooks/useGeolocation';
 import { useNearbyStations, useSearchStations } from '@/hooks/useStations';
 import { useRecommendations } from '@/hooks/useIntelligent';
 import { useCountry } from '@/context/CountryContext';
+import PageTransition from '@/components/ui/PageTransition';
 
 export default function MapPage() {
   const router = useRouter();
@@ -136,6 +137,7 @@ export default function MapPage() {
   return (
     <>
       <Navbar />
+      <PageTransition>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* ── Page header + Search ──────────────────────────── */}
         <div className="mb-6">
@@ -254,6 +256,7 @@ export default function MapPage() {
           </div>
         </div>
       </main>
+      </PageTransition>
     </>
   );
 }

@@ -13,6 +13,7 @@ import { useCountry } from '@/context/CountryContext';
 import { formatPricePerKwh } from '@/lib/formatCurrency';
 import type { OperatingHours } from '@/types';
 import toast from 'react-hot-toast';
+import PageTransition from '@/components/ui/PageTransition';
 
 export default function ManagerDashboard() {
   const { country } = useCountry();
@@ -85,6 +86,7 @@ export default function ManagerDashboard() {
   return (
     <ProtectedRoute roles={['manager']}>
       <Navbar />
+      <PageTransition>
       <div className="max-w-5xl mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold text-theme-primary">Station Manager Dashboard</h1>
@@ -215,6 +217,7 @@ export default function ManagerDashboard() {
           </form>
         </Modal>
       </div>
+      </PageTransition>
     </ProtectedRoute>
   );
 }

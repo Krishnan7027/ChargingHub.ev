@@ -197,7 +197,7 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
       )}
 
       {mode === 'otp' ? (
-        /* ─── OTP Login Mode ─── */
+        /* OTP Login Mode */
         otpSent ? (
           <form onSubmit={handleVerifyOtp} className="space-y-3">
             <div>
@@ -313,7 +313,7 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
           </div>
         )
       ) : (
-        /* ─── Login / Signup Mode ─── */
+        /* Login / Signup Mode */
         <>
           <form onSubmit={handleSubmit} className="space-y-3">
             {mode === 'signup' && (

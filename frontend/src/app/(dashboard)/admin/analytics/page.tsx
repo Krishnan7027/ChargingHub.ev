@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
+import PageTransition from '@/components/ui/PageTransition';
 import ProtectedRoute from '@/components/ui/ProtectedRoute';
 import { usePlatformAnalytics } from '@/hooks/useIntelligent';
 
@@ -48,6 +49,7 @@ export default function AnalyticsPage() {
   return (
     <ProtectedRoute roles={['admin']}>
       <Navbar />
+      <PageTransition>
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <h1 className="text-2xl font-bold">Analytics Dashboard</h1>
@@ -178,6 +180,7 @@ export default function AnalyticsPage() {
           </div>
         )}
       </div>
+      </PageTransition>
     </ProtectedRoute>
   );
 }

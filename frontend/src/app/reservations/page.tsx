@@ -7,6 +7,7 @@ import ProtectedRoute from '@/components/ui/ProtectedRoute';
 import EmptyState from '@/components/ui/EmptyState';
 import { useMyReservations, useCancelReservation } from '@/hooks/useStations';
 import toast from 'react-hot-toast';
+import PageTransition from '@/components/ui/PageTransition';
 
 export default function ReservationsPage() {
   const [filter, setFilter] = useState('all');
@@ -26,6 +27,7 @@ export default function ReservationsPage() {
   return (
     <ProtectedRoute>
       <Navbar />
+      <PageTransition>
       <div className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold mb-6">My Reservations</h1>
 
@@ -81,6 +83,7 @@ export default function ReservationsPage() {
           </div>
         )}
       </div>
+      </PageTransition>
     </ProtectedRoute>
   );
 }

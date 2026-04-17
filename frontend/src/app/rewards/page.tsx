@@ -1,6 +1,7 @@
 'use client';
 
 import Navbar from '@/components/layout/Navbar';
+import PageTransition from '@/components/ui/PageTransition';
 import AchievementsDashboard from '@/components/gamification/AchievementsDashboard';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -30,9 +31,11 @@ export default function RewardsPage() {
   return (
     <>
       <Navbar />
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <AchievementsDashboard />
-      </div>
+      <PageTransition>
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <AchievementsDashboard />
+        </div>
+      </PageTransition>
     </>
   );
 }
