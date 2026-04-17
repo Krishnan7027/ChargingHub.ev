@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ModalProps {
   open: boolean;
@@ -12,6 +13,11 @@ interface ModalProps {
 
 export default function Modal({ open, onClose, title, children, maxWidth = 'max-w-md' }: ModalProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -26,17 +32,17 @@ export default function Modal({ open, onClose, title, children, maxWidth = 'max-
     };
   }, [open, onClose]);
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
-  return (
+  const modal = (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
-      style={{ background: 'var(--overlay-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+      className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4"
+      style={{ background: 'rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
       onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
     >
       <div
-        className={`glass-heavy glass-refraction w-full ${maxWidth} max-h-[90vh] overflow-y-auto
+        className={`glass-heavy glass-refraction w-full ${maxWidth} max-h-[85vh] overflow-y-auto
           rounded-t-2xl sm:rounded-2xl
           animate-in`}
       >
@@ -57,4 +63,6 @@ export default function Modal({ open, onClose, title, children, maxWidth = 'max-
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 }

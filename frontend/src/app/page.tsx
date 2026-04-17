@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
+import { openAuthModal } from '@/lib/authModal';
 import { useEffect, useState } from 'react';
 
 function formatNumber(n: number): string {
@@ -195,12 +196,12 @@ export default function HomePage() {
                   </svg>
                   Find Stations Nearby
                 </Link>
-                <Link
-                  href="/register"
+                <button
+                  onClick={() => openAuthModal('signup')}
                   className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg shadow-lg shadow-black/10"
                 >
                   Get Started Free
-                </Link>
+                </button>
               </div>
             </div>
           </div>
@@ -336,12 +337,12 @@ export default function HomePage() {
               Join thousands of EV owners who never worry about finding a charger again.
             </p>
             <div className="animate-in delay-150 flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/register"
+              <button
+                onClick={() => openAuthModal('signup')}
                 className="inline-flex items-center justify-center px-9 py-4 bg-white dark:bg-white/95 text-primary-700 font-semibold rounded-xl hover:bg-primary-50 dark:hover:bg-white transition-all text-lg shadow-lg"
               >
                 Create Free Account
-              </Link>
+              </button>
               <Link
                 href="/map"
                 className="inline-flex items-center justify-center px-9 py-4 border-2 border-white/80 text-white font-semibold rounded-xl hover:bg-white/10 transition-all text-lg"

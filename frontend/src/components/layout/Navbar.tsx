@@ -8,6 +8,8 @@ import { getCountryList } from '@/lib/countries';
 import { canAccessRoutePlanner, canAccessSmartFeatures, getSmartFeatures } from '@/lib/roles';
 
 import { useState, useRef, useEffect } from 'react';
+import UserDropdown from '@/components/ui/UserDropdown';
+import AuthModal from '@/components/ui/AuthModal';
 
 function DropdownMenu({ label, items, onClose }: {
   label: string;
@@ -143,10 +145,22 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [smartMenuOpen, setSmartMenuOpen] = useState(false);
   const [adminMenuOpen, setAdminMenuOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'signup'>('login');
+
+  useEffect(() => {
+    function handleOpenAuth(e: Event) {
+      const detail = (e as CustomEvent).detail;
+      setAuthModalMode(detail?.mode || 'login');
+      setAuthModalOpen(true);
+    }
+    window.addEventListener('open-auth-modal', handleOpenAuth);
+    return () => window.removeEventListener('open-auth-modal', handleOpenAuth);
+  }, []);
 
   const dashboardPath = user
     ? user.role === 'admin' ? '/admin' : user.role === 'manager' ? '/manager' : '/customer'
-    : '/login';
+    : '/';
 
   const smartFeatures = getSmartFeatures(user?.role);
 
@@ -231,19 +245,9 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <CountrySelector />
             {user ? (
-              <>
-                <UserAvatar name={user.full_name} />
-                <span className="text-sm text-theme-primary font-medium">{user.full_name}</span>
-                <span className="badge-blue capitalize">{user.role}</span>
-                <button onClick={logout} className="btn-secondary text-sm py-1.5">
-                  Logout
-                </button>
-              </>
+              <UserDropdown />
             ) : (
-              <>
-                <Link href="/login" className="btn-secondary text-sm py-1.5">Log in</Link>
-                <Link href="/register" className="btn-primary text-sm py-1.5">Sign up</Link>
-              </>
+              <button onClick={() => { setAuthModalMode('login'); setAuthModalOpen(true); }} className="btn-primary text-sm py-1.5">Login</button>
             )}
           </div>
 
@@ -331,25 +335,32 @@ export default function Navbar() {
                   </>
                 )}
 
-                <div className="pt-2 border-t border-glass mt-2">
+                <div className="pt-2 border-t border-glass mt-2 space-y-1">
+                  <MobileNavLink href="/profile" onClick={() => setMobileOpen(false)}>
+                    Profile
+                  </MobileNavLink>
+                  <MobileNavLink href="/my-ev" onClick={() => setMobileOpen(false)}>
+                    My EV
+                  </MobileNavLink>
                   <button onClick={() => { logout(); setMobileOpen(false); }} className="block w-full text-left px-3 py-2 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors">
                     Logout
                   </button>
                 </div>
               </>
             ) : (
-              <>
-                <MobileNavLink href="/login" onClick={() => setMobileOpen(false)}>
-                  Log in
-                </MobileNavLink>
-                <Link href="/register" className="block px-3 py-2 rounded-lg text-primary-500 font-medium hover:bg-primary-500/10 transition-colors" onClick={() => setMobileOpen(false)}>
-                  Sign up
-                </Link>
-              </>
+              <button onClick={() => { setMobileOpen(false); setAuthModalMode('login'); setAuthModalOpen(true); }} className="block w-full text-left px-3 py-2 rounded-lg text-primary-500 font-medium hover:bg-primary-500/10 transition-colors">
+                Login
+              </button>
             )}
           </div>
         </div>
       </div>
+      <AuthModal
+        open={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        onAuthenticated={() => setAuthModalOpen(false)}
+        initialMode={authModalMode}
+      />
     </nav>
   );
 }

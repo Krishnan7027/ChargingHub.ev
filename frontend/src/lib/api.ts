@@ -18,6 +18,7 @@ import type {
   Payment, CostEstimateResponse, PlugChargeVehicle, PlugEventResult, ArrivalPrediction,
   Favorite, FavoriteStatus,
   SessionHistoryResponse, SessionHistoryStats, SessionHistoryFilters, SessionHistoryItem,
+  OTPSendResponse, OTPVerifyResponse, EVVehicle,
 } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
@@ -70,7 +71,7 @@ export const authApi = {
   getProfile: () =>
     http.get<User>('/auth/profile').then((r) => r.data),
 
-  updateProfile: (data: { fullName?: string; phone?: string }) =>
+  updateProfile: (data: { fullName?: string; phone?: string; avatarUrl?: string }) =>
     http.put<User>('/auth/profile', data).then((r) => r.data),
 
   changePassword: (data: { currentPassword: string; newPassword: string }) =>
@@ -576,4 +577,31 @@ export const sessionHistoryApi = {
 
   getStats: () =>
     http.get<SessionHistoryStats>('/charging/history/stats').then((r) => r.data),
+};
+
+// ── OTP Auth ──────────────────────────────────────────────────
+export const otpApi = {
+  sendOtp: (data: { identifier: string; type: 'email' | 'mobile' }) =>
+    http.post<OTPSendResponse>('/auth/send-otp', data).then((r) => r.data),
+
+  verifyOtp: (data: { identifier: string; type: 'email' | 'mobile'; otp: string }) =>
+    http.post<OTPVerifyResponse>('/auth/verify-otp', data).then((r) => r.data),
+};
+
+// ── EV Vehicles ───────────────────────────────────────────────
+export const vehicleApi = {
+  list: () =>
+    http.get<EVVehicle[]>('/vehicles').then((r) => r.data),
+
+  add: (data: { brand: string; model: string; batteryCapacityKwh?: number; rangeKm?: number; fastCharging?: boolean; chargingPortType?: string; imageUrl?: string }) =>
+    http.post<EVVehicle>('/vehicles', data).then((r) => r.data),
+
+  update: (id: string, data: Partial<{ brand: string; model: string; batteryCapacityKwh: number; rangeKm: number; fastCharging: boolean; chargingPortType: string; imageUrl: string }>) =>
+    http.put<EVVehicle>(`/vehicles/${id}`, data).then((r) => r.data),
+
+  delete: (id: string) =>
+    http.delete(`/vehicles/${id}`).then((r) => r.data),
+
+  setDefault: (id: string) =>
+    http.patch<EVVehicle>(`/vehicles/${id}/default`).then((r) => r.data),
 };

@@ -1299,3 +1299,29 @@ export interface SessionHistoryFilters {
   page?: number;
   limit?: number;
 }
+
+// ── EV Vehicles ─────────────────────────────────────────────
+export interface EVVehicle {
+  id: string;
+  user_id: string;
+  brand: string;
+  model: string;
+  battery_capacity_kwh?: number;
+  range_km?: number;
+  fast_charging: boolean;
+  charging_port_type?: string;
+  image_url?: string;
+  is_default: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OTPSendResponse {
+  message: string;
+  expiresIn: number;
+}
+
+export interface OTPVerifyResponse {
+  user: User;
+  token: string;
+}

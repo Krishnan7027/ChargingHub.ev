@@ -9,7 +9,7 @@ const User = {
     const { rows } = await db.query(
       `INSERT INTO users (email, password_hash, full_name, phone, role)
        VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, email, full_name, phone, role, is_active, created_at`,
+       RETURNING id, email, full_name, phone, role, avatar_url, is_active, created_at`,
       [email, passwordHash, fullName, phone, role]
     );
     return rows[0];
@@ -20,6 +20,15 @@ const User = {
       `SELECT id, email, full_name, phone, role, avatar_url, is_active, email_verified, created_at, updated_at
        FROM users WHERE email = $1`,
       [email]
+    );
+    return rows[0] || null;
+  },
+
+  async findByMobile(mobile) {
+    const { rows } = await db.query(
+      `SELECT id, email, full_name, phone, mobile, role, avatar_url, is_active, email_verified, created_at, updated_at
+       FROM users WHERE mobile = $1`,
+      [mobile]
     );
     return rows[0] || null;
   },
@@ -42,7 +51,7 @@ const User = {
   },
 
   async update(id, fields) {
-    const allowed = ['full_name', 'phone', 'avatar_url', 'is_active', 'email_verified'];
+    const allowed = ['full_name', 'phone', 'mobile', 'avatar_url', 'is_active', 'email_verified'];
     const sets = [];
     const values = [];
     let idx = 1;
