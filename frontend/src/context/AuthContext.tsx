@@ -13,8 +13,8 @@ interface AuthState {
   register: (data: { email: string; password: string; fullName: string; phone?: string; role?: string }) => Promise<User>;
   logout: () => void;
   refreshProfile: () => Promise<void>;
-  sendOtp: (identifier: string, type: 'email' | 'mobile') => Promise<void>;
-  loginWithOtp: (identifier: string, type: 'email' | 'mobile', otp: string) => Promise<User>;
+  sendOtp: (email: string) => Promise<void>;
+  loginWithOtp: (email: string, otp: string) => Promise<User>;
 }
 
 const AuthContext = createContext<AuthState | null>(null);
@@ -68,12 +68,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(u);
   }, []);
 
-  const sendOtp = useCallback(async (identifier: string, type: 'email' | 'mobile') => {
-    await otpApi.sendOtp({ identifier, type });
+  const sendOtp = useCallback(async (email: string) => {
+    await otpApi.sendOtp({ email });
   }, []);
 
-  const loginWithOtp = useCallback(async (identifier: string, type: 'email' | 'mobile', otp: string): Promise<User> => {
-    const { user: u, token } = await otpApi.verifyOtp({ identifier, type, otp });
+  const loginWithOtp = useCallback(async (email: string, otp: string): Promise<User> => {
+    const { user: u, token } = await otpApi.verifyOtp({ email, otp });
     setToken(token);
     setUser(u);
     getSocket();

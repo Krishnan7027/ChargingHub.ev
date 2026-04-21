@@ -31,7 +31,6 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
 
   // OTP fields (login only)
   const [otpIdentifier, setOtpIdentifier] = useState('');
-  const [otpType, setOtpType] = useState<'email' | 'mobile'>('email');
   const [otpSent, setOtpSent] = useState(false);
   const [otpCode, setOtpCode] = useState('');
   const [otpCooldown, setOtpCooldown] = useState(0);
@@ -68,7 +67,6 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
       setRole('customer');
       setShowPassword(false);
       setOtpIdentifier('');
-      setOtpType('email');
     }
   }, [open]);
 
@@ -81,7 +79,6 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
     setRole('customer');
     setShowPassword(false);
     setOtpIdentifier('');
-    setOtpType('email');
     setOtpSent(false);
     setOtpCode('');
     setOtpCooldown(0);
@@ -120,13 +117,13 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
 
   async function handleSendOtp() {
     if (!otpIdentifier.trim()) {
-      setError(otpType === 'email' ? 'Please enter your email' : 'Please enter your mobile number');
+      setError('Please enter your email');
       return;
     }
     setError('');
     setLoading(true);
     try {
-      await sendOtp(otpIdentifier.trim(), otpType);
+      await sendOtp(otpIdentifier.trim());
       setOtpSent(true);
       setOtpCooldown(60);
     } catch (err: unknown) {
@@ -146,7 +143,7 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
     setError('');
     setLoading(true);
     try {
-      await loginWithOtp(otpIdentifier.trim(), otpType, otpCode);
+      await loginWithOtp(otpIdentifier.trim(), otpCode);
       resetForm();
       onClose();
       onAuthenticated();
@@ -240,7 +237,7 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
                 onClick={() => { setOtpSent(false); setOtpCode(''); setError(''); }}
                 className="text-theme-muted hover:text-theme-secondary"
               >
-                Change {otpType}
+                Change email
               </button>
               <button
                 type="button"
@@ -254,43 +251,17 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
           </form>
         ) : (
           <div className="space-y-3">
-            {/* Type toggle */}
-            <div className="flex rounded-xl overflow-hidden border border-glass">
-              <button
-                type="button"
-                onClick={() => { setOtpType('email'); setError(''); }}
-                className={`flex-1 py-2 text-sm font-medium transition-colors ${
-                  otpType === 'email'
-                    ? 'bg-primary-500 text-white'
-                    : 'text-theme-secondary hover:bg-primary-500/5'
-                }`}
-              >
-                Email
-              </button>
-              <button
-                type="button"
-                onClick={() => { setOtpType('mobile'); setError(''); }}
-                className={`flex-1 py-2 text-sm font-medium transition-colors ${
-                  otpType === 'mobile'
-                    ? 'bg-primary-500 text-white'
-                    : 'text-theme-secondary hover:bg-primary-500/5'
-                }`}
-              >
-                Mobile
-              </button>
-            </div>
-
             <div>
               <label className="block text-sm font-medium text-theme-secondary mb-1">
-                {otpType === 'email' ? 'Email Address' : 'Mobile Number'}
+                Email Address
               </label>
               <input
-                type={otpType === 'email' ? 'email' : 'tel'}
+                type="email"
                 className="input"
-                placeholder={otpType === 'email' ? 'you@example.com' : '+91 98765 43210'}
+                placeholder="you@example.com"
                 value={otpIdentifier}
                 onChange={(e) => setOtpIdentifier(e.target.value)}
-                autoComplete={otpType === 'email' ? 'email' : 'tel'}
+                autoComplete="email"
               />
             </div>
 

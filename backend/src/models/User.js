@@ -24,15 +24,6 @@ const User = {
     return rows[0] || null;
   },
 
-  async findByMobile(mobile) {
-    const { rows } = await db.query(
-      `SELECT id, email, full_name, phone, mobile, role, avatar_url, is_active, email_verified, created_at, updated_at
-       FROM users WHERE mobile = $1`,
-      [mobile]
-    );
-    return rows[0] || null;
-  },
-
   async findByEmailForAuth(email) {
     const { rows } = await db.query(
       'SELECT * FROM users WHERE email = $1',
@@ -51,7 +42,7 @@ const User = {
   },
 
   async update(id, fields) {
-    const allowed = ['full_name', 'phone', 'mobile', 'avatar_url', 'is_active', 'email_verified'];
+    const allowed = ['full_name', 'phone', 'avatar_url', 'is_active', 'email_verified'];
     const sets = [];
     const values = [];
     let idx = 1;
