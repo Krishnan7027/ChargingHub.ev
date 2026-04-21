@@ -581,10 +581,10 @@ export const sessionHistoryApi = {
 
 // ── OTP Auth ──────────────────────────────────────────────────
 export const otpApi = {
-  sendOtp: (data: { identifier: string; type: 'email' | 'mobile' }) =>
+  sendOtp: (data: { email: string }) =>
     http.post<OTPSendResponse>('/auth/send-otp', data).then((r) => r.data),
 
-  verifyOtp: (data: { identifier: string; type: 'email' | 'mobile'; otp: string }) =>
+  verifyOtp: (data: { email: string; otp: string }) =>
     http.post<OTPVerifyResponse>('/auth/verify-otp', data).then((r) => r.data),
 };
 

@@ -3,6 +3,7 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const env = require('../config/env');
 const crypto = require('crypto');
+const emailService = require('./emailService');
 
 const OTP_EXPIRY = 300; // 5 minutes
 const OTP_PREFIX = 'otp:';
@@ -12,32 +13,12 @@ const otpService = {
     return String(crypto.randomInt(100000, 999999));
   },
 
-  normalizeMobile(mobile) {
-    let normalized = mobile.replace(/[\s\-\(\)]/g, '');
-    if (normalized.startsWith('0')) normalized = normalized.slice(1);
-    if (!normalized.startsWith('+')) {
-      if (normalized.length === 10) normalized = '+91' + normalized;
-      else if (!normalized.startsWith('91') || normalized.length < 12) normalized = '+91' + normalized;
-      else normalized = '+' + normalized;
-    }
-    return normalized;
-  },
-
-  async sendOTP({ identifier, type }) {
-    if (type === 'mobile') {
-      identifier = this.normalizeMobile(identifier);
-    }
-
+  async sendOTP({ email }) {
     // OTP is login-only — verify user exists before sending
-    let user;
-    if (type === 'email') {
-      user = await User.findByEmail(identifier);
-    } else {
-      user = await User.findByMobile(identifier);
-    }
+    const user = await User.findByEmail(email);
 
     if (!user) {
-      const err = new Error('No account found with this ' + type + '. Please sign up first.');
+      const err = new Error('No account found with this email. Please sign up first.');
       err.statusCode = 404;
       throw err;
     }
@@ -50,7 +31,7 @@ const otpService = {
 
     const otp = this.generateOTP();
     const redis = getClient();
-    const key = `${OTP_PREFIX}${type}:${identifier}`;
+    const key = `${OTP_PREFIX}email:${email}`;
 
     // Rate limit: check if OTP was sent recently (60s cooldown)
     const ttl = await redis.ttl(key);
@@ -62,20 +43,19 @@ const otpService = {
 
     await redis.setex(key, OTP_EXPIRY, otp);
 
-    // In production, send via email/SMS service
-    // For dev, log to console
-    console.log(`[OTP] ${type}:${identifier} => ${otp}`);
+    // Send OTP via email
+    if (process.env.SMTP_USER) {
+      await emailService.sendOTPEmail({ to: email, otp });
+    } else {
+      console.log(`[OTP] email:${email} => ${otp}`);
+    }
 
     return { message: 'OTP sent successfully', expiresIn: OTP_EXPIRY };
   },
 
-  async verifyOTP({ identifier, type, otp }) {
-    if (type === 'mobile') {
-      identifier = this.normalizeMobile(identifier);
-    }
-
+  async verifyOTP({ email, otp }) {
     const redis = getClient();
-    const key = `${OTP_PREFIX}${type}:${identifier}`;
+    const key = `${OTP_PREFIX}email:${email}`;
     const stored = await redis.get(key);
 
     if (!stored) {
@@ -85,7 +65,7 @@ const otpService = {
     }
 
     // Track failed attempts — brute-force protection
-    const attemptsKey = `${OTP_PREFIX}attempts:${type}:${identifier}`;
+    const attemptsKey = `${OTP_PREFIX}attempts:email:${email}`;
     if (stored !== otp) {
       const attempts = await redis.incr(attemptsKey);
       await redis.expire(attemptsKey, OTP_EXPIRY);
@@ -107,12 +87,7 @@ const otpService = {
     await redis.del(key);
 
     // Find existing user — OTP is login-only, user must exist
-    let user;
-    if (type === 'email') {
-      user = await User.findByEmail(identifier);
-    } else {
-      user = await User.findByMobile(identifier);
-    }
+    const user = await User.findByEmail(email);
 
     if (!user) {
       const err = new Error('Account not found. Please sign up first.');
