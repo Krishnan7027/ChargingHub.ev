@@ -35,7 +35,7 @@ function DropdownMenu({ label, items, onClose }: {
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="absolute top-full left-0 mt-1 w-48 glass-heavy rounded-xl py-1 z-50"
+      className="absolute top-full left-0 mt-1 w-48 glass-dropdown rounded-xl py-1 z-50"
     >
       <p className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-theme-muted">{label}</p>
       {items.map((item, i) => (
@@ -152,12 +152,14 @@ function CountrySelector() {
       </motion.button>
       <AnimatePresence>
         {open && (
+          <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <motion.div
             variants={dropdownVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="absolute top-full right-0 mt-1 w-48 glass-heavy rounded-xl py-1 z-50"
+            className="absolute top-full right-0 mt-1 w-48 glass-dropdown rounded-xl py-1 z-50"
           >
             <p className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-theme-muted">Region</p>
             {countries.map((c) => (
@@ -174,6 +176,7 @@ function CountrySelector() {
               </button>
             ))}
           </motion.div>
+          </>
         )}
       </AnimatePresence>
     </div>

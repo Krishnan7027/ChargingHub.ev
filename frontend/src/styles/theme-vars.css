@@ -22,6 +22,7 @@
   --glass-bg: rgba(255, 255, 255, 0.55);
   --glass-bg-heavy: rgba(255, 255, 255, 0.7);
   --glass-bg-light: rgba(255, 255, 255, 0.4);
+  --glass-dropdown-bg: rgba(255, 255, 255, 0.85);
   --glass-border: rgba(255, 255, 255, 0.7);
   --glass-border-subtle: rgba(255, 255, 255, 0.4);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -97,11 +98,12 @@
   --border-subtle: rgba(255, 255, 255, 0.04);
 
   /* ── Glass Properties ──────────────────────────────────── */
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-bg-heavy: rgba(255, 255, 255, 0.08);
-  --glass-bg-light: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-border-subtle: rgba(255, 255, 255, 0.06);
+  --glass-bg: rgba(255, 255, 255, 0.12);
+  --glass-bg-heavy: rgba(255, 255, 255, 0.18);
+  --glass-bg-light: rgba(255, 255, 255, 0.08);
+  --glass-dropdown-bg: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-border-subtle: rgba(255, 255, 255, 0.1);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
   --glass-shadow-heavy: 0 12px 48px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.25);
   --glass-blur: 24px;
@@ -119,11 +121,11 @@
   --mesh-color-3: rgba(139, 92, 246, 0.1);
 
   /* ── Component Surfaces ────────────────────────────────── */
-  --card-bg: rgba(255, 255, 255, 0.05);
-  --card-border: rgba(255, 255, 255, 0.08);
-  --card-hover-bg: rgba(255, 255, 255, 0.08);
-  --input-bg: rgba(255, 255, 255, 0.06);
-  --input-border: rgba(255, 255, 255, 0.1);
+  --card-bg: rgba(255, 255, 255, 0.10);
+  --card-border: rgba(255, 255, 255, 0.15);
+  --card-hover-bg: rgba(255, 255, 255, 0.14);
+  --input-bg: rgba(255, 255, 255, 0.10);
+  --input-border: rgba(255, 255, 255, 0.18);
   --input-focus-border: rgba(38, 168, 102, 0.5);
 
   /* ── Button Surfaces ───────────────────────────────────── */

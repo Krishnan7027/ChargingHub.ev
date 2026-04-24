@@ -2,17 +2,26 @@
 
 import { useFavorites } from '@/hooks/useFavorites';
 import { useToggleFavorite } from '@/hooks/useFavorites';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Navbar from '@/components/layout/Navbar';
 import PageTransition from '@/components/ui/PageTransition';
 
 export default function FavoritesPage() {
+  const router = useRouter();
   const { data: favorites, isLoading, error } = useFavorites();
   const { remove, isLoading: removing } = useToggleFavorite();
 
   if (isLoading) {
     return (
+      <>
+      <Navbar />
       <PageTransition>
       <div className="container mx-auto px-4 py-8">
+        <button onClick={() => router.back()} className="btn-ghost text-sm py-1 px-2 -ml-2 mb-2 flex items-center gap-1 text-theme-secondary">
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+          Back
+        </button>
         <h1 className="text-2xl font-bold mb-6 dark:text-white">My Favorite Stations</h1>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3].map((i) => (
@@ -25,25 +34,39 @@ export default function FavoritesPage() {
         </div>
       </div>
       </PageTransition>
+      </>
     );
   }
 
   if (error) {
     return (
+      <>
+      <Navbar />
       <PageTransition>
       <div className="container mx-auto px-4 py-8">
+        <button onClick={() => router.back()} className="btn-ghost text-sm py-1 px-2 -ml-2 mb-2 flex items-center gap-1 text-theme-secondary">
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+          Back
+        </button>
         <h1 className="text-2xl font-bold mb-6 dark:text-white">My Favorite Stations</h1>
         <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl p-6">
           Failed to load favorites. Please try again.
         </div>
       </div>
       </PageTransition>
+      </>
     );
   }
 
   return (
+    <>
+    <Navbar />
     <PageTransition>
     <div className="container mx-auto px-4 py-8">
+      <button onClick={() => router.back()} className="btn-ghost text-sm py-1 px-2 -ml-2 mb-2 flex items-center gap-1 text-theme-secondary">
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+        Back
+      </button>
       <h1 className="text-2xl font-bold mb-6 dark:text-white">My Favorite Stations</h1>
 
       {!favorites || favorites.length === 0 ? (
@@ -109,5 +132,6 @@ export default function FavoritesPage() {
       )}
     </div>
     </PageTransition>
+    </>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import StatusBadge from '@/components/ui/StatusBadge';
 import ProtectedRoute from '@/components/ui/ProtectedRoute';
@@ -10,6 +11,7 @@ import toast from 'react-hot-toast';
 import PageTransition from '@/components/ui/PageTransition';
 
 export default function ReservationsPage() {
+  const router = useRouter();
   const [filter, setFilter] = useState('all');
   const params = filter !== 'all' ? { status: filter } : undefined;
   const { data: reservations, isLoading } = useMyReservations(params);
@@ -29,6 +31,10 @@ export default function ReservationsPage() {
       <Navbar />
       <PageTransition>
       <div className="max-w-4xl mx-auto px-4 py-8">
+        <button onClick={() => router.back()} className="btn-ghost text-sm py-1 px-2 -ml-2 mb-2 flex items-center gap-1 text-theme-secondary">
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+          Back
+        </button>
         <h1 className="text-2xl font-bold mb-6">My Reservations</h1>
 
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2">

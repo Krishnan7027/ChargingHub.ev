@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { authApi } from '@/lib/api';
+import Navbar from '@/components/layout/Navbar';
 
 export default function ProfilePage() {
   const { user, loading, refreshProfile } = useAuth();
@@ -58,8 +59,14 @@ export default function ProfilePage() {
   }
 
   return (
+    <>
+    <Navbar />
     <div className="min-h-screen py-8 px-4">
       <div className="max-w-2xl mx-auto">
+        <button onClick={() => router.back()} className="btn-ghost text-sm py-1 px-2 -ml-2 mb-2 flex items-center gap-1 text-theme-secondary">
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+          Back
+        </button>
         <h1 className="text-2xl font-bold text-theme-primary mb-6">My Profile</h1>
 
         <div className="glass-heavy rounded-2xl p-6 border border-glass">
@@ -141,5 +148,6 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

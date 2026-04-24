@@ -1,14 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useSessionHistory, useSessionStats } from '@/hooks/useSessionHistory';
 import { useCountry } from '@/context/CountryContext';
 import { formatCurrency } from '@/lib/formatCurrency';
 import Link from 'next/link';
+import Navbar from '@/components/layout/Navbar';
 import PageTransition from '@/components/ui/PageTransition';
 import type { SessionHistoryFilters } from '@/types';
 
 export default function ChargingHistoryPage() {
+  const router = useRouter();
   const { country } = useCountry();
   const [filters, setFilters] = useState<SessionHistoryFilters>({
     page: 1,
@@ -27,8 +30,14 @@ export default function ChargingHistoryPage() {
   const totalPages = history ? Math.ceil(history.total / history.limit) : 0;
 
   return (
+    <>
+    <Navbar />
     <PageTransition>
     <div className="container mx-auto px-4 py-8">
+      <button onClick={() => router.back()} className="btn-ghost text-sm py-1 px-2 -ml-2 mb-2 flex items-center gap-1 text-theme-secondary">
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+        Back
+      </button>
       <h1 className="text-2xl font-bold mb-6 dark:text-white">Charging History</h1>
 
       {/* Stats Cards */}
@@ -199,5 +208,6 @@ export default function ChargingHistoryPage() {
       )}
     </div>
     </PageTransition>
+    </>
   );
 }

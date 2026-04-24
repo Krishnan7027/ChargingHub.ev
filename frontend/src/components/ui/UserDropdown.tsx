@@ -60,7 +60,7 @@ export default function UserDropdown() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-56 glass-heavy rounded-2xl py-2 z-50 shadow-xl border border-glass">
+        <div className="absolute right-0 top-full mt-2 w-56 glass-dropdown rounded-2xl py-2 z-50">
           {/* User info header */}
           <div className="px-4 py-3 border-b border-glass">
             <p className="text-sm font-semibold text-theme-primary truncate">{user.full_name}</p>

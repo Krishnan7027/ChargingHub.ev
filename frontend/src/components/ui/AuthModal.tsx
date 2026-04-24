@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Modal from './Modal';
 import { useAuth } from '@/context/AuthContext';
 import { getReturnAction, clearReturnAction } from '@/lib/navigationFlow';
+import { getPostLoginPath } from '@/lib/roles';
 
 interface AuthModalProps {
   open: boolean;
@@ -94,10 +95,11 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
     setError('');
     setLoading(true);
     try {
+      let user;
       if (mode === 'login') {
-        await login(email, password);
+        user = await login(email, password);
       } else {
-        await register({ email, password, fullName, phone: phone || undefined, role });
+        user = await register({ email, password, fullName, phone: phone || undefined, role });
       }
       resetForm();
       onClose();
@@ -106,6 +108,8 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
       if (returnAction) {
         clearReturnAction();
         router.push(returnAction.returnTo);
+      } else {
+        router.push(getPostLoginPath(user.role));
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : (mode === 'login' ? 'Login failed' : 'Signup failed');
@@ -143,7 +147,7 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
     setError('');
     setLoading(true);
     try {
-      await loginWithOtp(otpIdentifier.trim(), otpCode);
+      const user = await loginWithOtp(otpIdentifier.trim(), otpCode);
       resetForm();
       onClose();
       onAuthenticated();
@@ -151,6 +155,8 @@ export default function AuthModal({ open, onClose, onAuthenticated, initialMode 
       if (returnAction) {
         clearReturnAction();
         router.push(returnAction.returnTo);
+      } else {
+        router.push(getPostLoginPath(user.role));
       }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'OTP verification failed';
