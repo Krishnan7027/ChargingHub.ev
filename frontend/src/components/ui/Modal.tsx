@@ -46,7 +46,7 @@ export default function Modal({ open, onClose, title, children, maxWidth = 'max-
           animate="visible"
           exit="exit"
           className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4"
-          style={{ background: 'rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+          style={{ background: 'var(--overlay-bg)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
           onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
         >
           <motion.div

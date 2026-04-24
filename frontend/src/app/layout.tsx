@@ -7,6 +7,7 @@ import QueryProvider from '@/context/QueryProvider';
 import GlassBackground from '@/components/ui/GlassBackground';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import { Toaster } from 'react-hot-toast';
+import DisableNumberScroll from '@/components/ui/DisableNumberScroll';
 import '@/styles/globals.css';
 
 const inter = Inter({
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <CountryProvider>
             <AuthProvider>
               <GlassBackground />
+              <DisableNumberScroll />
               {children}
               <ThemeToggle />
               <Toaster

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { vehicleApi } from '@/lib/api';
+import Navbar from '@/components/layout/Navbar';
 import type { EVVehicle } from '@/types';
 
 const CHARGING_PORTS = ['Type 2', 'CCS', 'CHAdeMO', 'Type 1', 'Tesla'];
@@ -219,8 +220,14 @@ export default function MyEVPage() {
   }
 
   return (
+    <>
+    <Navbar />
     <div className="min-h-screen py-8 px-4">
       <div className="max-w-4xl mx-auto">
+        <button onClick={() => router.back()} className="btn-ghost text-sm py-1 px-2 -ml-2 mb-2 flex items-center gap-1 text-theme-secondary">
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+          Back
+        </button>
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold text-theme-primary">My EV</h1>
           {vehicles.length > 0 && !showAddForm && (
@@ -265,5 +272,6 @@ export default function MyEVPage() {
         )}
       </div>
     </div>
+    </>
   );
 }
