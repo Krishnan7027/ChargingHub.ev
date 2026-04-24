@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import Script from 'next/script';
 import { AuthProvider } from '@/context/AuthContext';
 import { CountryProvider } from '@/context/CountryContext';
 import { ThemeProvider } from '@/context/ThemeContext';
@@ -45,6 +46,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-WP084YB3W3"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-WP084YB3W3');
+          `}
+        </Script>
       </head>
       <body className={inter.className}>
         <ThemeProvider>
